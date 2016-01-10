@@ -1,0 +1,34 @@
+\section{FrameWork}
+Python: [framework]
+One of the goals of this thesis is to create refactoring for dynamic languages in general,
+in other words, to create a Framework for refactoring tools.
+//by using the same structure (program, framework, choose one better)
+After creating several refactoring operations for Racket Python was chosen next.
+POC (prove of concept)
+It was created a prove of concept in Python consistent in several refactoring operations, such as:
+[TODO] say which refactoring operations were implemented.
+Python was chosen because there is already an implementation of Python for the
+ DrRacket environment in which the refactoring tool for Racket was first developed.
+
+how easy it is to add new refactoring operations and languages
+The framework it is simply to use, it is only necessary to have a specification file
+of each refactoring operation.
+That file must have a function that receives two arguments,
+one is the AST of the program and the other is the def-use-relation.
+This information makes it possible to have several refactoring operations that help
+the programmer.
+what was "reused"
+everything except the refactoring operations itself.
+the advantages of that
+This Framework makes it easier to implement refactoring operations for dynamic languages,
+with only the catch that they have to be implemented for DrRacket. Helping minimizing
+the problem of the difficulty and lacking of refactoring operations for dynamic languages.
+(for at least every language implemented for DrRacket)
+
+%[TODO Explain META-LANGUAGE]
+The implementation for DrRacket is what does the trick, because by implementing
+the language with Racket syntax we are basically using as a meta-language that
+can represent several languages. Being the meta-language a language that are
+composed only by syntax elements is a huge advantage to compute effortless new
+refactoring operations for new languages when compared with the necessary effort to create
+the refactoring operations directly for that language.
