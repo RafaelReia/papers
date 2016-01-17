@@ -10,6 +10,18 @@ It was created a prove of concept in Python consistent in several refactoring op
 Python was chosen because there is already an implementation of Python for the
  DrRacket environment in which the refactoring tool for Racket was first developed.
 
+%[TODO say what parts of the code were reused]
+
+ %[TODO Explain META-LANGUAGE]
+ The implementation for DrRacket is what does the trick, because by implementing
+ the language with Racket syntax we are basically using as a meta-language that
+ can represent several languages. Being the meta-language a language that are
+ composed only by syntax elements is a huge advantage to compute effortless new
+ refactoring operations for new languages when compared with the necessary effort to create
+ the refactoring operations directly for that language.
+
+
+
 how easy it is to add new refactoring operations and languages
 The framework it is simply to use, it is only necessary to have a specification file
 of each refactoring operation.
@@ -24,11 +36,3 @@ This Framework makes it easier to implement refactoring operations for dynamic l
 with only the catch that they have to be implemented for DrRacket. Helping minimizing
 the problem of the difficulty and lacking of refactoring operations for dynamic languages.
 (for at least every language implemented for DrRacket)
-
-%[TODO Explain META-LANGUAGE]
-The implementation for DrRacket is what does the trick, because by implementing
-the language with Racket syntax we are basically using as a meta-language that
-can represent several languages. Being the meta-language a language that are
-composed only by syntax elements is a huge advantage to compute effortless new
-refactoring operations for new languages when compared with the necessary effort to create
-the refactoring operations directly for that language.

@@ -1,9 +1,10 @@
-\section{Racket Refactoring Tool}
-This section explains the decisions made in order to make this refactoring tool.
+%\section{Racket Refactoring Tool}
+%This section explains the decisions made in order to make this refactoring tool.
 
 \section{Architecture}
 Refactoring Tool work flow: (add a brief explanation of what does )
-The tool uses two pieces of information, def-use-relations and the AST.
+The Refactoring tool uses two types of information, the def-use-relations and
+the AST.
 
 It gets the def-use-relations directly from DrRacket, which is visually
 represented in a form of Arrows, and are used in refactorings such as Extract-
@@ -12,9 +13,43 @@ Method, Add-Prefix, Organize-Imports, etc.
 The AST is acquired after using the check-syntax button. It was intended to be
 acquired automatically, because DrRacket has an online check syntax, but it was
 not possible. After that it cleans the AST removing information that is not
-necessary, at least for now, for the refactorings. When the AST is cleaned it
+necessary, at least for now, for the refactoring operations. When the AST is cleaned it
 passes the exact part of the AST that was selected. And tries to match rules,
 using syntax-parse against that syntax.
+
+\subsection{Def-Use-Relations}
+DrRacket has def-use-relations in the system that are visually represented by
+arrows. The information is computed in the online-comp.rkt that is where expands
+and computes the information needed to know the def-use-relations and whether
+the program is syntactically correct.
+There is an online expansion monitor that calls the online-comp, the online-comp
+then expands the program (to the expanded program) and does a trace to get the
+information needed for the arrows (def-use-relations).
+Afterwards it sends back that information to the caller of the online-comp to do
+the replay of the trace did by the compile comp and to process the information
+about the arrows.
+
+
+\subsection{Def-Use-Relations utility}
+Arrows can be used to check whether or not there is a duplicated name or to
+compute the arguments of a function to be extracted.
+
+\subsubsection{Arrow Evolution}
+In previous versions of the online-comp information about the type of arrows
+was available in the structure. However in the recent versions that type of
+information was removed.
+With the previous version of the online-comp the framework was computing the argument for the
+newly extracted function using the type information: "one of 'lexical, 'top-level, 'import".
+That change created a problem while trying to check whether an argument was imported
+from the language or from another file/library that had at least two solutions:
+  -Arrows + Text information
+  -Arrows + sExpressions
+
+The first approach is simpler and more direct than the second one. However it is
+less tolerant to changes and to errors.
+The second one combines the Arrow information with the syntax information to
+check whether it is imported from the language or from other library.
+
 
 \subsection{Get Syntax Expressions}
 The syntax expression tree is how the program is represented in Racket.
@@ -161,7 +196,7 @@ possible to have several rules to be match in the same syntax parser which
 helps to create more sophisticated rules.
 
 
-\section{ Writting/creating code}
+\section{ Pretty Printing}
 
 Pretty Printing (E.g. Cond lets etc)
 The racket makes it easy to create syntax using the syntax-parse to transform the
@@ -175,6 +210,16 @@ surrounded by [] parenthesis but the syntax element does not store that informat
  supports both representations.
 
 \subsection{Refactoring operations}
+\subsubsection{Extract Functions}
+Compute arguments
+
+Body
+
+Call
+
+Paste (etc)
+
+\subsubsection{Let to Defines}
 Refactoring Let to Defines Usefulness Vs implementation difficulty
 let* vs let
 There is a subtle difference between this two keywords that influences directly the simplicity of the solution.
@@ -201,9 +246,10 @@ However this has a problem. Let can be used in expressions, but the define can n
 In the vast majority of cases this refactoring is correct, but when a let is used in an expression
 it is not correct and it changes the meaning of the program, transforming a correct
 program in a incorrect one.
-
+\subsubsection{Define to Let}
 Refactoring Define to Let Usefulness Vs Implementation difficulty
 
+\subsubsection{Ambiguities}
 Refactoring (if ?x (begin ?y ...) \#f) could go either way:
 (when ?x ?y ...)
 or
@@ -220,12 +266,14 @@ choose the other one. For example if a programmer is creating a predicate may
 choose the and version, whereas if the programmer is using another control structure
 may prefer the when version.
 
-Implemented Refactoring Operations:
-
-
-Case Study: (find a good ones) FP Project, Architecture Project.
+\subsubsection{Implemented Refactoring Operations:}
 
 \section{Features}
+
+\subsection{User FeedBack}
+
+
+\subsection{Automated refactoring}
 Automated refactoring, after finishing a project to make it more beautiful. (could be interesting)
 This is already done, it calls every possible refactoring operation that the tool finds.
 This is kinda dangerous to use, however this might be useful for the user to see all the results of the refactoring operations
@@ -316,7 +364,9 @@ repository and because of that it becomes simple to keep the refactoring tool up
 However, the main reason to create a plugin is to become independent from DrRacket
 evolution. With a plugin that is possible and it is managable.
 
-
+\section{Evaluation}
+Case Study: (find a good ones) FP Project, Architecture Project.
+Correctness
 \section{Future work}
 Detect when a developer is refactoring in order to help the developer finish the
 refactoring by doing it automatically.
