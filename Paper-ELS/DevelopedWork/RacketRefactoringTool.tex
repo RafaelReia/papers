@@ -210,12 +210,34 @@ surrounded by [] parenthesis but the syntax element does not store that informat
  supports both representations.
 
 \subsection{Refactoring operations}
+
 \subsubsection{Extract Functions}
-Compute arguments
+Extract function is an important refactoring operation that every refactoring tool
+should have. However is not that simple to implement and there are some things to
+take into account.
+In order to extract a function it is necessary to compute the arguments needed
+to the correct use of the function. While naming the new function it is an interesting
+feature to check if that name is duplicate.
+Then computing the body and replacing it by the call should be straightforward.
+Another problem is where should the function be extracted to. A function can not
+be defined in an expression, (e.g inside a let) but it could be defined in the top-level
+or in any other level that is accessible from the top level.
 
-Body
+e.g: When extracting the \'(+ 1 2) to a function where should it be defined?
+Top-level? level-0 level-1 or in the current level, level-2?
+\begin{lstlisting}[caption="Example"]
+;;top-level
+(define (level-0)
+  (define (level-1)
+    (define (level-2)
+      (+ 1 2))
+    (level-2))
+  (level-1))
+\end{lstlisting}
 
-Call
+The fact is that is extremely difficult to know the answer to this question, and
+we think that the best solution to this question is to let the user decide where
+he want the function defined.
 
 Paste (etc)
 
@@ -271,7 +293,13 @@ may prefer the when version.
 \section{Features}
 
 \subsection{User FeedBack}
-
+It is an important part of tool to give proper feedback to the user. It was studied
+a way to inform users what were the conditions that did not let a refactoring operation
+to occur. And which are the steps in order to do a certain refactoring
+operation in the selected code instead of just disabling the refactoring operation
+button. However after an analysis it was clear that kind of problems rarely occur
+in Racket language and therefore not implemented. However if a language is statement
+based instead of expression based the situation changes.
 
 \subsection{Automated refactoring}
 Automated refactoring, after finishing a project to make it more beautiful. (could be interesting)
@@ -353,6 +381,15 @@ if a piece of code was duplicated or not.
 However this detection is a quadratic algorithm (TODO check this) which might
 have some performance problems for bigger programs.
 
+\section{Analysis}
+\subsection{HaRe}
+\subsection{Scheme Griswold Implementation}
+\subsection{Smalltalk Refactoring Browser}
+\subsection{Javascript Framework}
+\subsection{Bicycle Repair Man}
+\subsection{Rope}
+\subsection{pycharm}
+
 \section{Plugin}
 In order to improve the deployement and usage of the refactoring tool a plugin
 for DrRacket was createad.
@@ -366,7 +403,7 @@ evolution. With a plugin that is possible and it is managable.
 
 \section{Evaluation}
 Case Study: (find a good ones) FP Project, Architecture Project.
-Correctness
+Correctness:
 \section{Future work}
 Detect when a developer is refactoring in order to help the developer finish the
 refactoring by doing it automatically.

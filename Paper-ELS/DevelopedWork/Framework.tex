@@ -20,8 +20,14 @@ Python was chosen because there is already an implementation of Python for the
  refactoring operations for new languages when compared with the necessary effort to create
  the refactoring operations directly for that language.
 
+\subsection{Statement based languages}
+This Framework was build with a base of expression based languages. The flow of
+the program is needed to decide whether or not a refactoring can be correctly done
+or even to decide where and how many returns a function needs. However this could
+be minimized with a PDG (program depedence graph) that has the control flow information
+needed to compute correct refactorings.
 
-
+\section{Features}
 how easy it is to add new refactoring operations and languages
 The framework it is simply to use, it is only necessary to have a specification file
 of each refactoring operation.
@@ -36,3 +42,10 @@ This Framework makes it easier to implement refactoring operations for dynamic l
 with only the catch that they have to be implemented for DrRacket. Helping minimizing
 the problem of the difficulty and lacking of refactoring operations for dynamic languages.
 (for at least every language implemented for DrRacket)
+
+\section{Analysis}
+\subsection{Famix}
+
+
+\section{Future Work}
+Add a PDG to the framework.
