@@ -2,20 +2,27 @@
 %This section explains the decisions made in order to make this refactoring tool.
 
 \section{Architecture}
-Refactoring Tool work flow: (add a brief explanation of what does )
-The Refactoring tool uses two types of information, the def-use-relations and
-the AST.
+%Refactoring Tool work flow: (add a brief explanation of what does )
+The Refactoring tool uses mainly two sources of information, the def-use-relations and
+the AST of the program.
 
-It gets the def-use-relations directly from DrRacket, which is visually
-represented in a form of Arrows, and are used in refactorings such as Extract-
-Method, Add-Prefix, Organize-Imports, etc.
+The def-use-relations are visually represented in a form of Arrows in DrRacket,
+that information is especially relevant for refactoring operations such as Extrac-Function,
+Add-Prefix, Organize-Imports, etc.
 
-The AST is acquired after using the check-syntax button. It was intended to be
-acquired automatically, because DrRacket has an online check syntax, but it was
-not possible. After that it cleans the AST removing information that is not
-necessary, at least for now, for the refactoring operations. When the AST is cleaned it
-passes the exact part of the AST that was selected. And tries to match rules,
-using syntax-parse against that syntax.
+The AST is represented by the s-expressions that compose the racket program. In
+Racket everything is a syntax-expression and therefore accessing the list (tree)
+of the syntax-expressions has all the information that a normal AST provides.
+
+
+[INSERT IMAGE HERE]
+
+%The AST is acquired after using the check-syntax button. It was intended to be
+%acquired automatically, because DrRacket has an online check syntax, but it was
+%not possible. After that it cleans the AST removing information that is not
+%necessary, at least for now, for the refactoring operations. When the AST is cleaned it
+%passes the exact part of the AST that was selected. And tries to match rules,
+%using syntax-parse against that syntax.
 
 \subsection{Def-Use-Relations}
 DrRacket has def-use-relations in the system that are visually represented by
@@ -30,7 +37,7 @@ the replay of the trace did by the compile comp and to process the information
 about the arrows.
 
 
-\subsection{Def-Use-Relations utility}
+\subsubsection{Def-Use-Relations utility}
 Arrows can be used to check whether or not there is a duplicated name or to
 compute the arguments of a function to be extracted.
 
@@ -51,68 +58,35 @@ The second one combines the Arrow information with the syntax information to
 check whether it is imported from the language or from other library.
 
 
-\subsection{Get Syntax Expressions}
-The syntax expression tree is how the program is represented in Racket.
+\subsection{Syntax Expressions}
+The Syntax expressions (s-exp) list are already being produced and used by the
+Racket language and in DrRacket. They represent the program and are computed in
+order to provide error information to the user.
+DrRacket already provides functions in order to create s-exp lists and uses some of those
+functions in the online check syntax and in the check syntax button callback.
 
-\subsubsection{DrRacket product}
-DrRacket produces syntax from the program in two places.
-In the Online compilation time and via the Check Syntax represented by a button.
-Online-comp is the racket's online check syntax.
-Besides being online we do not know what calls the online syntax expander.
-Because of that we can not find a way of storing the AST information that we
-need to do the refactoring operations.
-Not knowing what calls the online syntax expander makes it impossible to store
-the information because the instance that receives the AST information is not
-accessible, it disappears.
-Having an instance of gui.rkt in
-online-comp.rkt / code-walker.rkt does not work either because we can not have 2
-instances of the same thing running at the same time.
+[insert images here explaining that]
 
 
-Therefore there are three possible solutions:
+\subsubsection{Syntax Expression tree forms}
+DrRacket provides functions to compute the s-exp list in two different formats.
+One format is the expanded program, this format is used by the Check Syntax and
+the online check syntax, and computes the program expanded.
+The other format is the non-expanded program and computes the program unexpanded.
 
-Write to a file
-Find out what is calling/starting the handler and get the results from there
-Use Check Syntax Button
-The last one was temporarly chosen because the others failed, either because we wasn't able
- to store syntax objects in a file (in a "small" number of time) or because we
- could not find what is calling that (in a "small" number of time).
+The expanded program has the macros expanded and the identifier information computed,
+however it is harder to extract the relevant information when compared with the
+non expanded program.
+%Racket has two forms of syntax tree. An expanded form, with the macros expanded
+%and a non expanded form that is after a read-syntax without the macros expanded.
 
-The solution chose can be improved by working *automatically*.
-To do that we Have two options:
- Use the Online check syntax
- Automate the "call" to the check syntax button.
- Possibility the automate the call to the check syntax button will be chosen.
- This simplifies the process, however it increases the time that the user has to
- wait, and can make it unusable.
-This approaches besides not being ituitive for the user, or hard to do. They have
-a problem when doing several refactoring operations. Because If the user forgot
-to call the check syntax (by clicling on the button), the refactoring operation
-would affect an outdated syntax expression tree and produce wrong results. The
-results could be weird and created syntax errors but sometimes could be syntatic
-correct and insert bugs/ change the meaning of the program.
-
-A better approach is for each refactoring to compute the Syntax empressions tree.
-With this it makes the call more intuitive for the user and essures that each
-refactoring operation is made with an updated syntax expression tree.
-
-\subsection{Syntax Expression tree form}
-Racket has two forms of syntax tree. An expanded form, with the macros expanded
-and a non expanded form that is after a read-syntax without the macros expanded.
-
-Expanded Program Vs Not expanded Program
-\#Talk about difficulty, durability, Python (other languages)
-
-[Only in the expanded form] (and) is treated like an if which is bad and give problems
-The rest tends to work.
-testing:
-(if (= (+ 1 2) 1) \#f \#t) to (not (= (+ 1 2) 1))
-
-\#add an example of both to compare
+For example, the following program is represented in the expanded program,
+and in the non expanded program.
 \begin{lstlisting}[caption="example"]
-(if (< 1 2)
-    #t
-    #f)
+#lang racket
+(if (= (+ 1 2) 1)
+      #f
+      #t)
 \end{lstlisting}
 
 \begin{lstlisting}[caption="Syntax from Example"]
@@ -130,23 +104,30 @@ testing:
               (quote #t) (quote #f))) print-values)))>
 \end{lstlisting}
 
+%Expanded Program Vs Not expanded Program
+%Talk about difficulty, durability, Python (other languages)
 
-%Difficulty
-Racket uses s-expressions to represent the program, basically it represents the
-abstract syntax tree (AST) of the program.
-Racket has two "trees" the fully expanded program, that has all the macros
-expanded and the non expanded program, that is more like the code the user programed.
-The fully expanded program loses some information about the program, for example
-And. Or, When, Unless are transformed into if forms.
-It also adds racket internal representation of the program into the AST.
-All these combine make it harder to create refactoring operations to the program,
-because it loses information and because it adds unnecessary syntax to the program.
-It is necessary to take into consideration that the internal representation of
-the program may change in the future and that could make the refactoring tool
-useless.
+%[Only in the expanded form] (and) is treated like an if which is bad and give problems
+%The rest tends to work.
+%testing:
+%(if (= (+ 1 2) 1) \#f \#t) to (not (= (+ 1 2) 1))
+
+The expanded program transforms the "and", "or", "when" and "unless" forms into
+ifs and that makes refactoring operations harder to implement. Regarding that it
+ also adds more information that the refactoring tool does not need, such as racket
+ internal information, for the vast majority of the refactoring operations.
+However, the expanded program has important information regarding the binding
+information that is not available in the non-expanded form and is rather useful
+to detect if two identifiers refer to the same binding.
+In addition to that, the expanded program has a format that is likely to change
+in the future because Racket is an evolving language and the expanded form is a
+low level and internal form of representation of the program in Racket.
+All those combined make it desirable to use the non expanded form for the refactoring
+operations as much as possible and use the expanded form only for the necessary
+step.
 
 
-%Sub Cap Code with Macros The Problem
+%Sub Cap Code with Macros The Problem [Stoped here 19/01/16]
 However, if the program contains macros using the non expanded program may
 result in semantic incorrect refactoring operations. This is not considered a
 problem because this refactoring tool is aimed at unexperienced programmers (that
@@ -171,7 +152,7 @@ form of the program. because if foo has collateral effects (changing the value o
 a variable, printing some stuff, etc) it will only do that once, instead of twice.
 changing the semantic of the program.
 
-\section{Code-walker} % [TODO explain better]
+\subsection{Code-walker} % [TODO explain better]
 It is used as a parser for the syntax tree.
 the way that the code-walker guarantees that goes to every important part of the
 tree is by having a "pointer" to the current selected syntax element, and have
@@ -187,6 +168,8 @@ Because Most of the time we are searching for a specific syntax element (e.g fun
 define, etc, because everything is a syntax element in Racket) and using this we
 can skip uninteresting syntax in order to get to the syntax that we want to use.
 
+
+%%%%%% Writing Part of the Refactoring/refactoring rule
 \section{Syntax-Parse}
 Syntax-Parse Utility
 Racket gives a function that parses syntax. The Syntax-Parse provided by Racket

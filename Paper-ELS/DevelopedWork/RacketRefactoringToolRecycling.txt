@@ -1,0 +1,41 @@
+\subsubsection{DrRacket product}
+DrRacket produces syntax from the program in two places.
+In the Online compilation time and via the Check Syntax represented by a button.
+Online-comp is the racket's online check syntax.
+Besides being online we do not know what calls the online syntax expander.
+Because of that we can not find a way of storing the AST information that we
+need to do the refactoring operations.
+Not knowing what calls the online syntax expander makes it impossible to store
+the information because the instance that receives the AST information is not
+accessible, it disappears.
+Having an instance of gui.rkt in
+online-comp.rkt / code-walker.rkt does not work either because we can not have 2
+instances of the same thing running at the same time.
+
+
+Therefore there are three possible solutions:
+
+Write to a file
+Find out what is calling/starting the handler and get the results from there
+Use Check Syntax Button
+The last one was temporarily chosen because the others failed, either because we wasn't able
+ to store syntax objects in a file (in a "small" number of time) or because we
+ could not find what is calling that (in a "small" number of time).
+
+The solution chose can be improved by working *automatically*.
+To do that we Have two options:
+ Use the Online check syntax
+ Automate the "call" to the check syntax button.
+ Possibility the automate the call to the check syntax button will be chosen.
+ This simplifies the process, however it increases the time that the user has to
+ wait, and can make it unusable.
+This approaches besides not being ituitive for the user, or hard to do. They have
+a problem when doing several refactoring operations. Because If the user forgot
+to call the check syntax (by clicling on the button), the refactoring operation
+would affect an outdated syntax expression tree and produce wrong results. The
+results could be weird and created syntax errors but sometimes could be syntatic
+correct and insert bugs/ change the meaning of the program.
+
+A better approach is for each refactoring to compute the Syntax empressions tree.
+With this it makes the call more intuitive for the user and essures that each
+refactoring operation is made with an updated syntax expression tree.
