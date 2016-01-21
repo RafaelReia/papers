@@ -25,37 +25,27 @@ of the syntax-expressions has all the information that a normal AST provides.
 %using syntax-parse against that syntax.
 
 \subsection{Def-Use-Relations}
-DrRacket has def-use-relations in the system that are visually represented by
-arrows. The information is computed in the online-comp.rkt that is where expands
-and computes the information needed to know the def-use-relations and whether
-the program is syntactically correct.
-There is an online expansion monitor that calls the online-comp, the online-comp
-then expands the program (to the expanded program) and does a trace to get the
-information needed for the arrows (def-use-relations).
-Afterwards it sends back that information to the caller of the online-comp to do
-the replay of the trace did by the compile comp and to process the information
-about the arrows.
 
+DrRacket already uses the def-use-relations in the system that are visually
+represented by arrows in the GUI.
+The def-use-relations is computed by the online-compiler that runs in the background
+However it is only processed when a program is syntactically correct. (e.g. if
+a program has syntax errors there are no arrows produced in DrRacket)
+
+%The information is computed in the online-comp.rkt that is where expands
+%and computes the information needed to know the def-use-relations and whether
+%the program is syntactically correct.
+%There is an online expansion monitor that calls the online-comp, the online-comp
+%then expands the program (to the expanded program) and does a trace to get the
+%information needed for the arrows (def-use-relations).
+%Afterwards it sends back that information to the caller of the online-comp to do
+%the replay of the trace did by the compile comp and to process the information
+%about the arrows.
 
 \subsubsection{Def-Use-Relations utility}
-Arrows can be used to check whether or not there is a duplicated name or to
-compute the arguments of a function to be extracted.
-
-\subsubsection{Arrow Evolution}
-In previous versions of the online-comp information about the type of arrows
-was available in the structure. However in the recent versions that type of
-information was removed.
-With the previous version of the online-comp the framework was computing the argument for the
-newly extracted function using the type information: "one of 'lexical, 'top-level, 'import".
-That change created a problem while trying to check whether an argument was imported
-from the language or from another file/library that had at least two solutions:
-  -Arrows + Text information
-  -Arrows + sExpressions
-
-The first approach is simpler and more direct than the second one. However it is
-less tolerant to changes and to errors.
-The second one combines the Arrow information with the syntax information to
-check whether it is imported from the language or from other library.
+Def-Use-Relations are important in order to produce correct refactoring operations
+because they can be used to check whether or not there will be a duplicated name
+or even to compute the arguments of a function to be extracted.
 
 
 \subsection{Syntax Expressions}
@@ -113,88 +103,145 @@ and in the non expanded program.
 %(if (= (+ 1 2) 1) \#f \#t) to (not (= (+ 1 2) 1))
 
 The expanded program transforms the "and", "or", "when" and "unless" forms into
-ifs and that makes refactoring operations harder to implement. Regarding that it
- also adds more information that the refactoring tool does not need, such as racket
- internal information, for the vast majority of the refactoring operations.
+ifs and that makes refactoring operations harder to implement.
+
+Racket adds internal representation information to the expanded-program which for
+most refactoring operations are not needed.
+
 However, the expanded program has important information regarding the binding
 information that is not available in the non-expanded form and is rather useful
 to detect if two identifiers refer to the same binding.
+%TODO check; It also contains information where a program returns or not. TODO CHECK!
 In addition to that, the expanded program has a format that is likely to change
 in the future because Racket is an evolving language and the expanded form is a
 low level and internal form of representation of the program in Racket.
+
 All those combined make it desirable to use the non expanded form for the refactoring
 operations as much as possible and use the expanded form only for the necessary
-step.
+operations.
 
 
-%Sub Cap Code with Macros The Problem [Stoped here 19/01/16]
-However, if the program contains macros using the non expanded program may
-result in semantic incorrect refactoring operations. This is not considered a
-problem because this refactoring tool is aimed at unexperienced programmers (that
-had one semester of programming classes) and those type of programmers do not use
-macros. If we intended to create a tool for more experienced programmers the non
-expanded program is insufficient and the expanded program must be used.
+%Sub Cap Code with Macros The Problem
+Macros usage could make the refactoring operations incorrect by modifying the
+program behavior. This is not considered part of the scope of this refactoring
+tool capabilities.
+This is not considered part of the scope problem because this refactoring tool
+is aimed at unexperienced programmers (that had one semester of programming classes)
+ and those type of programmers do not use macros.
 
+ If we intended to create a tool that supports macros the non expanded program
+ is insufficient and the expanded program must be used. However there are no
+ guarantees that would be enough to ensure the correctness of such refactoring
+ operations due to the reflection capabilities of Racket.
 
 %Dependency of Racket evolution
-Using the expanded program might simplify the refactoring for other languages,
-for example it has a literal that says when the program returns in python, and
-racket does not have it. In the expanded form there is syntax that explicitly says
-where the program returns.
+%Using the expanded program might simplify the refactoring for other languages,
+%for example it has a literal that says when the program returns in python, and
+%racket does not have it. In the expanded form there is syntax that explicitly says
+%where the program returns.
 
-In the future it is possible to create a tool that uses both program expansions,
-making it possible to have macros and the relation with other languages for the
-more difficult problems and using the non expanded program for the simple cases.
-
-Semantic problem (E.g. (and (< 1 (foo 2)) (< (foo 2) 3)) )
-The refactoring operation that merges two ands into one, can change the semantic
-form of the program. because if foo has collateral effects (changing the value of
-a variable, printing some stuff, etc) it will only do that once, instead of twice.
-changing the semantic of the program.
+%In the future it is possible to create a tool that uses both program expansions,
+%making it possible to have macros and the relation with other languages for the
+%more difficult problems and using the non expanded program for the simple cases.
 
 \subsection{Code-walker} % [TODO explain better]
-It is used as a parser for the syntax tree.
-the way that the code-walker guarantees that goes to every important part of the
-tree is by having a "pointer" to the current selected syntax element, and have
-a stack that contains the remaining code to analyze.
-Each syntax element could be a syntax-pair, one syntax element or the empty list.
-If it is a pair of syntax elements they are organized by (stx . pair)
-In which the first element is a syntax element and the second one is a syntax pair.
-A syntax pair is a pair containing a syntax object as it first element and
+The code-walker is used to parse the syntax tree represented by a syntax elements
+that is a list of s-exp in racket. %TODO check this.
+A syntax element can contain either a symbol, a syntax-pair, a datum (number, boolean or string)
+or an empty list. %might contain other stuff but never got it, not relevant?
+While a syntax-pair is a pair containing a syntax object as it first element and
 a syntax pair, a syntax element or an empty list as the second argument.
-Because of this structure it is necessary to have a stack in order to search
-the tree correctly and in the best way possible.
-Because Most of the time we are searching for a specific syntax element (e.g function,
-define, etc, because everything is a syntax element in Racket) and using this we
-can skip uninteresting syntax in order to get to the syntax that we want to use.
+Each syntax-object has information about the line where they are defined and this
+information is used by the code-walker to find the correct elements.
+
+%A syntax object combines a simpler Racket value, such as a symbol or pair, with a scope set at each phase level,
+%source-location information, syntax properties, and tamper status. In particular, an identifier is represented as
+%a syntax object that combines a symbol with scope sets and other information. The lexical information of a syntax
+%object is its scope set combined with the portion of the global table of bindings that is relevant to the syntax object’s set of scopes.
+
+Most of the time using the code-walker we are searching for a specific syntax element
+and we use the location information contained in the syntax-object in order to
+skip the syntax blocks that are before the syntax element wanted in the first place.
+
+The Code-walker is a core part of the refactoring tool ensuring that the selected
+syntax is correctly fed to the refactoring operations.
+
+%the way that the code-walker guarantees that goes to every important part of the
+%tree is by having a "pointer" to the current selected syntax element, and have
+%a stack that contains the remaining code to analyze.
+%Because of this structure it is necessary to have a stack in order to search
+%the tree correctly and in the best way possible.
+%Because Most of the time we are searching for a specific syntax element (e.g function,
+%define, etc, because everything is a syntax element in Racket) and using this we
+%can skip uninteresting syntax in order to get to the syntax that we want to use.
 
 
 %%%%%% Writing Part of the Refactoring/refactoring rule
-\section{Syntax-Parse}
-Syntax-Parse Utility
-Racket gives a function that parses syntax. The Syntax-Parse provided by Racket
-is rather useful. because besides having a wide range of auxiliary functions that
-helps matching the syntax it also has backtracking. With Backtracking it is
-possible to have several rules to be match in the same syntax parser which
-helps to create more sophisticated rules.
+\section{Writting}
+\subsection{Syntax-Parse}
+%Syntax-Parse Utility
+The Syntax-Parse function provided by Racket is rather useful for the refactoring
+operations regarding mainly syntax information.
+It has a wide range of options to help matching the correct syntax it also have
+backtracking. With Backtracking it is possible to have several rules to be match
+in the same syntax parser which helps to create more sophisticated rules.
 
+\subsubsection{Literal vs Datum-literal}
+One of the options in the syntax-parse is to specify if an element is a literal.
+The #:literals option specifies identifiers that should be treated as literals
+rather than pattern variables. This option helps to ensure that a refactoring
+operation made is targeted only to the correct elements of the language. There is
+also another option that is very similar to the literals know as datum-literals.
+Datum-literals match symbols instead of an identifier and can be rather useful as
+the literals option because it provides a wider range of options.
 
-\section{ Pretty Printing}
+However because of an unknown bug the literals option only works with the expanded-program
+and we are limited to use the datum-literals option. This could possible create
+incorrect refactoring transformations when the user renames the literals of the
+language. e.g(renaming the if, cond, let, defines, syntax, when, unless, etc)
+
+\subsection{Pretty Printing}
 
 Pretty Printing (E.g. Cond lets etc)
-The racket makes it easy to create syntax using the syntax-parse to transform the
-AST into another AST. however the syntax elements (s-expressions) lose some information
-about parenthesis. For example it is a convention that cond clauses should be
-surrounded by [] parenthesis but the syntax element does not store that information
- among others. One possible solution to this problem is by using a pretty-printer.
- There are several pretty-printers developed for Racket and even the Racket language
- has one incorporated.
- The one already incorporated does not use the [ ] parenthesis, however racket
- supports both representations.
+The racket makes it easy to modify syntax using the syntax-parse to transform the
+AST into another AST.
+In order to produce indented code we choose to use a pretty-printer already
+incorporated in the language.
+However this pretty-printer does not follow the convention in the cond clauses
+should be surrounded by [] parenthesis. This is not considered a problem because
+Racket supports both representations.
+One possible solution is to use a different pretty-printer in
+order to keep the language convention.
+%Some syntax elements (s-expressions) lose some information about parenthesis.
+%For example it is a convention that cond clauses should be surrounded by [] parenthesis
+%but the syntax element does not store that kind of information.
+%There are several pretty-printers developed for Racket and even the Racket language
+%has one incorporated.
+%The one already incorporated does not use the [ ] parenthesis, however racket
+%supports both representations.
 
-\subsection{Refactoring operations}
 
-\subsubsection{Extract Functions}
+
+\section{Refactoring operations}
+
+\subsection{semantic problems}
+There are known semantic problems that might occur after doing a refactoring
+operation.
+One of those problem occurs when removing the and of the following example
+(E.g. (and (< 1 (foo 2)) (< (foo 2) 3)) )
+The refactoring transforms the code into this:
+(< 1 (foo 2) 3)
+This refactoring has semantic problems if the function "foo" has collateral effects.
+And instead of applying those collateral effects twice it will only apply once therefore
+changing the semantic of the program.
+
+We still decided to keep this refactoring operation because for the vast majority
+of the cases this does not change the semantic of the program and the solution
+would limit too much this kind of refactoring. Because of the reflection capabilities
+of racket we could only safely apply this refactoring when the arguments of the
+"<" were datums (number, boolean or string).
+
+\subsection{Extract Functions}
 Extract function is an important refactoring operation that every refactoring tool
 should have. However is not that simple to implement and there are some things to
 take into account.
@@ -222,11 +269,38 @@ The fact is that is extremely difficult to know the answer to this question, and
 we think that the best solution to this question is to let the user decide where
 he want the function defined.
 
-Paste (etc)
+
+\subsubsection{Computing the arguments}
+%In previous versions of the online-comp information about the type of arrows
+%was available in the structure. However in the recent versions that type of
+%information was removed.
+
+%With the previous version of the online-comp the framework was computing the argument for the
+%newly extracted function using the type information: "one of 'lexical, 'top-level, 'import".
+In order to compute the arguments we have to know which variables are being define
+inside or outside the extracted function.
+The candidates to arguments of the function to be created are the variables defined
+outside, however imported variables, whether from the language or from other libraries
+does not have to be passed as arguments.
+There are no information in the def-use-relations that indicates whether an variable
+is imported or not.
+We considered two possible solutions:
+  -Def-use-relations + Text information
+  -Def-use-relations + sExpressions
+
+The first approach is simpler to implement and more direct than the second one.
+However it is less tolerant to changes and to errors.
+The second one combines the Arrow information with the syntax information to
+check whether it is imported from the language or from other library.
+
+We choose the second approach in order to provide the refactoring tool with a
+better and lastly solution to compute correctly the arguments of the new function.
 
 \subsubsection{Let to Defines}
-Refactoring Let to Defines Usefulness Vs implementation difficulty
-let* vs let
+%Refactoring Let to Defines Usefulness Vs implementation difficulty
+%TODO implement
+
+%let* vs let
 There is a subtle difference between this two keywords that influences directly the simplicity of the solution.
 the let defines variables independently, while let* can use the value of the variable defined before.
 e.g.
@@ -234,42 +308,79 @@ There is a global variable a defined with value 10.
 in the let we define variable a with 1 and variable b = a + 1
 (let ([a 1]
 [b (+ a 1)]))
+
+\begin{lstlisting}[caption="Example"]
+(define a 10)
+(let ([a 1]
+      [b (+ a 1)])
+      ...
+      )
+\end{lstlisting}
 This let, because it defines the variables independently the value of b is 11.
-However if it was used let* the value of b would be 2.
-let* simplifies the creation of defines and removes the necessity of using the keyword local to ensure semantic preservation.
 
-While the keyword local helps semantic preservation, that is not used very often and can make confusion to the programmer.
+\begin{lstlisting}[caption="Example"]
+(define a 10)
+(let* ([a 1]
+      [b (+ a 1)])
+      ...
+      )
+\end{lstlisting}
+However in the case of let* the value of b is 2.
 
-Therefore only let* would be considered because it is a more directly representation of a function.
+let* simplifies the creation of defines and removes the necessity of using the
+keyword local to ensure semantic preservation.
 
-named let.
+While the keyword local helps semantic preservation, that is not used very often
+and can make confusion to the programmer.
+
+Therefore only let* would be considered because it is a more directly
+representation of a function.
+
+%named let.
 Named let is a let that has a name and can be called, like a function.
 It is directly mapped as a function and therefore might be useful to transform to a function.
 The same applies from a function to a named let.
 
-However this has a problem. Let can be used in expressions, but the define can not.
+However this has a problem, a let form can be used in expressions, but the define can not.
 In the vast majority of cases this refactoring is correct, but when a let is used in an expression
 it is not correct and it changes the meaning of the program, transforming a correct
 program in a incorrect one.
+
+
 \subsubsection{Define to Let}
 Refactoring Define to Let Usefulness Vs Implementation difficulty
+%TODO implement.
 
 \subsubsection{Ambiguities}
-Refactoring (if ?x (begin ?y ...) \#f) could go either way:
-(when ?x ?y ...)
-or
-(and ?x (begin ?y ...))
+There are some cases where two types of syntax refactoring apply.
+Eg:
+\begin{lstlisting}[caption="Example"]
+(if ?x
+    (begin ?y ...)
+    #f)
+\end{lstlisting}
+The two different refactoring transformations are possible:
+\begin{lstlisting}[caption="Example"]
+(when ?x
+      ?y ...)
+\end{lstlisting}
 
-This example shows how hard it is to have an semi-automated refactoring tool
-that gives suggestions. It could displays both possibilities, but that will
-create an precedent meaning that if a refactoring has several possibilities the
-tool has to display every one. Or it could only display that there is a
-refactoring opportunity. This requires further reflection to choose the best
-approach to the problem.
+\begin{lstlisting}[caption="Example"]
+(and ?x (begin ?y ...))
+\end{lstlisting}
+
 The programmer could want in some situations choose one approach and in others
 choose the other one. For example if a programmer is creating a predicate may
 choose the and version, whereas if the programmer is using another control structure
 may prefer the when version.
+
+This example shows how hard it is to have an semi-automated refactoring tool
+that gives suggestions.
+It could displays both possibilities, but that will create an precedent meaning
+that if a refactoring has several possibilities the tool has to display every one.
+Or it could only display that there is a refactoring opportunity.
+This requires further reflection to choose the best approach to the problem.
+
 
 \subsubsection{Implemented Refactoring Operations:}
 
@@ -290,7 +401,7 @@ This is already done, it calls every possible refactoring operation that the too
 This is kinda dangerous to use, however this might be useful for the user to see all the results of the refactoring operations
 and a good way to test if the refactoring operations do not change the meaning of the program.
 
-\subsubsection{Automatic Suggesting refactoring opportunities.} %[Done]
+\subsubsection{Automatic Suggesting refactoring opportunities.}
 This feature is very useful in order to have a general idea what possible refactoring
 operations can be done in a piece of software. It is also important for inexperienced
 users because with this, they can have an idea what refactoring operations can be applied or not.
