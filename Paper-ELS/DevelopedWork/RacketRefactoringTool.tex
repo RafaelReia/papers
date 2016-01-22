@@ -188,7 +188,7 @@ in the same syntax parser which helps to create more sophisticated rules.
 
 \subsubsection{Literal vs Datum-literal}
 One of the options in the syntax-parse is to specify if an element is a literal.
-The #:literals option specifies identifiers that should be treated as literals
+The \#:literals option specifies identifiers that should be treated as literals
 rather than pattern variables. This option helps to ensure that a refactoring
 operation made is targeted only to the correct elements of the language. There is
 also another option that is very similar to the literals know as datum-literals.
@@ -224,7 +224,7 @@ order to keep the language convention.
 
 \section{Refactoring operations}
 
-\subsection{semantic problems}
+\subsection{Semantic problems}
 There are known semantic problems that might occur after doing a refactoring
 operation.
 One of those problem occurs when removing the and of the following example
@@ -296,11 +296,12 @@ check whether it is imported from the language or from other library.
 We choose the second approach in order to provide the refactoring tool with a
 better and lastly solution to compute correctly the arguments of the new function.
 
-\subsubsection{Let to Defines}
+\subsection{Let to Defines}
 %Refactoring Let to Defines Usefulness Vs implementation difficulty
 %TODO implement
 
 %let* vs let
+There are several types of let forms, but the most common are the let and the let*.
 There is a subtle difference between this two keywords that influences directly the simplicity of the solution.
 the let defines variables independently, while let* can use the value of the variable defined before.
 e.g.
@@ -338,8 +339,8 @@ representation of a function.
 
 %named let.
 Named let is a let that has a name and can be called, like a function.
-It is directly mapped as a function and therefore might be useful to transform to a function.
-The same applies from a function to a named let.
+The named let* is directly mapped as a function and therefore might be useful to transform to a function.
+The same applies from a function to a named let*.
 
 However this has a problem, a let form can be used in expressions, but the define can not.
 In the vast majority of cases this refactoring is correct, but when a let is used in an expression
@@ -347,11 +348,11 @@ it is not correct and it changes the meaning of the program, transforming a corr
 program in a incorrect one.
 
 
-\subsubsection{Define to Let}
+\subsection{Define to Let}
 Refactoring Define to Let Usefulness Vs Implementation difficulty
 %TODO implement.
 
-\subsubsection{Ambiguities}
+\subsection{Ambiguities}
 There are some cases where two types of syntax refactoring apply.
 Eg:
 \begin{lstlisting}[caption="Example"]
@@ -382,7 +383,7 @@ Or it could only display that there is a refactoring opportunity.
 This requires further reflection to choose the best approach to the problem.
 
 
-\subsubsection{Implemented Refactoring Operations:}
+\subsection{Implemented Refactoring Operations:}
 
 \section{Features}
 
