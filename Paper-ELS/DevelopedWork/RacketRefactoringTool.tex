@@ -335,14 +335,13 @@ This let, because it defines the variables independently the value of b is 11.
 \end{lstlisting}
 However in the case of let* the value of b is 2.
 
-Therefore only let* would be considered because it is a more directly
-representation of a function.
+%Therefore only the let would be considered because it is a more directly
+%representation of a function.
 
 %named let.
 Named let is a let that has a name and can be called, like a function.
-The named let* is directly mapped as a function and therefore might be useful to transform to a function.
-The same applies from a function to a named let*.
-
+The named let is directly mapped as a function and therefore might be useful to transform to a function.
+The same applies from a function to a named let.
 However this has a problem, a let form can be used in expressions, but the define can not.
 In the vast majority of cases this refactoring is correct, but when a let is used in an expression
 it is not correct and it changes the meaning of the program, transforming a correct
@@ -351,7 +350,7 @@ e.g
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 (and (let* test ((a 1)) (< a 2)) (< b c))
 \end{lstlisting}
-Modifying this named let* into a define would raise a syntax error because a
+Modifying this named let into a define would raise a syntax error because a
 define could not be used in an expression context.
 
 This could be solved by using the local keyword that is an expression like
