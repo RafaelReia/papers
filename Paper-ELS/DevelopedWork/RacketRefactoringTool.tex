@@ -72,18 +72,18 @@ non expanded program.
 
 For example, the following program is represented in the expanded program,
 and in the non expanded program.
-\begin{lstlisting}[caption="example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
 #lang racket
 (if (= (+ 1 2) 1)
       #f
       #t)
 \end{lstlisting}
 
-\begin{lstlisting}[caption="Syntax from Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Syntax from Example"]
 #<syntax:3:0 (if (< 1 2) #t #f)>
 \end{lstlisting}
 
-\begin{lstlisting}[caption="Expanded Syntax from example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Expanded Syntax from example"]
 #<syntax:1:0 (module anonymous-module racket
   (#%module-begin (module configure-runtime
     (quote #%kernel)#%module-begin
@@ -228,9 +228,14 @@ order to keep the language convention.
 There are known semantic problems that might occur after doing a refactoring
 operation.
 One of those problem occurs when removing the and of the following example
-(E.g. (and (< 1 (foo 2)) (< (foo 2) 3)) )
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+  (and (< 1 (foo 2)) (< (foo 2) 3))
+\end{lstlisting}
 The refactoring transforms the code into this:
-(< 1 (foo 2) 3)
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+  (< 1 (foo 2) 3)
+\end{lstlisting}
+
 This refactoring has semantic problems if the function "foo" has collateral effects.
 And instead of applying those collateral effects twice it will only apply once therefore
 changing the semantic of the program.
@@ -255,7 +260,7 @@ or in any other level that is accessible from the top level.
 
 e.g: When extracting the \'(+ 1 2) to a function where should it be defined?
 Top-level? level-0 level-1 or in the current level, level-2?
-\begin{lstlisting}[caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 ;;top-level
 (define (level-0)
   (define (level-1)
@@ -312,7 +317,7 @@ in the let we define variable a with 1 and variable b = a + 1
 (let ([a 1]
 [b (+ a 1)]))
 
-\begin{lstlisting}[caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 (define a 10)
 (let ([a 1]
       [b (+ a 1)])
@@ -321,7 +326,7 @@ in the let we define variable a with 1 and variable b = a + 1
 \end{lstlisting}
 This let, because it defines the variables independently the value of b is 11.
 
-\begin{lstlisting}[caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 (define a 10)
 (let* ([a 1]
       [b (+ a 1)])
@@ -343,7 +348,7 @@ In the vast majority of cases this refactoring is correct, but when a let is use
 it is not correct and it changes the meaning of the program, transforming a correct
 program in a incorrect one.
 e.g
-\begin{lstlisting}[caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 (and (let* test ((a 1)) (< a 2)) (< b c))
 \end{lstlisting}
 Modifying this named let* into a define would raise a syntax error because a
@@ -369,18 +374,18 @@ Is that worth it?
 \subsection{Ambiguities}
 There are some cases where two types of syntax refactoring apply.
 Eg:
-\begin{lstlisting}[caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 (if ?x
     (begin ?y ...)
     #f)
 \end{lstlisting}
 The two different refactoring transformations are possible:
-\begin{lstlisting}[caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 (when ?x
       ?y ...)
 \end{lstlisting}
 
-\begin{lstlisting}[caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 (and ?x (begin ?y ...))
 \end{lstlisting}
 
@@ -527,31 +532,61 @@ we can consider that the refactoring operations are correct.
 
 
 \section{Analysis}
-\subsection{HaRe}
-\subsection{Scheme Griswold Implementation}
-\subsection{Smalltalk Refactoring Browser}
-\subsection{Javascript Framework}
-\subsection{Bicycle Repair Man}
-\subsection{Rope}
-\subsection{pycharm}
+%It was made an analysis to compare the refactoring tool with the others
+\begin{table}[]
+\centering
+\caption{Data Structures}
+\label{my-label}
+\begin{tabular}{c|c|c|c|c}
+Name     & AST & PDG & Database & Others \\ \hline
+Griswold & X   & X   &          &        \\ \hline
+HaRe     & X   &     &          &        \\ \hline
+Rope     & X   &     & X        &        \\ \hline
+Bicycle  & X   &     & X        &
+\end{tabular}
+\end{table}
+%TODO Add Smalltalk?
+%more refactoring tools?
+This table summarizes the data structures of the refactoring tools deeply analyzed.
+It is clear that the AST of a program is an essential part of the refactoring
+tool information with every Refactoring tool having an AST to represent the program.
+Regarding the PDG and Database it has mainly information about the def-use-relation
+of the program. The PDG has also control flow information among others.
 
-\section{Plugin}
-In order to improve the deployment and usage of the refactoring tool a plugin
-for DrRacket was created.
-DrRacket has several advantages and the plugin support is another one, because
-it allows a simple integration with DrRacket itself a simple managing interface.
-Another advantage is the incorporation with git. A plugin can be a link for a git
-repository and because of that it becomes simple to keep the refactoring tool up to date.
+HaRe only uses the AST as a source of information of the program. Thus, by not having
+the def-use-relation or a PDG it has less information to perform the refactoring operations.
+However because HaRe is for the Haskell program language that is purely-functional
+programming language that extra information is not necessary to perform a good set of
+refactoring operations correctly.
 
-However, the main reason to create a plugin is to become independent from DrRacket
-evolution. With a plugin that is possible and it is manageable.
+Our developed tool uses the same kind of information, namely the AST and the def-use-relations.
+Some tools like the one build by Griswold has more information available when compared
+to the one developed by us. However we find out that for expression based languages
+such as racket and focused in the functional part it is sufficient an AST and
+def-use-relations.
+
+
+
+%HaRe Scheme Griswold Implementation
+%Smalltalk Refactoring Browser
+%Javascript Framework
+%Bicycle Repair Man
+%Rope
+%pycharm
+
 
 
 \section{Evaluation}
 Case Study: (find a good ones) FP Project, Architecture Project. For SLATE
 Correctness: Here?
 \section{Conclusion}
+def-use-relations + AST is sufficient.
 
+Importance of some refactoring operations
+
+Maintainability of the refactoring tool?
+
+Framework?
 \section{Future work}
 Detect when a developer is refactoring in order to help the developer finish the
 refactoring by doing it automatically.

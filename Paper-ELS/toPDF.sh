@@ -11,4 +11,4 @@ rm *.lot
 rm *.nlo
 rm *.out
 rm *.toc
-okular report.pdf
+xdg-open report.pdf

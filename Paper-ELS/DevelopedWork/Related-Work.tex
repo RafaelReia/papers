@@ -1,132 +1,34 @@
-/section{Related Work}
-%Griswold
-Griswold \cite{griswold1991program} proved that meaning-preserving restructuring
-can substantively reduce the maintenance cost of a system. %How??
-A prototype was created to prove the concept, by creating restructuring operations,
- for the Scheme programming language, implemented in Common Lisp.
-The prototype was developed for Scheme because of its imperative features, simple %ingles
-syntax and was available an implementation in Common Lisp of a Scheme PDG (program dependence graph).
-The prototype had simple restructuring operations to prove the concept, such as:
- moving an expression, renaming a variable, abstracting an expression, extracting a function, scope-wide function replacement, adding a reference indirection and adding looping to list references.
+\section{Related-Work -Change} %Rewrite/Create a Story
+A refactoring tool \cite{griswold1991program} for scheme, implemented in Lisp that
+uses two forms of information, AST and PDG (program dependence Graph).
+The AST represents the abstract syntactic structure of the program.
+While the PDG explicitly represents the key relationship of dependence between
+operations in the program. %control flow!
+The graph vertices's represent program operations and the edges represent the flow of
+data and control between operations.
+However the PDG only has information of dependencies of the program. And if there
+are two semantically unrelated statements they could be placed arbitrarily with
+respect to each other.
+%Whitout the constraints given by the AST two semantically unrelated statements
+%could be placed arbitrarily with respect to each other. %rewrite!
+Using the AST as the main representation of the program ensures that statements
+are not arbitrarily reorder.
+And the PDG is only used as a notation to prove that transformations preserve
+the meaning and as quick way to retrieve needed dependence information.
+Contours are used with the PDG providing scope information, non existent in the PDG,
+to help reason about transformations in the PDG.
+%Rewrite, talk about the scopes
+With these structures it is possible to have a single formalism to reason effectively
+about flow dependencies and scope structure.
 
-%%REWRITE THIS
-The Refactoring tool uses two forms of information, Countours and PDG (program dependence Graph),
-that are used to reason about the program.
-%In order to be able to correctly implement these operations it was used contours and a PDG.
-
-It uses Contours as the main program representation.
-Contours are an abstraction of the essential semantic properties that the AST
-represents in an efficient and complete form.
-And it uses the PDG to ensure [Insert Stuff Here]
-
-Whereas the PDG explicitly represents the key relationship of dependence between
-the operations in the program. %control flow!
-The PDG is used because simple graph algorithms can extract this information and
-it has been a popular program representation for aiding program parallelization,
-optimization and version merging.
-These features combined with the right semantic support make the PDGs a good
-foundation for preserving meaning during restructuring.
-With these structures it is possible to combine them and have a single formalism
-to reason effectively about flow dependencies and scope structure.
-
-
-
-%Hare confirm and check this.
-
-HaRe \cite{thompson2005refactoring} is a refactoring tool for Haskell that integrates with Emacs and Vim.
-This tool was made for being used instead of being a proof of concept prototype
-and it is implemented in Haskell.
-The system also allows the users to design their own refactoring operations
-using the HaRe API.
-
-The HaRe system uses an AST (abstract syntax tree) of the program to be
+HaRe \cite{thompson2005refactoring} is a refactoring tool for Haskell that
+integrates with Emacs and Vim.
+%(abstract syntax tree)
+The HaRe system uses an AST of the program to be
 refactored in order to reason about the transformations to do.
 The system has also a token stream in order to preserve the comments and the
 program layout by keeping information about the source code location and the comments of all tokens.
-%Smalltalk Refactoring Browser
-
-The Refactoring Browser \cite{roberts1997refactoring} is a refactoring tool for
-Smalltalk programs which goal was to make refactoring known and used by everyone.
-
-To do that they implemented the refactoring browser with the concern that the
- refactoring operations did by the programmer using the refactoring browser needed to be faster than by hand.
-
-It was considered that the user of this tool is intelligent therefore automated
-refactorings would not suit them.
-Automated refactorings do not suit the user because they could generate code that
- would not make sense in the domain.
-For example, the tool would generate new classes in order to eliminate duplicated
-code, by creating an abstract class, which might not make sense in the domain.
-Instead of doing that, the tool points out possible refactoring operations and
-lets the user decide whether or not to do those operations.
-
-In order to ensure behavior preservation the tool checks the preconditions
-of each refactoring operation before execution.
-However, there are some conditions that are more difficult to determine statically,
- such as dynamic typing and relationships cardinality between objects.
-Instead of checking the precondition statically the refactoring browser checks
-the preconditions dynamically.
-
-The preconditions checks are done using method wrappers to collect runtime information.
-The Refactoring Browser starts by doing the refactoring operation and then it
-adds a wrapper method to the original method.
-While the program is running, the wrapper detects the source code that called
-the original method and changes it for the new method.
-For example, in the rename operation, after applying the rename and while the
-program is running, whenever the old method is called, the browser suspends the
-execution and changes the code that called the old method, so that it now calls the new method.
-The problem of this approach is that the dynamically analysis is only as good
-as the test suit used by the programmer.
-
-%Bicycle Repair Man
-
-\subsection{Python}
-
-The following section presents two refactoring tools for Python.
-It starts with Bicycle-Repair-Man\footnote{https://pypi.python.org/pypi/bicyclerepair/0.7.1},
- a refactoring tool that attempts to create a refactoring browser.
-Afterwards it presents Rope\footnote{https://github.com/python-rope/rope}, a
-refactoring tool that works like a Python library.
-
-\subsubsection{Bicycle Repair Man}
-
- is a Refactoring Tool for Python written in Python.
- This refactoring tool can be added to IDEs and editors, such as Emacs, Vi, Eclipse,
-  and Sublime Text. However, this tool did not improve since 2004.
-
-Bicycle Repair Man is an attempt to create the refactoring browser functionality for
- Python and has the following refactoring operations: extract method, extract variable, inline variable, move to module and rename.
-
-The tool has an AST to represent the program and a database that has information
-about the several program entities and dependencies information.
-Bicycle Repair Man does its own parsing so it replaces the Python's parser with
-its own wrapper to be easier to develop the refactoring operations.
-
-%Rope
-
-\subsubsection{Rope}
-
- is a Python refactoring tool written in Python, which works like a Python library.
-In order to make it easier to create refactoring operations Rope assumes that a
-Python program only has assignments and functions calls. %(can this be a bad thing?)
-The tool can easily get information about the assignments.
-However for functions calls it is necessary to have other approaches in order to
-obtain the necessary information.
-
-Rope uses a Static Object Analysis which analyses the modules or scope to get
-information about functions.
-Rope only analyses the scopes when they change and it only analyses the modules
-when asked by the user, because this approach is time consuming.
-
-The other approach is the Dynamic Object Analysis that starts working when a
-module is running.
-Then, Rope collects information about parameters passed to and returned from
-functions in order to get all the information needed.
-The main problem is that this approach is slow while collecting information,
-but not while accessing the information.
-
-Rope stores the information collected by the analysis in a database.
-If Rope needs the information and there is nothing on the database the Static
-object inference starts trying to infer the object information.
-
-Rope uses an AST in order to store the syntax information about the programs.
+It retrieves scope information from the AST, that allows to have refactoring operations that
+require binding information of variables. %so a def-use-relation?
+The system also allows the users to design their own refactoring operations
+using the HaRe API.
