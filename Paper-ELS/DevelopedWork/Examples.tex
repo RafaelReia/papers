@@ -1,0 +1,136 @@
+%3/code.scm
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+  (if (>= n_jogadas 35)
+        #T
+        #F)
+\end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+(and (and (eq? #t (movimento-valido? jogador jogada))
+                 (eq? #t (pe�a-jogador? jogador jogada)))
+            (and (eq? #t (casa-destino-vazia? jogada))
+                 (eq? #t (casa-inicial-vazia? jogada))))
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+(define (jogo-perdido-pretas?)
+    (if (or (vector-search "p" a)
+                (vector-search "p" b)
+                (vector-search "p" c)
+                (vector-search "p" d)
+                (vector-search "p" e)
+                (vector-search "p" f)
+                (vector-search "p" g)
+                (vector-search "p" h))
+        #F
+        #T))
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+(define (jogo-perdido-brancas?)
+  (if (or (vector-search "b" a)
+              (vector-search "b" b)
+              (vector-search "b" c)
+              (vector-search "b" d)
+              (vector-search "b" e)
+              (vector-search "b" f)
+              (vector-search "b" g)
+              (vector-search "b" h))
+      #F
+      #T))
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+(if (and (and (eq? #t (movimento-valido? jogador jogada))
+                 (eq? #t (pe�a-jogador? jogador jogada)))
+            (and (eq? #t (casa-destino-vazia? jogada))
+                 (eq? #t (casa-inicial-vazia? jogada))))
+       (efectua-jogada tab jogada)
+       (error "Jogada invalidada: ")))
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+(define (jogo-empatado? tab)
+ (define (cont jogador)
+   (cond  ((eq? jogador 'pretas)
+           (set! n_jogadas (add1 n_jogadas)))
+          (else (set! n_jogadas (+ 0 n_jogadas)))))
+ (if (>= n_jogadas 35)
+   #T
+   #F))
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+   (define (movimento-dama-livre jogada)
+     (begin (if (and (and (eq? (first (rest (rest (rest jogada)))) (- (first (rest jogada)) 1))
+                          (eq? (first jogada) (- (first jogada) 1)))
+            (and (eq? (first (rest (rest (rest jogada)))) (- (first (rest jogada)) 2))
+                 (eq? (first jogada) (- (first jogada) 2)))
+            (and (eq? (first (rest (rest (rest jogada)))) (- (first (rest jogada)) 3))
+                 (eq? (first jogada) (- (first jogada) 3)))
+            (and (eq? (first (rest (rest (rest jogada)))) (- (first (rest jogada)) 4))
+                 (eq? (first jogada) (- (first jogada) 4)))
+            (and (eq? (first (rest (rest (rest jogada)))) (- (first (rest jogada)) 5))
+                 (eq? (first jogada) (- (first jogada) 5)))
+            (and (eq? (first (rest (rest (rest jogada)))) (- (first (rest jogada)) 6))
+                 (eq? (first jogada) (- (first jogada) 6)))
+            (and (eq? (first (rest (rest (rest jogada)))) (- (first (rest jogada)) 7))
+                 (eq? (first jogada) (- (first jogada) 7)))
+            (and (eq? (first (rest (rest (rest jogada)))) (+ (first (rest jogada)) 1))
+                 (eq? (first jogada) (+ (first jogada) 1)))
+            (and (eq? (first (rest (rest (rest jogada)))) (+ (first (rest jogada)) 2))
+                 (eq? (first jogada) (+ (first jogada) 2)))
+            (and (eq? (first (rest (rest (rest jogada)))) (+ (first (rest jogada)) 3))
+                 (eq? (first jogada) (+ (first jogada) 3)))
+            (and (eq? (first (rest (rest (rest jogada)))) (+ (first (rest jogada)) 4))
+                 (eq? (first jogada) (+ (first jogada) 4)))
+            (and (eq? (first (rest (rest (rest jogada)))) (+ (first (rest jogada)) 5))
+                 (eq? (first jogada) (+ (first jogada) 5)))
+            (and (eq? (first (rest (rest (rest jogada)))) (+ (first (rest jogada)) 6))
+                 (eq? (first jogada) (+ (first jogada) 6)))
+            (and (eq? (first (rest (rest (rest jogada)))) (+ (first (rest jogada)) 7))
+                 (eq? (first jogada) (+ (first jogada) 7))))
+            jogada
+             (display " Movimento-dama: o movimento da dama n�o � valido."))))
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+             (define (movimento-dama-branca jogada)
+  (begin (if (or (eq? (vector-ref (+ (first jogada) 1) (+ (first (rest jogada)) 1) "b")
+                  (vector-ref (+ (first jogada) 2) (+ (first (rest jogada)) 2) "b")
+                  (vector-ref (+ (first jogada) 3) (+ (first (rest jogada)) 3) "b")
+                  (vector-ref (+ (first jogada) 4) (+ (first (rest jogada)) 4) "b")
+                  (vector-ref (+ (first jogada) 5) (+ (first (rest jogada)) 5) "b")
+                  (vector-ref (+ (first jogada) 6) (+ (first (rest jogada)) 6) "b")
+                  (vector-ref (+ (first jogada) 6) (+ (first (rest jogada)) 6) "b")
+                  (vector-ref (+ (first jogada) 7) (+ (first (rest jogada)) 7) "b")))
+             (display "movimento da dama branca: Tem uma pessa da sua cor no caminho da jogada, esta n�o se pode efectuar")
+             jogada)))
+\end{lstlisting}
+
+;Procedimento q verifica se existe alguma pe�a no caminho da dama preta, que n�o deixe esta efectuar a jogada.
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+(define (movimento-dama-preta jogada)
+  (begin (if (or (eq? (vector-ref (+ (first jogada) 1) (+ (first (rest jogada)) 1) "p")
+                  (vector-ref (+ (first jogada) 2) (+ (first (rest jogada)) 2) "p")
+                  (vector-ref (+ (first jogada) 3) (+ (first (rest jogada)) 3) "p")
+                  (vector-ref (+ (first jogada) 4) (+ (first (rest jogada)) 4) "p")
+                  (vector-ref (+ (first jogada) 5) (+ (first (rest jogada)) 5) "p")
+                  (vector-ref (+ (first jogada) 6) (+ (first (rest jogada)) 6) "p")
+                  (vector-ref (+ (first jogada) 6) (+ (first (rest jogada)) 6) "p")
+                  (vector-ref (+ (first jogada) 7) (+ (first (rest jogada)) 7) "p")))
+             (display "movimento da dama branca: Tem uma pessa da sua cor no caminho da jogada, esta n�o se pode efectuar")
+             jogada)))
+\end{lstlisting}
+%2/code.scm
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+
+\end{lstlisting}
+(define (traduz-coluna coluna valor-linha)
+
+  (if (odd? valor-linha)
+      (begin
+        (let ((coluna-interna (sub1 (/ coluna 2))))
+          (if (integer? coluna-interna)
+              coluna-interna
+              #f)))
+      (begin
+        (let ((coluna-interna (/ (sub1 coluna) 2)))
+          (if (integer? coluna-interna)
+              coluna-interna
+              #f)))))
+\end{lstlisting}
