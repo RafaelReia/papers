@@ -32,3 +32,33 @@ It retrieves scope information from the AST, that allows to have refactoring ope
 require binding information of variables. %so a def-use-relation?
 The system also allows the users to design their own refactoring operations
 using the HaRe API.
+
+
+Rope is a Python refactoring tool written in Python, which works like a Python library.
+In order to make it easier to create refactoring operations, Rope assumes that a
+Python program only has assignments and functions calls. %(can this be a bad thing?)
+The tool can easily get information about the assignments.
+However, for function calls it is necessary to have other approaches in order to
+obtain the necessary information.
+
+Rope uses a Static Object Analysis, which analyses the modules or scope to get
+information about functions.
+Rope only analyses the scopes when they change and it only analyses the modules
+when asked by the user, because this approach is time consuming.
+
+%PyCore.run_module() runs a module and collects object information if perform_doa
+%project config is set. Since as the program runs rope gathers type information,
+%the program runs much slower. After the program is run, you can get better code
+%assists and some of the refactorings perform much better.
+
+The other approach is the Dynamic Object Analysis that requires running
+the program in order to work.
+The Dynamic Object Analysis gathers type information and parameters passed to and returned from
+functions in order to get all the information needed.
+It stores the information collected by the analysis in a database.
+If Rope needs the information and there is nothing on the database the Static
+object inference starts trying to infer the object information.
+This approach makes the program run much slower, thus it is only active when
+the user decides.
+
+Rope uses an AST in order to store the syntax information about the programs.

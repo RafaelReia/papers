@@ -60,7 +60,7 @@ using the HaRe API.
 
 
 
-%Smalltalk Refactoring Browser
+%Smalltalk Refactoring Browser %FIXME REWRITE AND CORRECT
 
 The Refactoring Browser \cite{roberts1997refactoring} is a refactoring tool for
 Smalltalk programs which goal was to make refactoring known and used by everyone.
@@ -105,7 +105,7 @@ It starts with Bicycle-Repair-Man\footnote{https://pypi.python.org/pypi/bicycler
 Afterwards it presents Rope\footnote{https://github.com/python-rope/rope}, a
 refactoring tool that works like a Python library.
 
-\subsubsection{Bicycle Repair Man}
+\subsubsection{Bicycle Repair Man} %FIXME REWRITE
 
  is a Refactoring Tool for Python written in Python.
  This refactoring tool can be added to IDEs and editors, such as Emacs, Vi, Eclipse,
@@ -121,29 +121,36 @@ its own wrapper to be easier to develop the refactoring operations.
 
 %Rope
 
-\subsubsection{Rope}
+Rope FIXME REWRITE
 
- is a Python refactoring tool written in Python, which works like a Python library.
-In order to make it easier to create refactoring operations Rope assumes that a
+Rope is a Python refactoring tool written in Python, which works like a Python library.
+In order to make it easier to create refactoring operations, Rope assumes that a
 Python program only has assignments and functions calls. %(can this be a bad thing?)
 The tool can easily get information about the assignments.
-However for functions calls it is necessary to have other approaches in order to
+However, for function calls it is necessary to have other approaches in order to
 obtain the necessary information.
 
-Rope uses a Static Object Analysis which analyses the modules or scope to get
+Rope uses a Static Object Analysis, which analyses the modules or scope to get
 information about functions.
 Rope only analyses the scopes when they change and it only analyses the modules
 when asked by the user, because this approach is time consuming.
 
-The other approach is the Dynamic Object Analysis that starts working when a
-module is running.
-Then, Rope collects information about parameters passed to and returned from
-functions in order to get all the information needed.
-The main problem is that this approach is slow while collecting information,
-but not while accessing the information.
+%PyCore.run_module() runs a module and collects object information if perform_doa
+%project config is set. Since as the program runs rope gathers type information,
+%the program runs much slower. After the program is run, you can get better code
+%assists and some of the refactorings perform much better.
 
-Rope stores the information collected by the analysis in a database.
+The other approach is the Dynamic Object Analysis that requires running
+the program in order to work.
+The Dynamic Object Analysis gathers type information and parameters passed to and returned from
+functions in order to get all the information needed.
+It stores the information collected by the analysis in a database.
 If Rope needs the information and there is nothing on the database the Static
 object inference starts trying to infer the object information.
+This approach makes the program run much slower, thus it is only active when
+the user decides.
 
 Rope uses an AST in order to store the syntax information about the programs.
+
+TODO pycharm
+TODO JAVASCRIPT

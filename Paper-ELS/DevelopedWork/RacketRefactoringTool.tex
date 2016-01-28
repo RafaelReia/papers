@@ -417,6 +417,14 @@ in Racket language and therefore not implemented.
 However if a language is statement based instead of expression based the situation changes
 and the importance of the User Feedback increases.
 
+\subsection{Refactoring Preview}
+An important goal of this refactoring tool is to let beginner users to know what
+refactoring operations exist and how to use them.
+Previewing the outcome of a refactoring operation come naturally in order to
+help the users understand the result of a refactoring before even applying the refactoring.
+This works by applying the refactoring operation in a copy version of the AST
+and displaying those changes to the user.
+%insert image?
 
 \subsection{Wide-Scope Replacement} %is this a feature or a refactoring?
 The Wide-Scope replacement brings the possibility to replace all the duplicated
@@ -591,3 +599,4 @@ Detect when a developer is refactoring in order to help the developer finish the
 refactoring by doing it automatically.
 Improving automatic detection
 Wide-scope-replacement smarter and better, computation of the arguments
+Improve the Preview of the refactoring operations.
