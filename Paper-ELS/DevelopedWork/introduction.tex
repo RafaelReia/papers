@@ -13,28 +13,62 @@
 %and we made an AWESOME refactoring tool for beginners.
 
 %the need to know how to program
-The need to program is growing specially in other areas non related with software engineering
-have the need to know how to program and create simple programs. It is growing
-so abruptly that it is appearing job proposals that require double degree in
+The need to program is growing specially in areas non related with software engineering %computer engineering
+have the need to know how to program and create simple programs.
+It is growing so abruptly that it is appearing job proposals requiring a double degree in
 architecture or design and in the computation field. %because that knowledge does not come with the first course.
 This creates the need to have a better support to beginner programmers, we define
-a beginner programmer as a user that had one semester of programming class.
+a beginner programmer as a user who had one semester of programming class. %TODO rewrite, weird step
 Giving the users the tools and the means to create better software.
-There are several languages that are known as suited for learning and the initial contact
-with programming, such as Racket, Python and JavaScript that are used in introductory
+There are several languages that are known to be suited for the initial contact
+with programming, such as Racket, Python and JavaScript which are used in introductory
 courses around the world.
 
-%%%%MERGING
-There are already refactoring tools available made for that type of language, %%%%!!!HELPPP those languages, these languages, ????
+There are already refactoring tools available made for those languages, %%%%FIXME!!!HELPPP those languages, these languages, ????
 however those refactoring tools were made for more advanced users and not for beginners.
-Meaning that those refactoring tools do not have refactoring operations that would
-fit a beginner user, namely for improving syntax made by beginners, and
-simple enough to be used by a beginner user.
+Meaning that in general those refactoring tools do not have refactoring operations that %%TODO REWRITE this
+would fit a beginner user.
+
+Such refactoring tool need to improve code made by beginners, with refactorings for
+the typical errors made, and be simple enough to be used by a beginner user.
 %to detect code that might/should
-Also. they do not provide any support in the detection of code that might/should
-be refactored that would help the user know the refactoring operations available.
-On top of that, the IDE that most of those tools are embedded are too complex for beginners
+Also, those tools do not provide any support in the detection of code which might/should
+be refactored.
+Automatic detection would help the users to know the refactoring operations available.
+On top of that, the IDE in which most of those tools are embedded are too complex for beginners
 to use, such as Eclipse, VisualStudio, Vim, Emacs. %carefull here!
+
+Provide a refactoring tool aimed (made) for beginners, students that have one semester
+of programing classes, that help correct typical errors made and make suggestions
+to help those users with possible refactoring operations.
+A refactoring tool brings a new set of options that the student could use to
+get used to the refactoring tool and provide a way to improve their code without
+inserting errors in the code.
+%FIXME
+Although there is DrRacket a pedagogical IDE, formerly known as DrScheme, that was
+build for the Racket Language, it does not have Refactoring Operations.
+
+Being an extension to Racket language that is used for teaching introductory courses,
+and kown as a good language to learn how to program.
+Besides that, it has a pedagogical IDE tailor made for the Racket programing language,
+the DrRacket, former DrScheme. %TODO improve
+
+%give moto
+%create story, but how?
+%add examples of typical errors
+
+
+Whereas the Eclipse and Visual Sudio are the difficult IDEs for beginners with such level of
+complexity that is really hard for a beginner student to understand.
+To have an idea, Eclipse has around 300 menu bar options and Visual studio 280 with is a massive amount
+of options for the user to select. On the other end, DrRacket has around 100. (every option was accounted in the sub-menus
+even options that are not available). Regardless the number of options available,
+the options in the menu bar in Eclipse or in Visual studio were in average more complex than the
+options available in DrRacket.
+%DrRacket Pedagogical:
+%Catches typical syntactic mistakes of beginners and pinpoints the exact source location
+%of run-time exceptions. %%more stuff??
+
 
 %These languages already have refactoring tools available, however those refactoring tools
 %are meant for advanced users only providing refactoring operations for more advanced
@@ -50,35 +84,3 @@ to use, such as Eclipse, VisualStudio, Vim, Emacs. %carefull here!
 %However there are none made for beginners, meaning that do not have refactoring operations
 %that would fit a beginner user, namely for improving syntax made by beginners, and
 %simple enough to be used by a beginner user.
-
-%%%%MERGING
-Provide a refactoring tool aimed (made) for beginners, students that have one semester
-of programing classes, that help correct typical errors made and suggest them
-with possible refactoring operations.
-The refactoring tool brings a new set of options that the student could use to
-get used to the refactoring tool and provide a way to improve their code without
-inserting errors in the code.
-%fix
-Although there is DrRacket a pedagogical IDE, formerly known as DrScheme, that was
-build for the Racket Language, it does not have Refactoring Operations.
-
-Extension to Racket language that is good for learning and used in several
-programming introductory courses around the world.
-It has a pedagogical IDE tailor made for the Racket programing language, namely
-the DrRacket, former DrScheme.
-
-%give moto
-%create story, but how?
-%add examples of typical errors
-
-
-Whereas the Eclipse and Visual Sudio are the evil IDEs with such level of
-complexity that is really hard for beginner students to understand.
-Eclipse has around 300 menu options and Visual studio 280 with is a massive amount
-of options for the user to select, DrRacket for example has around 100. (every option was accounted in the sub-menus
-even options that are not available). regardless the number of options available,
-the options in Eclipse or in Visual studio were in average more complex than the
-options available in DrRacket.
-%DrRacket Pedagogical:
-%Catches typical syntactic mistakes of beginners and pinpoints the exact source location
-%of run-time exceptions. %%more stuff??
