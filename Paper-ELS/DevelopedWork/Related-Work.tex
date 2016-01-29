@@ -37,19 +37,15 @@ using the HaRe API.
 Rope is a Python refactoring tool written in Python, which works like a Python library.
 In order to make it easier to create refactoring operations, Rope assumes that a
 Python program only has assignments and functions calls. %(can this be a bad thing?)
-The tool can easily get information about the assignments.
-However, for function calls it is necessary to have other approaches in order to
-obtain the necessary information.
-
+Thus, by limitating the complexity of the languages reduces the complexity of the
+refactoring tool.
+%The tool can easily get information about the assignments.
+%However, for function calls it is necessary to have other approaches in order to
+%obtain the necessary information.
 Rope uses a Static Object Analysis, which analyses the modules or scope to get
 information about functions.
 Rope only analyses the scopes when they change and it only analyses the modules
 when asked by the user, because this approach is time consuming.
-
-%PyCore.run_module() runs a module and collects object information if perform_doa
-%project config is set. Since as the program runs rope gathers type information,
-%the program runs much slower. After the program is run, you can get better code
-%assists and some of the refactorings perform much better.
 
 The other approach is the Dynamic Object Analysis that requires running
 the program in order to work.
@@ -59,6 +55,43 @@ It stores the information collected by the analysis in a database.
 If Rope needs the information and there is nothing on the database the Static
 object inference starts trying to infer the object information.
 This approach makes the program run much slower, thus it is only active when
-the user decides.
-
+the user decides.%TODO improve
 Rope uses an AST in order to store the syntax information about the programs.
+
+
+Bicycle Repair Man
+Bicycle Repair Man is a Refactoring Tool for Python written in Python.
+ This refactoring tool can be added to IDEs and editors, such as Emacs, Vi, Eclipse,
+  and Sublime Text.
+Bicycle Repair Man is an attempt to create the refactoring browser functionality for
+ Python and has the following refactoring operations:
+ extract method, extract variable, inline variable, move to module, and rename.
+
+The tool has an AST to represent the program and a database that has information
+about several program entities and dependency information.
+
+JAVASCRIPT
+There are few refactoring tools for JavaScript but there is a framework
+\cite{feldthaus2011tool} for refactoring JavaScript programs. %FIXME I do not like it
+In order to guarantee the correctness of the refactoring operation, the framework
+uses preconditions, expressed as query analyses provided by pointer analysis. %TODO explain better!
+Queries to the pointer analysis produces over-approximations of sets in a safe way to
+have correct refactoring operations.
+For example, while doing a rename operation, it over-approximates the set of expressions
+that must be modified when a property is renamed in a safe manner.
+%FIXME explained enough?
+%a set L of object labels over-approximates a set O of runtime objects if every
+%object o ∈ O is represented by some l ∈ L.
+To prove the concept, three refactoring operations were implemented, namely rename,
+encapsulate property, and extract module.
+By using over-approximations it is possible to be sure when a refactoring
+operation is valid.
+However, this approach has the disadvantage of not applying every possible refactoring operation,
+because the refactoring operations for which the framework cannot guarantee behavior
+preservation are prevented.%FIXME rewrite if possible
+It was expectable that this framework would prevent a big percentage of refactoring
+operations, but after testing with 50 JavaScript programs,
+the overall unjustified rejections were 6.2\% of all the rejections.
+The rejections regarding imprecise preconditions represent 8.2\%.
+Finally, the unjustified rejections due to imprecise pointer analysis were of
+5.9\% for the rename and 7.0\% for the encapsulate property.

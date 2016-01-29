@@ -105,23 +105,22 @@ It starts with Bicycle-Repair-Man\footnote{https://pypi.python.org/pypi/bicycler
 Afterwards it presents Rope\footnote{https://github.com/python-rope/rope}, a
 refactoring tool that works like a Python library.
 
-\subsubsection{Bicycle Repair Man} %FIXME REWRITE
 
- is a Refactoring Tool for Python written in Python.
+Bicycle Repair Man
+Bicycle Repair Man is a Refactoring Tool for Python written in Python.
  This refactoring tool can be added to IDEs and editors, such as Emacs, Vi, Eclipse,
-  and Sublime Text. However, this tool did not improve since 2004.
-
+  and Sublime Text.
 Bicycle Repair Man is an attempt to create the refactoring browser functionality for
- Python and has the following refactoring operations: extract method, extract variable, inline variable, move to module and rename.
+ Python and has the following refactoring operations:
+ extract method, extract variable, inline variable, move to module, and rename.
 
 The tool has an AST to represent the program and a database that has information
-about the several program entities and dependencies information.
-Bicycle Repair Man does its own parsing so it replaces the Python's parser with
-its own wrapper to be easier to develop the refactoring operations.
+about several program entities and dependency information.
+%Bicycle Repair Man does its own parsing so it replaces the Python's parser with
+%its own wrapper to be easier to develop the refactoring operations.
 
 %Rope
 
-Rope FIXME REWRITE
 
 Rope is a Python refactoring tool written in Python, which works like a Python library.
 In order to make it easier to create refactoring operations, Rope assumes that a
@@ -152,5 +151,36 @@ the user decides.
 
 Rope uses an AST in order to store the syntax information about the programs.
 
+While naively over or under approximating the set of expression that must be modified when a property f
+is renamed would be unsound, we describe an algorithm that over approximates this set in a safe manner
+(how?)
+
+JAVASCRIPT
+There are few refactoring tools for JavaScript but there is a framework
+\cite{feldthaus2011tool} for refactoring JavaScript programs. %FIXME I do not like it
+In order to guarantee the correctness of the refactoring operation, the framework
+uses preconditions, expressed as query analyses provided by pointer analysis. %TODO explain better!
+Queries to the pointer analysis produces over-approximations of sets in a safe way to
+have correct refactoring operations.
+For example, while doing a rename operation, it over-approximates the set of expressions
+that must be modified when a property is renamed in a safe manner.
+%FIXME explained enough?
+%a set L of object labels over-approximates a set O of runtime objects if every
+%object o ∈ O is represented by some l ∈ L.
+To prove the concept, three refactoring operations were implemented, namely rename,
+encapsulate property, and extract module.
+By using over-approximations it is possible to be sure when a refactoring
+operation is valid.
+However, it has the disadvantage of not applying every possible refactoring operation,
+because the refactoring operations for which the framework cannot guarantee behavior
+preservation are prevented.
+It was expectable that this framework would prevent a big percentage of refactoring
+operations, but after testing with 50 JavaScript programs,
+the overall unjustified rejections were 6.2\% of all the rejections.
+The rejections regarding imprecise preconditions represent 8.2\%.
+Finally, the unjustified rejections due to imprecise pointer analysis were of
+5.9\% for the rename and 7.0\% for the encapsulate property.
+
 TODO pycharm
-TODO JAVASCRIPT
+TODO erlang
+TODO new Haskell
