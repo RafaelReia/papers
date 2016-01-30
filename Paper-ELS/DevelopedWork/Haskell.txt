@@ -1,0 +1,12 @@
+IT HAS AN AST \o/\o/\o/
+
+Token stream with comments and white spaces
+perform the transformations on the AST but after modifying the AST the refactorer
+will modify the token stream to reflect the changes.
+
+After that it extracts the program from the token stream
+
+The AST has source position information, the scopes can be distinguished and the
+information where the binding occurs.
+
+%meh nothing new

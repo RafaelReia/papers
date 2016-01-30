@@ -1,0 +1,24 @@
+Two different teams in different universities created a refactoring tool for Erlang
+ using different approaches
+and then they compared results.
+Kent approach
+AAST internal representation and program analysis and transformation manipulate the
+AAST directly
+eotvos approach store both syntactic and semantic information of the Erlang program
+
+The representation of AST nodes can be used by the refactorer to attach static
+information or any necessary information to the AST notes
+It also attach the comments to the AST representing a program.
+And they use a pretty-printer to print the Erlang AST attached with the comments
+(do not have the comment preservation problem.)
+
+Annotated the AST with binding information in terms of binding information and function names
+annotated in terms of defining and use locations.
+AST is also annotated with its start and end location in the source code, category information,
+because Erlang syntax distinguish different kinds of syntax categories such as functions, attributes, if-expressions, etc
+and type information.
+
+The Other approach in a relational database MySQL
+it stores the AST tables and tables that store semantic information, such as scope and visibility
+of functions and variables.
+it also has tables that have def use relations (occurence and first-occurence
