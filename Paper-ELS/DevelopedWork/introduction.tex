@@ -1,6 +1,4 @@
 \section{Introduction}
-
-
 %language support for beginners
 %refactoring is an advantage
 %there is a lot of tools that provide refactoring operations to
@@ -15,47 +13,65 @@
 %the need to know how to program
 %the importance to know how to program+
 
-
-
 %TODO!!
-%TODO explain/define refactoring!
-The need to  need to know how to program and create simple programs is growing
-specially in areas non related with any computation field %computer engineering
-It is growing so abruptly that it is starting to appear job proposals requiring
-a double degree in architecture or design and in the computation field
-to work in a architecture studio. %because that knowledge does not come with the first course.
-Thus creating the need to have a better support to beginner programmers.
-We define a beginner programmer as a user who had one semester of programming class. %TODO rewrite, weird step
-Giving the users the tools and the means to create better software.
-There are several languages that are known to be suited for the initial contact
+%TODO explain/define refactoring! Add Examples!
+%%%%
+%The need to need to know how to program and create simple programs is growing
+%specially in areas non related with any computation field %computer engineering
+%It is growing so abruptly that it is starting to appear job proposals requiring
+%a double degree in architecture or design and in the computation field
+%to work in a architecture studio. %because that knowledge does not come with the first course.
+%Thus creating the need to have a better support to beginner programmers. %%really?
+
+%value priority attention consideration influence interest
+%that already are job offers that require a degree in any computation field.
+
+Programing relevance as a skill is growing in areas non related with any computation field.  %specialy
+This urge to know how to program as a complementary skill %craving
+to the main degree (formation) demands better support for the novice programmers.
+We define a novice/beginner programmer as a user who had one semester of programming class. %FIXME rewrite, weird step
+%Giving the users the tools and the means to create better software.
+There are several languages that are known to be suited for the initial contact %better?
 with programming, such as Racket, Python and JavaScript which are used in introductory
 courses around the world.
+In addition, there are integrated development environments (IDEs) which the main
+concern are users that little or no previous contact with programming.
+This pedagogical %educational
+aware IDE try to give the tools and the means to create better programs while simplifying
+the complexity of a typical IDE. %examples? DrRacket and PyCharm edu
 
-There are already refactoring tools available made for those languages, %%%%FIXME those languages, these languages ??
-however those refactoring tools were made for more advanced users and not for beginners.
-Meaning that in general those refactoring tools do not have refactoring operations that %%TODO REWRITE this
-would fit a beginner user. %%TODO DO NOT FORGET THIS %%%FIXME %FIXME
+One important tool/part of an IDE is the refactoring tool. This tool provides
+support to refactoring operations which are the process of improving the design
+of an existing code base \cite{fowler1999refactoring}
+without changing the behavior of the program.
+Those languages already have refactoring tools available, %%%%FIXME those languages, these languages ??
+however they were made for more advanced users and not for beginners.
+The absent of specific refactoring operations for beginners suggests, that in general %%FIXME maybe too big
+those refactoring tools do not have refactoring operations that
+would fit a beginner user.
 
-Such refactoring tool need to improve code made by beginners, with refactorings for %must help to improve / should help to imporove / ?
-the typical errors made, and be simple enough to be used by a beginner user.
+Such refactoring tool need to improve code made by beginners, with refactorings for %must help to improve / should help to improve / ?
+the typical errors made, and simple enough to be used by a beginner user.
 %to detect code that might/should
-In addition, those tools do not provide any support in the detection of code which might/should
+In addition, those tools do not provide any support for the detection of code which might/should
 be refactored.
 Automatic detection would help the users to know the refactoring operations available.
-On top of that, the IDE in which most of those tools are embedded are too complex for beginners
-to use, such as Eclipse, VisualStudio, Vim, Emacs. %carefull here! need help here.
+On top of that, the IDEs in which most of those tools are embedded are too complex for beginners
+to use, such as Eclipse\cite{carlson2005eclipse}, VisualStudio, Vim, Emacs. %carefull here! need help here.
 
-Provide a refactoring tool aimed (made) for beginners, students that have one semester
-of programing classes, that helps to correct typical errors made and in addition can
+Provide a refactoring tool aimed (made) for beginners, students that have one semester %targeted, concerned
+of programing classes, that helps to improve typical design errors made and in addition can
 make suggestions showing the possible refactoring operations found.
 %to help those users with possible refactoring operations.
 Such refactoring tool brings a new set of options to the beginners to use
-in order to get used to a refactoring and provide a way to improve their code
-without introducing errors.
+in order to safely improve their code and while they get used to a refactoring tool.
 %FIXME
-Although there is DrRacket a pedagogical IDE, formerly known as DrScheme, that was
-build for the Racket Language, it does not have Refactoring Operations.
 
+%IDEs again?
+%% %FIXME Introduce Pycharm and DrRacket?
+Although there is DrRacket a pedagogical IDE \cite{drscheme} \cite{drscheme_pegadogy},
+formerly known as DrScheme, that was
+build for the Racket Language, it does not have Refactoring Operations execpt the rename.
 Such refactoring tool would be an extension to the Racket language that is already
 used in several introductory courses,
 %Being an extension to Racket language that is used for teaching introductory courses,
@@ -66,15 +82,16 @@ the DrRacket, former DrScheme. %TODO improve
 %give moto
 %create story, but how?
 %add examples of typical errors
+%Eclipse \cite{carlson2005eclipse}, IntelliJ \cite{bock2011intellij} or NetBeans \cite{boudreau2002netbeans}
 
-
-Whereas the Eclipse and Visual Studio are the difficult IDEs for beginners with such level of
+Whereas the Eclipse and Visual Studio are difficult IDEs for beginners with such level of
 complexity that is really hard for a beginner student to understand.
-To have an idea, Eclipse has around 300 menu bar options and Visual studio 280 with is a massive amount
-of options for the user to select. On the other end, DrRacket has around 100. (every option was accounted in the sub-menus
-even options that are not available). Regardless the number of options available,
-the options in the menu bar in Eclipse or in Visual studio were in average more complex than the
-options available in DrRacket.
+For instance Eclipse has around 300 menu bar options and Visual studio 280 with is a massive amount
+of options for the user to select.
+On the other end, DrRacket has around 100. (every option was accounted in the sub-menus %hand or end?
+even options that are not available).
+Regardless the number of options available, the options available in Eclipse or
+in Visual studio were in average more complex than the options available in DrRacket.
 %DrRacket Pedagogical:
 %Catches typical syntactic mistakes of beginners and pinpoints the exact source location
 %of run-time exceptions. %%more stuff??
