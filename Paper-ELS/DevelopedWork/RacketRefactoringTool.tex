@@ -2,17 +2,19 @@
 %This section explains the decisions made in order to make this refactoring tool.
 
 \section{Architecture}
-%Refactoring Tool work flow: (add a brief explanation of what does )
-The Refactoring tool uses mainly two sources of information, the def-use-relations and
-the AST of the program.
+%Refactoring Tool work flow: (add a brief explanation of what does)
 
+%FIXME The Chosen IDE here??
+
+In order to create correct refactorings the refactoring tool uses  two sources of
+information, the def-use-relations and the AST of the program.
 The def-use-relations are visually represented in a form of Arrows in DrRacket,
 that information is especially relevant for refactoring operations such as Extrac-Function,
 Add-Prefix, Organize-Imports, etc.
 
-The AST is represented by the s-expressions that compose the racket program. In
-Racket everything is a syntax-expression and therefore accessing the list (tree)
-of the syntax-expressions has all the information that a normal AST provides.
+The AST is represented by the syntax expressions (s-exp) which composes the racket program.
+In Racket everything is a syntax-expression and therefore accessing the list (tree)
+of the syntax-expressions has all the information that a normal AST provides. %FIXME incorrect
 
 
 [INSERT IMAGE HERE]
@@ -24,35 +26,15 @@ of the syntax-expressions has all the information that a normal AST provides.
 %passes the exact part of the AST that was selected. And tries to match rules,
 %using syntax-parse against that syntax.
 
-\subsection{Def-Use-Relations}
-
-DrRacket already uses the def-use-relations in the system that are visually
-represented by arrows in the GUI.
-The def-use-relations is computed by the online-compiler that runs in the background
-However it is only processed when a program is syntactically correct. (e.g. if
-a program has syntax errors there are no arrows produced in DrRacket)
-
-%The information is computed in the online-comp.rkt that is where expands
-%and computes the information needed to know the def-use-relations and whether
-%the program is syntactically correct.
-%There is an online expansion monitor that calls the online-comp, the online-comp
-%then expands the program (to the expanded program) and does a trace to get the
-%information needed for the arrows (def-use-relations).
-%Afterwards it sends back that information to the caller of the online-comp to do
-%the replay of the trace did by the compile comp and to process the information
-%about the arrows.
-
-\subsubsection{Def-Use-Relations utility}
-Def-Use-Relations are important in order to produce correct refactoring operations
-because they can be used to check whether or not there will be a duplicated name
-or even to compute the arguments of a function to be extracted.
-
-
 \subsection{Syntax Expressions}
-The Syntax expressions (s-exp) list are already being produced and used by the
-Racket language and in DrRacket. They represent the program and are computed in
-order to provide error information to the user.
-DrRacket already provides functions in order to create s-exp lists and uses some of those
+%intro and explain the importance of the S-Exp
+The s-exp list represent the AST, which provides information about
+the structure of the program.
+The s-exp list are already being produced and used by the Racket language and
+in DrRacket.
+They represent the program and are computed in order to provide error information
+to the user.
+DrRacket already provides functions which computes the program's s-exp list and uses some of those
 functions in the online check syntax and in the check syntax button callback.
 
 [insert images here explaining that]
@@ -61,11 +43,12 @@ functions in the online check syntax and in the check syntax button callback.
 \subsubsection{Syntax Expression tree forms}
 DrRacket provides functions to compute the s-exp list in two different formats.
 One format is the expanded program, this format is used by the Check Syntax and
-the online check syntax, and computes the program expanded.
-The other format is the non-expanded program and computes the program unexpanded.
+the online check syntax, and computes the program with all the macros expanded. %maybe check that
+The other format is the non-expanded program and computes the program with the macros
+unexpanded.
 
-The expanded program has the macros expanded and the identifier information computed,
-however it is harder to extract the relevant information when compared with the
+The expanded program has the macros expanded and the identifier information correctly
+computed, however it is harder to extract the relevant information when compared with the
 non expanded program.
 %Racket has two forms of syntax tree. An expanded form, with the macros expanded
 %and a non expanded form that is after a read-syntax without the macros expanded.
@@ -81,7 +64,7 @@ and in the non expanded program.
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Syntax from Example"]
 #<syntax:3:0 (if (< 1 2) #t #f)>
-\end{lstlisting}
+\end{lstlisting} %%TODO change example to a and, or, when or unless
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Expanded Syntax from example"]
 #<syntax:1:0 (module anonymous-module racket
@@ -112,27 +95,26 @@ However, the expanded program has important information regarding the binding
 information that is not available in the non-expanded form and is rather useful
 to detect if two identifiers refer to the same binding.
 %TODO check; It also contains information where a program returns or not. TODO CHECK!
-In addition to that, the expanded program has a format that is likely to change
-in the future because Racket is an evolving language and the expanded form is a
-low level and internal form of representation of the program in Racket.
+In addition, the expanded program has a format that is likely to change
+in the future.
+Racket is an evolving language and the expanded form is a low level and internal
+form of representation of the program. %thus all improvements or changes in meaning will directly impact this representation
 
 All those combined make it desirable to use the non expanded form for the refactoring
-operations as much as possible and use the expanded form only for the necessary
+operations whenever possible and use the expanded form only for the necessary
 operations.
 
 
 %Sub Cap Code with Macros The Problem
-Macros usage could make the refactoring operations incorrect by modifying the
-program behavior. This is not considered part of the scope of this refactoring
-tool capabilities.
-This is not considered part of the scope problem because this refactoring tool
-is aimed at unexperienced programmers (that had one semester of programming classes)
- and those type of programmers do not use macros.
+Macros usage could make the refactoring operations incorrect by modifying the   %FIXME rewrite
+program behavior.
+However, since the refactoring tool is targeted at unexperienced programmers macros
+would be used often it is not considered part of the scope of this refactoring tool capabilities.
 
- If we intended to create a tool that supports macros the non expanded program
- is insufficient and the expanded program must be used. However there are no
- guarantees that would be enough to ensure the correctness of such refactoring
- operations due to the reflection capabilities of Racket.
+Nevertheless, if we intended to create a tool that supports macros the non expanded program
+ is insufficient and the expanded program must be used.
+However there are no guarantees that would be enough to ensure the correctness of
+such refactoring operations due to the reflection capabilities of Racket.
 
 %Dependency of Racket evolution
 %Using the expanded program might simplify the refactoring for other languages,
@@ -144,15 +126,36 @@ is aimed at unexperienced programmers (that had one semester of programming clas
 %making it possible to have macros and the relation with other languages for the
 %more difficult problems and using the non expanded program for the simple cases.
 
-\subsection{Code-walker} % [TODO explain better]
+
+\subsection{Def-Use-Relations}
+Def-Use-Relations hold an important information in order to produce correct refactoring operations %the def-use-relations? holds?
+because they can be used to check whether or not there will be a duplicated name
+or even to compute the arguments of a function to be extracted.
+%The information is computed in the online-comp.rkt that is where expands
+%and computes the information needed to know the def-use-relations and whether
+%the program is syntactically correct.
+%There is an online expansion monitor that calls the online-comp, the online-comp
+%then expands the program (to the expanded program) and does a trace to get the
+%information needed for the arrows (def-use-relations).
+%Afterwards it sends back that information to the caller of the online-comp to do
+%the replay of the trace did by the compile comp and to process the information
+%about the arrows.
+%\subsubsection{Def-Use-Relations utility}
+DrRacket already uses the def-use-relations in the system and they are visually  %TODO they are or it is?
+represented by arrows in the GUI.
+The def-use-relations is computed by the online-compiler that runs in the background
+However it is only processed when a program is syntactically correct. (e.g. if
+a program has syntax errors there are no arrows produced in DrRacket)
+
+\subsection{Code-walker}
 The code-walker is used to parse the syntax tree represented by a syntax elements
 that is a list of s-exp in racket. %TODO check this.
-A syntax element can contain either a symbol, a syntax-pair, a datum (number, boolean or string)
-or an empty list. %might contain other stuff but never got it, not relevant?
+A syntax element can contain either a symbol, a syntax-pair, a datum (number, boolean or string),
+or an empty list. %might be other stuff but never got it, not relevant?
 While a syntax-pair is a pair containing a syntax object as it first element and
 a syntax pair, a syntax element or an empty list as the second argument.
 Each syntax-object has information about the line where they are defined and this
-information is used by the code-walker to find the correct elements.
+information is to search for the correct elements.
 
 %A syntax object combines a simpler Racket value, such as a symbol or pair, with a scope set at each phase level,
 %source-location information, syntax properties, and tamper status. In particular, an identifier is represented as
@@ -160,11 +163,11 @@ information is used by the code-walker to find the correct elements.
 %object is its scope set combined with the portion of the global table of bindings that is relevant to the syntax object’s set of scopes.
 
 Most of the time using the code-walker we are searching for a specific syntax element
-and we use the location information contained in the syntax-object in order to
-skip the syntax blocks that are before the syntax element wanted in the first place.
+and location information contained in the syntax-object  is used to skip the syntax
+ blocks that are before the syntax element wanted in the first place.
 
 The Code-walker is a core part of the refactoring tool ensuring that the selected
-syntax is correctly fed to the refactoring operations.
+syntax is correctly fed to the refactoring operations. %actually?
 
 %the way that the code-walker guarantees that goes to every important part of the
 %tree is by having a "pointer" to the current selected syntax element, and have
@@ -178,24 +181,29 @@ syntax is correctly fed to the refactoring operations.
 
 %%%%%% Writing Part of the Refactoring/refactoring rule
 \section{Writting}
+%FIXME is this important? does this require an introduction
 \subsection{Syntax-Parse}
-%Syntax-Parse Utility
+
 The Syntax-Parse function provided by Racket is rather useful for the refactoring
 operations regarding mainly syntax information.
-It has a wide range of options to help matching the correct syntax it also have
-backtracking. With Backtracking it is possible to have several rules to be match
+It has a wide range of options to help matching the correct syntax it also have  %fine tunning
+backtracking.
+With Backtracking it is possible to have several rules to be matched
 in the same syntax parser which helps to create more sophisticated rules.
 
 \subsubsection{Literal vs Datum-literal}
-One of the options in the syntax-parse is to specify if an element is a literal.
+One of the options in the syntax-parse is the possibility to specify if an element
+is a literal.
 The \#:literals option specifies identifiers that should be treated as literals
-rather than pattern variables. This option helps to ensure that a refactoring
-operation made is targeted only to the correct elements of the language. There is
-also another option that is very similar to the literals know as datum-literals.
+rather than pattern variables.
+This option helps to ensure that a refactoring operation made is targeted only
+to the correct elements of the language.
+Datum literals, represented by \#:datum-literals are a complementary keyword to the
+literals.
 Datum-literals match symbols instead of an identifier and can be rather useful as
 the literals option because it provides a wider range of options.
 
-However because of an unknown bug the literals option only works with the expanded-program
+However because of an unknown bug the literals option only works with the expanded-program %should I use this?
 and we are limited to use the datum-literals option. This could possible create
 incorrect refactoring transformations when the user renames the literals of the
 language. e.g(renaming the if, cond, let, defines, syntax, when, unless, etc)
@@ -212,6 +220,7 @@ should be surrounded by [] parenthesis. This is not considered a problem because
 Racket supports both representations.
 One possible solution is to use a different pretty-printer in
 order to keep the language convention.
+
 %Some syntax elements (s-expressions) lose some information about parenthesis.
 %For example it is a convention that cond clauses should be surrounded by [] parenthesis
 %but the syntax element does not store that kind of information.
@@ -219,8 +228,6 @@ order to keep the language convention.
 %has one incorporated.
 %The one already incorporated does not use the [ ] parenthesis, however racket
 %supports both representations.
-
-
 
 \section{Refactoring operations}
 
@@ -236,7 +243,7 @@ The refactoring transforms the code into this:
   (< 1 (foo 2) 3)
 \end{lstlisting}
 
-This refactoring has semantic problems if the function "foo" has collateral effects.
+This refactoring has semantic problems if the function "foo" has collateral effects. %FIXME improve, do not like this
 And instead of applying those collateral effects twice it will only apply once therefore
 changing the semantic of the program.
 
@@ -244,7 +251,7 @@ We still decided to keep this refactoring operation because for the vast majorit
 of the cases this does not change the semantic of the program and the solution
 would limit too much this kind of refactoring. Because of the reflection capabilities
 of racket we could only safely apply this refactoring when the arguments of the
-"<" were datums (number, boolean or string).
+" < " were datums (number, boolean or string).
 
 \subsection{Extract Functions}
 Extract function is an important refactoring operation that every refactoring tool
