@@ -54,7 +54,7 @@ non expanded program.
 %and a non expanded form that is after a read-syntax without the macros expanded.
 
 For example, the following program is represented in the expanded program,
-and in the non expanded program.
+and in the non expanded program. %FIXME TODO FIXME change example to a and, or, when or unless
 \begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
 #lang racket
 (if (= (+ 1 2) 1)
@@ -64,7 +64,7 @@ and in the non expanded program.
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Syntax from Example"]
 #<syntax:3:0 (if (< 1 2) #t #f)>
-\end{lstlisting} %%TODO change example to a and, or, when or unless
+\end{lstlisting} %%TODO FIXME TODO change example to a and, or, when or unless
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Expanded Syntax from example"]
 #<syntax:1:0 (module anonymous-module racket
@@ -243,15 +243,22 @@ The refactoring transforms the code into this:
   (< 1 (foo 2) 3)
 \end{lstlisting}
 
-This refactoring has semantic problems if the function "foo" has collateral effects. %FIXME improve, do not like this
-And instead of applying those collateral effects twice it will only apply once therefore
-changing the semantic of the program.
+This refactoring operation has a semantic problem if the function "foo" has
+side effects, for example as said in the .
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Foo"]
+(define (foo arg)
+  (displayln "foo"))
+\end{lstlisting}
 
-We still decided to keep this refactoring operation because for the vast majority
-of the cases this does not change the semantic of the program and the solution
-would limit too much this kind of refactoring. Because of the reflection capabilities
-of racket we could only safely apply this refactoring when the arguments of the
-" < " were datums (number, boolean or string).
+Instead of applying the side effect that is displaying the argument twice, in this
+case displaying the string "foo", it will only display the it once.
+Therefor changing the meaning of the program.
+
+We still decided to keep this refactoring operation because in the vast majority
+of the cases this refactoring operation does not change the semantic of the program.
+Furthermore, the possible solution would limit excessively this refactoring operation.  %enormously
+Considering Racket's reflection capabilities we would only apply this refactoring operation
+safely when the arguments of the function, in this case " < " were datums (number, boolean or string). %FIXME
 
 \subsection{Extract Functions}
 Extract function is an important refactoring operation that every refactoring tool
@@ -588,7 +595,9 @@ def-use-relations.
 %Rope
 %pycharm
 
-
+%TODO add in what my tool is different from the others? in what it is equal?
+%TODO add I already used the refactoring tool to do a refactoring operation in
+%the source code of the refactoring tool. However this is only applyable in the parts that are supported by this refactoring tool.
 
 \section{Evaluation}
 Case Study: (find a good ones) FP Project, Architecture Project. For SLATE
