@@ -99,7 +99,7 @@ that there is a possible refactoring.
 This feature could be improved by having a set of colors for the different types
 of refactoring operations. And the color intensity could be proportional to the level
 of suggestion. (e.g the recommended level to use extract function refactoring
-increases with the number of duplicated code found)
+increases with the number of duplicated code found) %maybe produce an example?
 
 
 \subsection{Automated refactoring}
@@ -107,7 +107,7 @@ Automatic refactoring is an option that the user decides to let the refactoring
 tool do every refactoring operation that it founds. It is a feature that usually used
 after the automatic suggesting and when the user wants that every refactoring operation
 found to be applied.
-
+%FIXME THIS IS SUPER DANGEROUS!
 %The Automatic suggesting can be easily extend to automatic refactoring.
 %Automated refactoring, after finishing a project to make it more beautiful. (could be interesting)
 %This is already done, it calls every possible refactoring operation that the tool finds.
@@ -116,11 +116,18 @@ found to be applied.
 
 
 \section{Tool Maintenance}
-Developer Point of view
+%Developer Point of view
 %%%% Nor for the paper tough %%%%
 %%automatic might help save work when the user nows what exactly the tool will do.
-This feature combined with the automatic suggesting are a huge help to do the
-evaluation of this refactoring tool and to use in battery tests.
+
+%This feature combined with the automatic suggesting is a huge help to do the
+%evaluation of this refactoring tool and to use in battery tests.
+A refactoring tool is a quite complex piece of software and therefore it needs maintenance.
+Automatic testing is used in general by developers to ensure that the software
+is doing OK for those test cases and to be run after changing some part of the code.
+By having a way to automatically perform all the refactoring operations found,
+the developer of a refactoring tool can test if the changes made did not introduce
+bugs in other refactoring operations of the refactoring tool. %TODO continue
 First the automated refactoring displays all the possible refactoring found thus making it easier
 to detect the refactoring operations in projects.
 It makes it easier to evaluate the need to do the refactoring and to evaluate
