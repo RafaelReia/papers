@@ -115,33 +115,50 @@ found to be applied.
 %and a good way to test if the refactoring operations do not change the meaning of the program.
 
 
-\section{Tool Maintenance}
+\section{Tool Maintenance} %Framework maintenance!
 %Developer Point of view
 %%%% Nor for the paper tough %%%%
 %%automatic might help save work when the user nows what exactly the tool will do.
 
 %This feature combined with the automatic suggesting is a huge help to do the
 %evaluation of this refactoring tool and to use in battery tests.
-A refactoring tool is a quite complex piece of software and therefore it needs maintenance.
+
+
+%FIXME change to the FRAMEWORK
+A refactoring tool is a quite complex piece of software and therefore requires maintenance.
 Automatic testing is used in general by developers to ensure that the software
-is doing OK for those test cases and to be run after changing some part of the code.
+is bug free for those test cases.
 By having a way to automatically perform all the refactoring operations found,
-the developer of a refactoring tool can test if the changes made did not introduce
-bugs in other refactoring operations of the refactoring tool. %TODO continue
-First the automated refactoring displays all the possible refactoring found thus making it easier
-to detect the refactoring operations in projects.
-It makes it easier to evaluate the need to do the refactoring and to evaluate
-if the refactoring tool (frameowork) is working correctly.
-Second the automatic refactoring makes it easier to test if the refactoring operations are correct (**** for a limited test cases ****)
-This is possible by running the test cases of the program before any refactoring.
-Then using automatic refactoring in the program that applies all the refactoring that the tool finds.
-And finally by running again the test cases of the program.
-After testing it with several (or huge) programs if every test passes (or the exact same tests, because refactoring operations should not fix bugs)
-we can consider that the refactoring operations are correct.
+the developer of a refactoring tool can test and ensure if the changes made did not introduce
+bugs in other refactoring operations of the refactoring tool.
+One way to automatic test the refactoring operations is to apply every refactoring
+operations possible to a piece of code. By having this possibility it is simpler
+to the developer to create specific test cases that simplify tool maintenance.
+In order to do this it is necessary to correctly identify all the possible refactoring
+operations in one piece of code. Such operation is already implemented in the refactoring
+tool, the automatic suggesting.
+Therefore the remaining part of the algorithm is to apply all of those operations.
+The trick part is  that every refactoring operation changes the AST, so after
+applying one refactoring operation it is necessary to recompute the program AST.
+By changing the AST the possible refactoring operations applicable also might change,
+so it is necessary to recompute the AST.
+
+%First the automated refactoring displays all the possible refactoring found thus making it easier
+%to detect the refactoring operations in projects.
+%It makes it easier to evaluate the need to do the refactoring and to evaluate
+%if the refactoring tool (frameowork) is working correctly.
+%Second the automatic refactoring makes it easier to test if the refactoring operations are correct (**** for a limited test cases ****)
+%This is possible by running the test cases of the program before any refactoring.
+%Then using automatic refactoring in the program that applies all the refactoring that the tool finds.
+%And finally by running again the test cases of the program.
+%After testing it with several (or huge) programs if every test passes (or the exact same tests, because refactoring operations should not fix bugs)
+%we can consider that the refactoring operations are correct.
 
 
 \section{Analysis}
 %It was made an analysis to compare the refactoring tool with the others
+%TODO table information is available in GIT repository
+%TODO what my tool is different, what it is equal
 \begin{table}[]
 \centering
 \caption{Data Structures}
@@ -168,16 +185,27 @@ However because HaRe is for the Haskell program language that is purely-function
 programming language that extra information is not necessary to perform a good set of
 refactoring operations correctly.
 
-Our developed tool uses the same kind of information, namely the AST and the def-use-relations.
+Our developed tool uses the same types of information, namely the AST and the def-use-relations.
 Some tools like the one build by Griswold has more information available when compared
 to the one developed by us. However we find out that for expression based languages
 such as racket and focused in the functional part it is sufficient an AST and
 def-use-relations.
 
+The major difference is the objective of the refactoring tool.
+Some like the refactoring tool build by Griswold focus on the correctness of the refactoring
+operations.
+Others, in the operations available but more focused on professional users.
+However, the goal of this refactoring tool is to provide refactoring operations concerned
+with beginners.
+Therefore we are not interested in having refactoring operations formerly proven %FIXME REWRITE
+correct or advanced and complex refactoring operations.
+We intend to have simple, useful, and correct for most of the cases beginners would use.
+With this we set our refactoring operations scope to exclude macros usage, classes
+and other complex structures.
+
 
 
 %HaRe Scheme Griswold Implementation
-%Smalltalk Refactoring Browser
 %Javascript Framework
 %Bicycle Repair Man
 %Rope
