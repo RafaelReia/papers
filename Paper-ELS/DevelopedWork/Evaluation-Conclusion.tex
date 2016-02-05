@@ -1,4 +1,4 @@
-\section{Evaluation}
+\section{Evaluation} %FIXME improvee!!!
 Case Study: (find a good ones) FP Project, Architecture Project. For SLATE
 Correctness: Here?
 
@@ -15,28 +15,50 @@ the need to this kind of refactoring.
 
 \section{Conclusion}
 
-There are some conclusions one can make. Firstly it seams that a refactoring
+
+There are some conclusions one can make. Firstly it seams that a refactoring %FIXME
 tool for functional refactoring operations in languages that are expression based
 can be made only with information obtained from the AST and def-use-relation.
-The second one is the crescent importance of the support given to beginner users
+The second one is the crescent importance of the support given to beginner users %FIXME
 that made JetBrains, a company known for their professional IDEs, to make PyCharm - edu
  an IDE that is aimed for beginners and it also has incorporated a refactoring tool.
  Lastly the refactoring tools concern with professionals leaves the beginner
  user helpless.
- A refactoring tool aimed for beginners would help them to safely improve
+ A refactoring tool aimed for beginners would help them to safely improve %FIXME!!!!!
  their code while giving those users the first contact with a refactoring tool.
 
 
-def-use-relations + AST is sufficient.
+%def-use-relations + AST is sufficient.
 
-Importance of some refactoring operations
+%Importance of some refactoring operations
 
-Maintainability of the refactoring tool?
-
-Framework?
+%Framework?
 \section{Future work}
-Detect when a developer is refactoring in order to help the developer finish the
+There are some improvements that we consider important. For example it would
+be a huge improvement to detect when a developer is refactoring in order to help the developer finish the
 refactoring by doing it automatically.
-Improving automatic detection
-Wide-scope-replacement smarter and better, computation of the arguments
-Improve the Preview of the refactoring operations.
+This would be important specially for beginners that would help them finishing
+the transformations safely while teaching them refactoring operations. %FIXME yup...
+Automatic detecting of duplicated code is very naive.
+Therefore improving the detection of duplicated to be smarter and understand if
+two variables represent the same even if the names are different, or even if there
+are some expressions in different places (commutative expressions). %FIXME !!!
+
+Because the goal of the refactoring tool is to let beginners have the first touch
+with refactoring tools, having a good preview is important to show the user what
+the refactoring operation does.
+Improving the existing preview and changing from the menu to the code directly
+would be a great improvement to this refactoring tool.
+
+%Improve the Preview of the refactoring operations.
+
+%Improving automatic detection
+In the same line of thought, having a better automatic detection would make the
+life easier for the novice programmers. Having different colors for different
+types of refactoring operations is a good way to show the users more information
+and to let the user know what refactoring is being suggested without having to
+select the area.
+Another improvement that could be made is the color intensity of the suggestion.
+With a lower intensity for low "priority" refactoring operations and a high intensity
+for higher "priority". Thus giving the user a better knowledge of what is a better
+way to solve a problem or what is a strongly recommendation to change the code.
