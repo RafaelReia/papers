@@ -124,11 +124,13 @@ found to be applied.
 \caption{Data Structures}
 \label{my-label}
 \begin{tabular}{c|c|c|c|c}
-Name     & AST & PDG & Database & Others \\ \hline
-Griswold & X   & X   &          &        \\ \hline
-HaRe     & X   &     &          &        \\ \hline
-Rope     & X   &     & X        &        \\ \hline
-Bicycle  & X   &     & X        &
+Name       & AST & PDG & Database & Others \\ \hline
+Griswold   & X   & X   &          &        \\ \hline
+HaRe       & X   &     &          &        \\ \hline
+Rope       & X   &     & X        &        \\ \hline
+Bicycle    & X   &     & X        &        \\ \hline
+Pycharm    & X   &     & X        &        \\ \hline
+Javascript &     &     &          & X
 \end{tabular}
 \end{table}
 %TODO Add JAVASCRIPT, Pycharm?
@@ -153,20 +155,29 @@ refactoring operations correctly.
 Our developed tool uses the same types of information, namely the AST and the def-use-relations.
 Some tools like the one build by Griswold has more information available when compared
 to the one developed by us.
-However we find out that for expression based languages such as racket and focused
-in the functional part it is sufficient an AST and def-use-relations.%FIXME!!!
+%However we find out that for expression based languages such as racket and focused
+%in the functional part it is sufficient an AST and def-use-relations.%FIXME!!!
 
-The main difference is in the objectives of each refactoring tool.
-Some like the refactoring tool build by Griswold focus on the correctness of the refactoring
+The refactoring tool developed by us uses the same data structures, the AST and
+def-use-relations. The def-use-relation is often represented as a database, sometimes
+that information is annotated in the AST, %haskell v2
+and onther times are extracted from the AST itself when it is possibel or even
+from the PDG.
+Some tools have more information about the program, either because they need that
+information to perform the refactoring operation or because they need to prove that
+the refactoring is correct.  %case of pycharm/python && griswold
+
+Undoubtly the main difference is in the objectives of each refactoring tool.
+Some tools like the one build by Griswold focus on the correctness of the refactoring
 operations.
-Others, in the operations available but more focused on professional users.
-However, the goal of this refactoring tool is to provide refactoring operations
-designed for beginners. %FIXME
+Others, in the refactoring operations for professional or advanced users.
+However, the goal of our refactoring tool is to provide refactoring operations
+designed for beginners. %FIXME suited aimed targeted
 Therefore we are not interested in having refactoring operations formerly proven %FIXME REWRITE
-correct or advanced and complex refactoring operations. %FIXME where is the comma??
+correct or used in advanced and complex use cases. %FIXME where is the comma??
 We intend to have simple, useful, and correct for the usual use cases a beginner would use.
-With this we set our refactoring operations scope to exclude macros usage, classes
-and other complex structures.
+With this set of scope we exclude macros usage, classes and other complex structures %TODO check this!
+not used by beginners.
 
 
 %TODO add I already used the refactoring tool to do a refactoring operation in
