@@ -1,9 +1,13 @@
 \section{Related Work}
 \label{sec:Related-Work}
+Several refactoring tools were analyzed to guide our development.
+Our focus was on dynamic languages which are used in introductory courses or that have similarities
+with Racket.
 
 \subsection{Scheme}
 A refactoring tool \cite{griswold1991program} for scheme, implemented in Lisp that
-uses two forms of information, AST and PDG (program dependence Graph).
+uses two forms of information, AST (Abstract Syntax Tree) and PDG (Program Dependence Graph).
+
 The AST represents the abstract syntactic structure of the program.
 While the PDG explicitly represents the key relationship of dependence between
 operations in the program. %control flow!
@@ -36,61 +40,65 @@ require binding information of variables. %so a def-use-relation?
 The system also allows the users to design their own refactoring operations
 using the HaRe API.
 \subsection{Python}
-  \subsubsection{Rope}
-  Rope is a Python refactoring tool written in Python, which works like a Python library.
-  In order to make it easier to create refactoring operations, Rope assumes that a
-  Python program only has assignments and functions calls. %(can this be a bad thing?)
-  Thus, by limitating the complexity of the languages reduces the complexity of the
-  refactoring tool.
-  %The tool can easily get information about the assignments.
-  %However, for function calls it is necessary to have other approaches in order to
-  %obtain the necessary information.
-  Rope uses a Static Object Analysis, which analyses the modules or scope to get
-  information about functions.
-  Rope only analyses the scopes when they change and it only analyses the modules
-  when asked by the user, because this approach is time consuming.
 
-  The other approach is the Dynamic Object Analysis that requires running
-  the program in order to work.
-  The Dynamic Object Analysis gathers type information and parameters passed to and returned from
-  functions in order to get all the information needed.
-  It stores the information collected by the analysis in a database.
-  If Rope needs the information and there is nothing on the database the Static
-  object inference starts trying to infer the object information.
-  This approach makes the program run much slower, thus it is only active when
-  the user decides.%TODO improve
-  Rope uses an AST in order to store the syntax information about the programs.
+\subsubsection{Rope}
+Rope\cite[p.~109]{govindaraj2015test} is a Python refactoring tool written in Python, which works like a Python library.
+In order to make it easier to create refactoring operations, Rope assumes that a
+Python program only has assignments and functions calls. %(can this be a bad thing?)
+Thus, by limitating the complexity of the languages reduces the complexity of the
+refactoring tool.
+%The tool can easily get information about the assignments.
+%However, for function calls it is necessary to have other approaches in order to
+%obtain the necessary information.
+Rope uses a Static Object Analysis, which analyses the modules or scope to get
+information about functions.
+Rope only analyses the scopes when they change and it only analyses the modules
+when asked by the user, because this approach is time consuming.
 
-  \subsubsection{Bicycle Repair Man}
-  Bicycle Repair Man
-  Bicycle Repair Man is a Refactoring Tool for Python written in Python.
-   This refactoring tool can be added to IDEs and editors, such as Emacs, Vi, Eclipse,
-    and Sublime Text.
-  Bicycle Repair Man is an attempt to create the refactoring browser functionality for
-   Python and has the following refactoring operations:
-   extract method, extract variable, inline variable, move to module, and rename.
+The other approach is the Dynamic Object Analysis that requires running
+the program in order to work.
+The Dynamic Object Analysis gathers type information and parameters passed to and returned from
+functions in order to get all the information needed.
+It stores the information collected by the analysis in a database.
+If Rope needs the information and there is nothing on the database the Static
+object inference starts trying to infer the object information.
+This approach makes the program run much slower, thus it is only active when
+the user decides.%TODO improve
+Rope uses an AST in order to store the syntax information about the programs.
 
-  The tool has an AST to represent the program and a database that has information
-  about several program entities and dependency information.
-  \subsubsection{Pycharm-edu} %%%ADD references
-  Pycharm Educational Edition\footnote{https://www.jetbrains.com/pycharm-edu/},
-   or Pycharm edu, is a IDE for Python created by JetBrains,
-  the creator of IntelliJ.
-  The IDE was specially designed for the educational purpose, for programmers
-  with little or no previous coding experience.
-  Pycharm EDU is a simpler version of Pycharm community which is the free
-  python IDE created by JetBrains.
-  Therefore t is very similar to their normal IDEs it has interesting features
-  as code completion, version control tools integration.
-  However it has a simpler interface when compared with
-  Pycharm Community and other IDEs such as Eclipse or Visual Studio. %good for beginners, explain
+\subsubsection{Bicycle Repair Man}
+Bicycle Repair Man
+Bicycle Repair Man is a Refactoring Tool for Python written in Python.
+ This refactoring tool can be added to IDEs and editors, such as Emacs, Vi, Eclipse,
+  and Sublime Text.
+Bicycle Repair Man is an attempt to create the refactoring browser functionality for
+ Python and has the following refactoring operations:
+ extract method, extract variable, inline variable, move to module, and rename.
 
-  It has integrated a python tutorial and the big advantage is the possibility of
-  the teachers creating tasks/tutorials for the students.
-  However the Refactoring Tool did not received the same care as the IDE itself.
-  The refactoring operations are exactly the as the Pycharm community IDE wich were made
-  for more advanced users.
-  Therefore it does not provide specific refactoring operations to beginners.
+The tool has an AST to represent the program and a database that has information
+about several program entities and dependency information.
+
+\subsubsection{Pycharm-edu} %%%ADD references
+Pycharm Educational Edition\footnote{https://www.jetbrains.com/pycharm-edu/},
+ or Pycharm edu, is a IDE for Python created by JetBrains,
+the creator of IntelliJ.
+The IDE was specially designed for the educational purpose, for programmers
+with little or no previous coding experience.
+Pycharm EDU is a simpler version of Pycharm community which is the free
+python IDE created by JetBrains.
+Therefore t is very similar to their normal IDEs it has interesting features
+as code completion, version control tools integration.
+However it has a simpler interface when compared with
+Pycharm Community and other IDEs such as Eclipse or Visual Studio. %good for beginners, explain
+
+It has integrated a python tutorial and the big advantage is the possibility of
+the teachers creating tasks/tutorials for the students.
+However the Refactoring Tool did not received the same care as the IDE itself.
+The refactoring operations are exactly the as the Pycharm community IDE wich were made
+for more advanced users.
+Therefore it does not provide specific refactoring operations to beginners.
+
+%TODO add AST + def-use-relations check site!
 \subsection{Javascript}
 There are few refactoring tools for JavaScript but there is a framework
 \cite{feldthaus2011tool} for refactoring JavaScript programs. %FIXME I do not like it
@@ -109,10 +117,11 @@ By using over-approximations it is possible to be sure when a refactoring
 operation is valid.
 However, this approach has the disadvantage of not applying every possible refactoring operation,
 because the refactoring operations for which the framework cannot guarantee behavior
-preservation are prevented.%FIXME rewrite if possible
-It was expectable that this framework would prevent a big percentage of refactoring
-operations, but after testing with 50 JavaScript programs,
-the overall unjustified rejections were 6.2\% of all the rejections.
-The rejections regarding imprecise preconditions represent 8.2\%.
-Finally, the unjustified rejections due to imprecise pointer analysis were of
-5.9\% for the rename and 7.0\% for the encapsulate property.
+preservation are prevented which accounts for 6.2\% of all rejections.
+
+%It was expectable that this framework would prevent a big percentage of refactoring
+%operations, but after testing with 50 JavaScript programs,
+%the overall unjustified rejections were 6.2\% of all the rejections.
+%The rejections regarding imprecise preconditions represent 8.2\%.
+%Finally, the unjustified rejections due to imprecise pointer analysis were of
+%5.9\% for the rename and 7.0\% for the encapsulate property.
