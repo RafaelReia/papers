@@ -2,9 +2,27 @@
 Case Study: (find a good ones) FP Project, Architecture Project. For SLATE
 Correctness: Here?
 
+[INSERT EXAMPLES HERE]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+  (if (>= n_jogadas 35)
+        #T
+        #F)
+\end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring and expression"]
+(and
+  (and
+   (eq? #t (movimento-valido? jogador jogada))
+   (eq? #t (peca-jogador? jogador jogada)))
+  (and
+   (eq? #t (casa-destino-vazia? jogada))
+   (eq? #t (casa-inicial-vazia? jogada))))
+\end{lstlisting}
+
 
 These are some real examples of pieces of code made for beginners, in the course
 project of the programming introductory course.
+
 
 
 The examples show the usage of some of the refactoring operations previous presented
