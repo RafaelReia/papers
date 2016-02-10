@@ -1,3 +1,70 @@
+%%%version 10/2/16
+%%%%%% Writing Part of the Refactoring/refactoring rule
+\section{Writting}
+%FIXME is this important? does this require an introduction
+\subsection{Syntax-Parse}
+
+The Syntax-Parse function provided by Racket is rather useful for the refactoring
+operations regarding mainly syntax information.
+It has a wide range of options to help matching the correct syntax it also have  %fine tunning
+backtracking.
+With Backtracking it is possible to have several rules to be matched
+in the same syntax parser which helps to create more sophisticated rules.
+
+\subsubsection{Literal vs Datum-literal}
+One of the options in the syntax-parse is the possibility to specify if an element
+is a literal.
+The \#:literals option specifies identifiers that should be treated as literals
+rather than pattern variables.
+This option helps to ensure that a refactoring operation made is targeted only
+to the correct elements of the language.
+Datum literals, represented by \#:datum-literals are a complementary keyword to the
+literals.
+Datum-literals match symbols instead of an identifier and can be rather useful as
+the literals option because it provides a wider range of options.
+
+However because of an unknown bug the literals option only works with the expanded-program %should I use this?
+and we are limited to use the datum-literals option. This could possible create
+incorrect refactoring transformations when the user renames the literals of the
+language. e.g(renaming the if, cond, let, defines, syntax, when, unless, etc)
+
+\subsection{Pretty Printing}
+
+Pretty Printing (E.g. Cond lets etc)
+The racket makes it easy to modify syntax using the syntax-parse to transform the
+AST into another AST.
+In order to produce indented code we choose to use a pretty-printer already
+incorporated in the language.
+However this pretty-printer does not follow the convention in the cond clauses
+should be surrounded by [] parenthesis. This is not considered a problem because
+Racket supports both representations.
+One possible solution is to use a different pretty-printer in
+order to keep the language convention.
+
+%Some syntax elements (s-expressions) lose some information about parenthesis.
+%For example it is a convention that cond clauses should be surrounded by [] parenthesis
+%but the syntax element does not store that kind of information.
+%There are several pretty-printers developed for Racket and even the Racket language
+%has one incorporated.
+%The one already incorporated does not use the [ ] parenthesis, however racket
+%supports both representations.
+
+\section{Tool Maintenance}
+Developer Point of view
+%%%% Nor for the paper tough %%%%
+%%automatic might help save work when the user nows what exactly the tool will do.
+This feature combined with the automatic suggesting are a huge help to do the
+evaluation of this refactoring tool and to use in battery tests.
+First the automated refactoring displays all the possible refactoring found thus making it easier
+to detect the refactoring operations in projects.
+It makes it easier to evaluate the need to do the refactoring and to evaluate
+if the refactoring tool (frameowork) is working correctly.
+Second the automatic refactoring makes it easier to test if the refactoring operations are correct (**** for a limited test cases ****)
+This is possible by running the test cases of the program before any refactoring.
+Then using automatic refactoring in the program that applies all the refactoring that the tool finds.
+And finally by running again the test cases of the program.
+After testing it with several (or huge) programs if every test passes (or the exact same tests, because refactoring operations should not fix bugs)
+we can consider that the refactoring operations are correct.
 %%%version 8/2/16
 \section{Related Work}
 \label{sec:Related-Work}

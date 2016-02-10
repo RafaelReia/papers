@@ -1,5 +1,7 @@
 \section{Features}
-
+%TODO create introduction
+This section describes some of the features that improve the utility of this
+refactoring tool to beginner users. %TODO shall I name them?
 \subsection{User FeedBack}
 It is important to give proper feedback to the user while the user is preforming
 the refactoring operations.
@@ -21,61 +23,8 @@ Previewing works by applying the refactoring operation in a copy version of the 
 and displaying those changes to the user.
 %insert image?
 
-\subsection{Wide-Scope Replacement} %is this a feature or a refactoring?
-The Wide-Scope replacement brings the possibility to replace all the duplicated
-code with a function call. This is usually performed after an extract function refactoring.
-The Wide-Scope Replacement brings an huge improvement on the utility of the refactoring regarding the use
-of the extract function refactoring operation.
 
-It searches for the code that is duplicated of the extracted function and then it replaces for the call of the
-extracted function.
-The Wide-Scope replacement refactoring operation is divided in two steps: %FIXME Improve
-detect duplicated code
-Replace the duplicated code
-
-Replacing the duplicated code is the easy part, however the tool might has to compute %have?
-the arguments for the duplicated code itself. The argument computation occurs when
-the code is the same, but it has different variable names. This is not yet in this
-version of the refactoring tool. %TODO rewrite, it is buggy
-
-\subsubsection{Detecting duplicated code}
-Correctly detect code duplication is a key part for the correctness of this refactoring.
-Even the simplest form of duplicated code detection, when it only detects code duplication
-when the code is exactly equal, may have some problems regarding the bindings.
-For example, if the duplicated code is inside a let that changes some binding that must
-be taken into consideration.
-Racket already provides functions that compute if the bindings are the same.
-However that does not work if we consider the program in the not expanded
-form because there is not enough information for those bindings to work. %FIXME improve :(
-
-%[TODO Recently racket changed binding expansion and it brought interesting improvements to racket and that might be useful for this, read paper before]
-
-Therefore, in order to compute the correct bindings, it is necessary to use the expanded form
-of the program.
-
-The naive solution is to use the expanded program to detect the duplicated
- code and then use this information to do the replacing of the duplicated code.
-However when expanding the program Racket adds necessary internal information to
-run the program itself that are not visible for the user.
-While this does not change the detecting of the duplicated code, this adds unnecessary information
-that would have to be removed. %FIXME
-In order to solve this problem in a simple way we can use the expanded code to detect
-the correctly duplicated code and use the non expand program
-to compute which code will be replaced.
-
-However this detection is a quadratic algorithm (TODO check this) which might
-have some performance problems for bigger programs. %TODO TODO TODO
-
-Detecting duplicated code can be added to the automatic detection of possible refactoring operations to be applied. %FIXME is this already done?
-Notifying the users of a possible extract function operation if there is duplicated code.
-This is a rather useful notification because for programs that are bigger than the
-visible part of the screen.
-Which might be difficulty for the user to remember if a piece of code was duplicated or not.
-
-
-%This runs after detecting the duplicated code, so the bindings are corrected identified.
-
-\subsubsection{Automatic Suggesting}
+\subsection{Automatic Suggesting}
 Automatic Suggesting refactoring opportunities like the name suggests it suggests
 possible refactoring operations to the users.
 This feature is rather useful in order to have a general idea what possible refactoring
@@ -139,9 +88,9 @@ refactoring operations correctly.
 
 
 
-Our developed tool uses the same types of information, namely the AST and the def-use-relations.
-Some tools like the one build by Griswold has more information available when compared
-to the one developed by us.
+%Our developed tool uses the same types of information, namely the AST and the def-use-relations.
+%Some tools like the one build by Griswold has more information available when compared
+%to the one developed by us.
 %However we find out that for expression based languages such as racket and focused
 %in the functional part it is sufficient an AST and def-use-relations.%FIXME!!!
 
@@ -160,8 +109,8 @@ operations.
 Others, in the refactoring operations for professional or advanced users.
 However, the goal of our refactoring tool is to provide refactoring operations
 designed for beginners. %FIXME suited aimed targeted
-Therefore we are not interested in having refactoring operations formerly proven %FIXME REWRITE
-correct or used in advanced and complex use cases. %FIXME where is the comma??
+Therefore we are not interested in refactoring operations formerly proven %FIXME REWRITE
+correct or provide refactoring operations only used in advanced and complex use cases. %FIXME where is the comma??
 We intend to have simple, useful, and correct for the usual use cases a beginner would use.
 With this set of scope we exclude macros usage, classes and other complex structures %TODO check this!
 not used by beginners.

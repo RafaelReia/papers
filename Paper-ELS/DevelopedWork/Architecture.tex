@@ -180,41 +180,11 @@ syntax is correctly fed to the refactoring operations. %actually?
 
 
 %%%%%% Writing Part of the Refactoring/refactoring rule
-\section{Writting}
-%FIXME is this important? does this require an introduction
-\subsection{Syntax-Parse}
-
-The Syntax-Parse function provided by Racket is rather useful for the refactoring
-operations regarding mainly syntax information.
-It has a wide range of options to help matching the correct syntax it also have  %fine tunning
-backtracking.
-With Backtracking it is possible to have several rules to be matched
-in the same syntax parser which helps to create more sophisticated rules.
-
-\subsubsection{Literal vs Datum-literal}
-One of the options in the syntax-parse is the possibility to specify if an element
-is a literal.
-The \#:literals option specifies identifiers that should be treated as literals
-rather than pattern variables.
-This option helps to ensure that a refactoring operation made is targeted only
-to the correct elements of the language.
-Datum literals, represented by \#:datum-literals are a complementary keyword to the
-literals.
-Datum-literals match symbols instead of an identifier and can be rather useful as
-the literals option because it provides a wider range of options.
-
-However because of an unknown bug the literals option only works with the expanded-program %should I use this?
-and we are limited to use the datum-literals option. This could possible create
-incorrect refactoring transformations when the user renames the literals of the
-language. e.g(renaming the if, cond, let, defines, syntax, when, unless, etc)
-
-\subsection{Pretty Printing}
-
-Pretty Printing (E.g. Cond lets etc)
-The racket makes it easy to modify syntax using the syntax-parse to transform the
-AST into another AST.
-In order to produce indented code we choose to use a pretty-printer already
-incorporated in the language.
+\subsection{Pretty-printer} %output?
+%FIXME comments, how to solve this?
+Producing correct output is an important part of the refactoring tool.
+It is necessary to be careful to produce idented code and we decided to use a pretty-printer
+that is already incorporated in the language.
 However this pretty-printer does not follow the convention in the cond clauses
 should be surrounded by [] parenthesis. This is not considered a problem because
 Racket supports both representations.
@@ -229,7 +199,19 @@ order to keep the language convention.
 %The one already incorporated does not use the [ ] parenthesis, however racket
 %supports both representations.
 
+\subsection{Syntax-Parse}
+
+The Syntax-Parse function provided by Racket is rather useful for the refactoring
+operations regarding mainly syntax information.
+It has a wide range of options to help matching the correct syntax it also have  %fine tunning
+backtracking.
+With Backtracking it is possible to have several rules to be matched
+in the same syntax parser which helps to create more sophisticated rules.
+
 \section{Refactoring operations}
+%TODO do introduction
+In this section we explain some of the  more relevant refactoring operations and
+some limitations of the refactoring tool.
 
 \subsection{Semantic problems}
 There are known semantic problems that might occur after doing a refactoring
@@ -386,6 +368,60 @@ Interesting?
 
 It would be let* and named let* If define is a function it does not work.
 Is that worth it?
+
+\subsection{Wide-Scope Replacement} %is this a feature or a refactoring?
+The Wide-Scope replacement brings the possibility to replace all the duplicated
+code with a function call. This is usually performed after an extract function refactoring.
+The Wide-Scope Replacement brings an huge improvement on the utility of the refactoring regarding the use
+of the extract function refactoring operation.
+
+It searches for the code that is duplicated of the extracted function and then it replaces for the call of the
+extracted function.
+The Wide-Scope replacement refactoring operation is divided in two steps: %FIXME Improve
+detect duplicated code
+Replace the duplicated code
+
+Replacing the duplicated code is the easy part, however the tool might has to compute %have?
+the arguments for the duplicated code itself. The argument computation occurs when
+the code is the same, but it has different variable names. This is not yet in this
+version of the refactoring tool. %TODO rewrite, it is buggy
+
+\subsubsection{Detecting duplicated code}
+Correctly detect code duplication is a key part for the correctness of this refactoring.
+Even the simplest form of duplicated code detection, when it only detects code duplication
+when the code is exactly equal, may have some problems regarding the bindings.
+For example, if the duplicated code is inside a let that changes some binding that must
+be taken into consideration.
+Racket already provides functions that compute if the bindings are the same.
+However that does not work if we consider the program in the not expanded
+form because there is not enough information for those bindings to work. %FIXME improve :(
+
+%[TODO Recently racket changed binding expansion and it brought interesting improvements to racket and that might be useful for this, read paper before]
+
+Therefore, in order to compute the correct bindings, it is necessary to use the expanded form
+of the program.
+
+The naive solution is to use the expanded program to detect the duplicated
+ code and then use this information to do the replacing of the duplicated code.
+However when expanding the program Racket adds necessary internal information to
+run the program itself that are not visible for the user.
+While this does not change the detecting of the duplicated code, this adds unnecessary information
+that would have to be removed. %FIXME
+In order to solve this problem in a simple way we can use the expanded code to detect
+the correctly duplicated code and use the non expand program
+to compute which code will be replaced.
+
+However this detection is a quadratic algorithm (TODO check this) which might
+have some performance problems for bigger programs. %TODO TODO TODO
+
+Detecting duplicated code can be added to the automatic detection of possible refactoring operations to be applied. %FIXME is this already done?
+Notifying the users of a possible extract function operation if there is duplicated code.
+This is a rather useful notification because for programs that are bigger than the
+visible part of the screen.
+Which might be difficulty for the user to remember if a piece of code was duplicated or not.
+
+
+%This runs after detecting the duplicated code, so the bindings are corrected identified.
 
 \subsection{Ambiguities}
 There are some cases where two types of syntax refactoring apply.
