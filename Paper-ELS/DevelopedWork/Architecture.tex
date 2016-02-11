@@ -6,7 +6,7 @@
 
 %FIXME The Chosen IDE here??
 
-In order to create correct refactorings the refactoring tool uses  two sources of
+In order to create correct refactoring operations, the refactoring tool uses two sources of
 information, the def-use-relations and the AST of the program.
 The def-use-relations are visually represented in a form of Arrows in DrRacket,
 that information is especially relevant for refactoring operations such as Extrac-Function,
@@ -183,7 +183,7 @@ syntax is correctly fed to the refactoring operations. %actually?
 \subsection{Pretty-printer} %output?
 %FIXME comments, how to solve this?
 Producing correct output is an important part of the refactoring tool.
-It is necessary to be careful to produce idented code and we decided to use a pretty-printer
+It is necessary to be careful to produce indented code and we decided to use a pretty-printer
 that is already incorporated in the language.
 However this pretty-printer does not follow the convention in the cond clauses
 should be surrounded by [] parenthesis. This is not considered a problem because
@@ -198,6 +198,19 @@ order to keep the language convention.
 %has one incorporated.
 %The one already incorporated does not use the [ ] parenthesis, however racket
 %supports both representations.
+\subsection{Comments preservation}
+Preserving the comment after a refactoring transformation is an important task
+of the refactoring tool. If the comment in determined place of the program
+changes hits location affecting another structure it could confuse the programmer.
+However comment preservation is not implemented yet, making it a limitation of
+this prototype.
+
+One possible solution is to modify the syntax reader and add a comment node to the
+AST.
+While the new node will not be used during refactoring transformations it is used
+during the output part of the refactoring operation preserving the comment with
+the correct syntax expression.
+
 
 \subsection{Syntax-Parse}
 
@@ -425,7 +438,7 @@ Which might be difficulty for the user to remember if a piece of code was duplic
 
 \subsection{Ambiguities}
 There are some cases where two types of syntax refactoring apply.
-Eg:
+E.g.:
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 (if ?x
     (begin ?y ...)

@@ -95,15 +95,15 @@ refactoring operations correctly.
 %in the functional part it is sufficient an AST and def-use-relations.%FIXME!!!
 
 The refactoring tool developed by us uses the same data structures, the AST and
-def-use-relations. The def-use-relation is often represented as a database, sometimes
-that information is annotated in the AST, %haskell v2
-and onther times are extracted from the AST itself when it is possibel or even
-from the PDG.
+def-use-relations. The def-use-relation is often represented as a database,
+some refactoring tools annotate that information in the AST, %haskell v2
+some tools extract the information from the AST itself when it is possible and
+it is possible to extract that information from the PDG.
 Some tools have more information about the program, either because they need that
 information to perform the refactoring operation or because they need to prove that
-the refactoring is correct.  %case of pycharm/python && griswold
+the refactoring is correct.  %case of pycharm/python && Griswold
 
-Undoubtly the main difference is in the objectives of each refactoring tool.
+Undoubtedly the main difference is in the objectives of each refactoring tool.
 Some tools like the one build by Griswold focus on the correctness of the refactoring
 operations.
 Others, in the refactoring operations for professional or advanced users.
