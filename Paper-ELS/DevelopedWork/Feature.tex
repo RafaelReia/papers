@@ -3,42 +3,42 @@
 This section describes some of the features that improve the utility of this
 refactoring tool to beginner users. %TODO shall I name them?
 \subsection{User FeedBack}
-It is important to give proper feedback to the user while the user is preforming
-the refactoring operations.
-It was studied the best form to inform users what were the conditions that did not allow %FIXME did/do?
-a refactoring operation.
-And also, how to inform which are the steps in order to allow that refactoring operation to occur,
-instead of just disabling the refactoring button.
-However after an analysis it was clear that these situations rarely occur
+It is important to give proper feedback to the user while the user is atempting or
+ preforming refactoring operations.
+Instead of just disabling the refactoring operation button the tool should
+ provide information about the steps needed in order to be possible to apply
+ that refactoring operation.
+However, after an analysis it was clear that these situations rarely occur
 in Racket language and therefore it was not implemented.
 However if a language is statement based instead of expression based the situation changes
 and the importance of the User Feedback increases. %becomes critical?
 
-\subsection{Refactoring Preview}
-An important goal of this refactoring tool is to let beginner users to know what
-refactoring operations exist, what they do, and how to use them.
+%\subsection{Refactoring Preview}
 Previewing the outcome of a refactoring operation is an efficient form to
 help the users understand the result of a refactoring before even applying the refactoring. %FIXME or understand what a refactoring operation is/do
 Previewing works by applying the refactoring operation in a copy version of the AST
 and displaying those changes to the user.
+
+%An important goal of this refactoring tool is to let beginner users to know what
+%refactoring operations exist, what they do, and how to use them.
 %insert image?
 
-
 \subsection{Automatic Suggesting}
-The automatic suggestion is rather useful in order to have a general idea what possible refactoring
-operations can be done in a piece of software. %FIXME code?
-It is also important for inexperienced users because with this feature,
-they can have an idea what refactoring operations can be applied or not.
+Beginner programmers usually do not know which refactoring operations exist or
+which can be applied. 
+By having a automatic suggestion of the possible refactoring operations available
+ the beginner programmer can have an idea what refactoring operations can be
+ applied or not.
 
 In order to detect possible refactoring operations it parses the code from the
 beginning to the end and tries to check if a refactoring is applicable.
 To do that it tries to match every syntax expression using syntax parse.
 In other words it uses brute force to check whether a expression can be applied
 a refactoring operation or not.
-Automatic Suggesting is mainly applied to syntax refactoring operations, however
-it could be applied to the Extract-Function refactoring operation using the
-simple detection of duplicated code to inform the user that might be useful
-to extract a function instead of having duplicated code. %FIXME too big!
+%Automatic Suggesting is mainly applied to syntax refactoring operations, however
+%it could be applied to the Extract-Function refactoring operation using the
+%simple detection of duplicated code to inform the user that might be useful
+%to extract a function instead of having duplicated code. %FIXME too big!
 
 To properly display this information it highlights the source-code indicating
 that there is a possible refactoring.
@@ -91,7 +91,7 @@ refactoring operations correctly.
 %However we find out that for expression based languages such as racket and focused
 %in the functional part it is sufficient an AST and def-use-relations.%FIXME!!!
 
-The refactoring tool developed by us uses the same data structures, the AST and
+Our implementation uses the same data structures, the AST and
 def-use-relations. The def-use-relation is often represented as a database,
 some refactoring tools annotate that information in the AST, %haskell v2
 some tools extract the information from the AST itself when it is possible and
@@ -100,15 +100,15 @@ Some tools have more information about the program, either because they need tha
 information to perform the refactoring operation or because they need to prove that
 the refactoring is correct.  %case of pycharm/python && Griswold
 
-Undoubtedly the main difference is in the objectives of each refactoring tool.
+%Undoubtedly the main difference is in the objectives of each refactoring tool.
 Some tools like the one build by Griswold focus on the correctness of the refactoring
 operations.
-Others, in the refactoring operations for professional or advanced users.
+Others, focus in offering refactoring operations for professional or advanced users.
 However, the goal of our refactoring tool is to provide refactoring operations
 designed for beginners. %FIXME suited aimed targeted
 Therefore we are not interested in refactoring operations formerly proven %FIXME REWRITE
 correct or provide refactoring operations only used in advanced and complex use cases. %FIXME where is the comma??
-We intend to have simple, useful, and correct for the usual use cases a beginner would use.
+We intend to have simple, useful, and correct refactoring operations for the usual use cases a beginner would use.
 With this set of scope we exclude macros usage, classes and other complex structures %TODO check this!
 not used by beginners.
 
