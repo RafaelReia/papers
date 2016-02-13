@@ -377,38 +377,38 @@ made us keep the refactoring operation without the local keyword that works for
 most of the cases.
 
 
-\subsection{Define to Let} %not yet implemented
-Refactoring Define to Let Usefulness Vs Implementation difficulty
+%\subsection{Define to Let} %not yet implemented
+%Refactoring Define to Let Usefulness Vs Implementation difficulty
 %TODO implement.
-Useful for when changing several defines and merging them into a let.
-the let would "swallow" all the range of the defines scope
-Interesting?
+%Useful for when changing several defines and merging them into a let.
+%the let would "swallow" all the range of the defines scope
+%Interesting?
 
-It would be let* and named let* If define is a function it does not work.
-Is that worth it?
+%It would be let* and named let* If define is a function it does not work.
+%Is that worth it?
 
 \subsection{Ambiguities}
 There are some cases where two types of syntax refactoring apply.
-Eg:
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+E.g.:
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Code sample"]
 (if ?x
     (begin ?y ...)
     #f)
 \end{lstlisting}
 The two different refactoring transformations are possible:
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring option 1"]
 (when ?x
       ?y ...)
 \end{lstlisting}
 
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring option 2"]
 (and ?x (begin ?y ...))
 \end{lstlisting}
 
-The programmer could want in some situations choose one approach and in others
+The programmer may want in some situations choose one approach and in others
 choose the other one. For example if a programmer is creating a predicate may
-choose the and version, whereas if the programmer is using another control structure
-may prefer the when version.
+choose the "and" version, whereas if the programmer is using another control structure
+may prefer the "when" version.
 
 This example shows how hard it is to have an semi-automated refactoring tool
 that gives suggestions.
@@ -418,7 +418,7 @@ Or it could only display that there is a refactoring opportunity.
 This requires further reflection to choose the best approach to the problem.
 
 
-\subsection{Implemented Refactoring Operations:}
+%\subsection{Implemented Refactoring Operations:}
 
 \section{Features}
 

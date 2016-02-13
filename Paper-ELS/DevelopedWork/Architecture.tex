@@ -8,8 +8,8 @@
 
 In order to create correct refactoring operations, the refactoring tool uses two sources of
 information, the def-use-relations and the AST of the program.
-The def-use-relations are visually represented in a form of Arrows in DrRacket,
-that information is especially relevant for refactoring operations such as Extrac-Function,
+The def-use-relations are visually represented in a form of Arrows in DrRacket.
+That information is especially relevant for refactoring operations such as Extrac-Function,
 Add-Prefix, Organize-Imports, etc.
 
 The AST is represented by the syntax expressions (s-exp) which composes the racket program.
@@ -30,7 +30,7 @@ of the syntax-expressions has all the information that a normal AST provides. %F
 %intro and explain the importance of the S-Exp
 The s-exp list represent the AST, which provides information about
 the structure of the program.
-The s-exp list are already being produced and used by the Racket language and
+The s-exp list it is already being produced and used by the Racket language and
 in DrRacket.
 They represent the program and are computed in order to provide error information
 to the user.
@@ -48,7 +48,8 @@ The other format is the non-expanded program and computes the program with the m
 unexpanded.
 
 The expanded program has the macros expanded and the identifier information correctly
-computed, however it is harder to extract the relevant information when compared with the
+computed.
+However it is harder to extract the relevant information when compared with the
 non expanded program.
 %Racket has two forms of syntax tree. An expanded form, with the macros expanded
 %and a non expanded form that is after a read-syntax without the macros expanded.
@@ -62,11 +63,7 @@ and in the non expanded program. %FIXME TODO FIXME change example to a and, or, 
       #t)
 \end{lstlisting}
 
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Syntax from Example"]
-#<syntax:3:0 (if (< 1 2) #t #f)>
-\end{lstlisting} %%TODO FIXME TODO change example to a and, or, when or unless
-
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Expanded Syntax from example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Expanded program"]
 #<syntax:1:0 (module anonymous-module racket
   (#%module-begin (module configure-runtime
     (quote #%kernel)#%module-begin
@@ -76,6 +73,12 @@ and in the non expanded program. %FIXME TODO FIXME change example to a and, or, 
             (if (#%app < (quote 1) (quote 2))
               (quote #t) (quote #f))) print-values)))>
 \end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Non expanded program"]
+#<syntax:3:0 (if (< 1 2) #t #f)>
+\end{lstlisting} %%TODO FIXME TODO change example to a and, or, when or unless
+
+
 
 %Expanded Program Vs Not expanded Program
 %Talk about difficulty, durability, Python (other languages)
@@ -100,7 +103,7 @@ in the future.
 Racket is an evolving language and the expanded form is a low level and internal
 form of representation of the program. %thus all improvements or changes in meaning will directly impact this representation
 
-All those combined make it desirable to use the non expanded form for the refactoring
+Therefore it is desirable to use the non expanded form for the refactoring %all things considered
 operations whenever possible and use the expanded form only for the necessary
 operations.
 
@@ -109,11 +112,12 @@ operations.
 Macros usage could make the refactoring operations incorrect by modifying the   %FIXME rewrite
 program behavior.
 However, since the refactoring tool is targeted at unexperienced programmers macros
-would be used often it is not considered part of the scope of this refactoring tool capabilities.
-
-Nevertheless, if we intended to create a tool that supports macros the non expanded program
- is insufficient and the expanded program must be used.
-However there are no guarantees that would be enough to ensure the correctness of
+will not be used often and therefore it is not considered part of the scope of
+this refactoring tool capabilities.
+Nevertheless, if we intended to create a tool that gives support to refactoring macros
+using the non expanded program would let to errors making the expanded program the
+representation of the program used.
+However, there are no guarantees that would be enough to ensure the correctness of
 such refactoring operations due to the reflection capabilities of Racket.
 
 %Dependency of Racket evolution
@@ -128,8 +132,8 @@ such refactoring operations due to the reflection capabilities of Racket.
 
 
 \subsection{Def-Use-Relations}
-Def-Use-Relations hold an important information in order to produce correct refactoring operations %the def-use-relations? holds?
-because they can be used to check whether or not there will be a duplicated name
+Def-Use-Relations holds an important information in order to produce correct refactoring operations. %the def-use-relations? holds?
+They can be used to check whether or not there will be a duplicated name
 or even to compute the arguments of a function to be extracted.
 %The information is computed in the online-comp.rkt that is where expands
 %and computes the information needed to know the def-use-relations and whether
@@ -143,7 +147,7 @@ or even to compute the arguments of a function to be extracted.
 %\subsubsection{Def-Use-Relations utility}
 DrRacket already uses the def-use-relations in the system and they are visually  %TODO they are or it is?
 represented by arrows in the GUI.
-The def-use-relations is computed by the online-compiler that runs in the background
+The def-use-relations is computed by the online-compiler that runs in the background.
 However it is only processed when a program is syntactically correct. (e.g. if
 a program has syntax errors there are no arrows produced in DrRacket)
 
@@ -153,7 +157,7 @@ that is a list of s-exp in racket. %TODO check this.
 A syntax element can contain either a symbol, a syntax-pair, a datum (number, boolean or string),
 or an empty list. %might be other stuff but never got it, not relevant?
 While a syntax-pair is a pair containing a syntax object as it first element and
-a syntax pair, a syntax element or an empty list as the second argument.
+either a syntax pair, a syntax element or an empty list as the second argument.
 Each syntax-object has information about the line where they are defined and this
 information is to search for the correct elements.
 
@@ -186,7 +190,7 @@ Producing correct output is an important part of the refactoring tool.
 It is necessary to be careful to produce indented code and we decided to use a pretty-printer
 that is already incorporated in the language.
 However this pretty-printer does not follow the convention in the cond clauses
-should be surrounded by [] parenthesis. This is not considered a problem because
+should be surrounded by [ ] parenthesis. This is not considered a problem because
 Racket supports both representations.
 One possible solution is to use a different pretty-printer in
 order to keep the language convention.
@@ -216,10 +220,10 @@ the correct syntax expression.
 
 The Syntax-Parse function provided by Racket is rather useful for the refactoring
 operations regarding mainly syntax information.
-It has a wide range of options to help matching the correct syntax it also have  %fine tunning
+It provides a wide range of options to help matching the correct syntax with  %fine tunning
 backtracking.
-With Backtracking it is possible to have several rules to be matched
-in the same syntax parser which helps to create more sophisticated rules.
+The backtracking it is possible to have several rules to be matched
+in the same syntax parser, which helps to create more sophisticated rules.
 
 \section{Refactoring operations}
 %TODO do introduction
@@ -229,8 +233,9 @@ some limitations of the refactoring tool.
 \subsection{Semantic problems}
 There are known semantic problems that might occur after doing a refactoring
 operation.
-One of those problem occurs when removing the and of the following example
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+One problem occurs when removing the and of the following example.
+
+\begin{lstlisting}[basicstyle=\ttfamily, caption="And example"]
   (and (< 1 (foo 2)) (< (foo 2) 3))
 \end{lstlisting}
 The refactoring transforms the code into this:
@@ -238,8 +243,6 @@ The refactoring transforms the code into this:
   (< 1 (foo 2) 3)
 \end{lstlisting}
 
-This refactoring operation has a semantic problem if the function "foo" has
-side effects, for example as said in the .
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Foo"]
 (define (foo arg)
   (displayln "foo"))
@@ -263,7 +266,7 @@ to the correct use of the function.
 While giving the name to a function seams quite straightforward it is necessary to
 check for name duplication in order to produce a correct refactoring. (e.g. having
 two identifiers with the same name, in the same scope produces an incorrect program
-and therefore modifying the meaning of the program)
+and therefore modifying the meaning of the program).
 %TODO we assume that the program is correct before applying the refactoring operation
 Then computing the body and replacing it by the call should be straightforward.
 Another problem is where should the function extracted to. A function can not
@@ -296,13 +299,15 @@ he want the function defined.
 %With the previous version of the online-comp the framework was computing the argument for the
 %newly extracted function using the type information: "one of 'lexical, 'top-level, 'import".
 In order to compute the arguments we have to know in which scope the variables are being defined, in other words,
-if the variables are defined inside or outside the extracted function.%FIXME it is weird
+if the variables are defined inside or outside the extracted function. %FIXME it is weird
 The variables defined outside the function to be extract are the candidates to be the argument %FIXME IMPROVE
 of that function, however imported variables, whether from the language or from other libraries
 does not have to be passed as arguments.
 %There are no information in the def-use-relations that indicates whether an variable is imported or not.
 We considered two possible solutions:
+
   -Def-use-relations + Text information
+
   -Def-use-relations + AST
 
 The first approach is simpler to implement and more direct than the second one.
@@ -322,23 +327,23 @@ notices that instead of a let form it should be a function. %FIXME missing comma
 %let* vs let
 There are several types of let forms, but the most common are the let and the let*.
 There is a subtle difference between this two keywords that influences directly the simplicity of the solution.
-the let defines variables independently, while let* can use the value of the variable defined before.
+The let defines variables independently, while let* can use the value of the variable defined before.
 e.g:
 There is a global variable a defined with value 10.
-in the let we define variable a with 1 and variable b = a + 1
+In the let we define variable a with 1 and variable b = a + 1
 (let ([a 1]
 [b (+ a 1)]))
 
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="let form"]
 (define a 10)
 (let ([a 1]
       [b (+ a 1)])
       ...
       )
 \end{lstlisting}
-This let, because it defines the variables independently the value of b is 11.
+The let defines the variables independently thus the value of b is 11.
 
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="let* form"]
 (define a 10)
 (let* ([a 1]
       [b (+ a 1)])
@@ -358,7 +363,7 @@ However this has a problem, a let form can be used in expressions, but the defin
 In the vast majority of cases this refactoring is correct, but when a let is used in an expression
 it is not correct and it changes the meaning of the program, transforming a correct
 program in a incorrect one.
-e.g
+e.g.
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
 (and (let* test ((a 1)) (< a 2)) (< b c))
 \end{lstlisting}
@@ -372,27 +377,28 @@ made us keep the refactoring operation without the local keyword that works for
 most of the cases.
 
 
-\subsection{Define to Let} %not yet implemented
-Refactoring Define to Let Usefulness Vs Implementation difficulty
+%\subsection{Define to Let} %not yet implemented
+%Refactoring Define to Let Usefulness Vs Implementation difficulty
 %TODO implement.
-Useful for when changing several defines and merging them into a let.
-the let would "swallow" all the range of the defines scope
-Interesting?
+%Useful for when changing several defines and merging them into a let.
+%the let would "swallow" all the range of the defines scope
+%Interesting?
 
-It would be let* and named let* If define is a function it does not work.
-Is that worth it?
+%It would be let* and named let* If define is a function it does not work.
+%Is that worth it?
 
 \subsection{Wide-Scope Replacement} %is this a feature or a refactoring?
 The Wide-Scope replacement brings the possibility to replace all the duplicated
 code with a function call. This is usually performed after an extract function refactoring.
-The Wide-Scope Replacement brings an huge improvement on the utility of the refactoring regarding the use
-of the extract function refactoring operation.
+%The Wide-Scope Replacement brings an huge improvement on the utility of the refactoring regarding the use
+%of the extract function refactoring operation.
 
-It searches for the code that is duplicated of the extracted function and then it replaces for the call of the
-extracted function.
-The Wide-Scope replacement refactoring operation is divided in two steps: %FIXME Improve
-detect duplicated code
-Replace the duplicated code
+The Wide-Scope replacement refactoring operation searches for the code that is duplicated of the extracted function and then it replaces for the call of the
+extracted function and it is divided in two steps: %FIXME Improve
+
+- Detect duplicated code
+
+- Replace the duplicated code
 
 Replacing the duplicated code is the easy part, however the tool might has to compute %have?
 the arguments for the duplicated code itself. The argument computation occurs when
@@ -439,25 +445,25 @@ Which might be difficulty for the user to remember if a piece of code was duplic
 \subsection{Ambiguities}
 There are some cases where two types of syntax refactoring apply.
 E.g.:
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Code sample"]
 (if ?x
     (begin ?y ...)
     #f)
 \end{lstlisting}
 The two different refactoring transformations are possible:
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring option 1"]
 (when ?x
       ?y ...)
 \end{lstlisting}
 
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring option 2"]
 (and ?x (begin ?y ...))
 \end{lstlisting}
 
-The programmer could want in some situations choose one approach and in others
+The programmer may want in some situations choose one approach and in others
 choose the other one. For example if a programmer is creating a predicate may
-choose the and version, whereas if the programmer is using another control structure
-may prefer the when version.
+choose the "and" version, whereas if the programmer is using another control structure
+may prefer the "when" version.
 
 This example shows how hard it is to have an semi-automated refactoring tool
 that gives suggestions.
@@ -467,5 +473,5 @@ Or it could only display that there is a refactoring opportunity.
 This requires further reflection to choose the best approach to the problem.
 
 
-\subsection{Implemented Refactoring Operations:}
-Is this worth it?
+%\subsection{Implemented Refactoring Operations:}
+%Is this worth it?
