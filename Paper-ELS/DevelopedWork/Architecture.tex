@@ -17,7 +17,21 @@ In Racket everything is a syntax-expression and therefore accessing the list (tr
 of the syntax-expressions has all the information that a normal AST provides. %FIXME incorrect
 
 
-[INSERT IMAGE HERE]
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{refactoringTool-arch.png}
+\label{architecture}
+\caption{Information flow between modules.}
+\end{figure}
+Figure~\ref{architecture} summarizes the work flow of the refactoring tool where
+the Reader produces the non expanded program while the Expander produces the
+expanded program. Afterwards the Code walker parses the AST produced by the Reader or the Expander depending the
+cases. In order to produce the Def-Use-Relations it is necessary to use the code produced by the
+Expander because it has the correct dependency information.
+The Transformer uses both information from the Code Walker and the Def Use Relations
+to transform the code. Then it goes to the Writing module that produces the output
+in the Definitions area.
 
 %The AST is acquired after using the check-syntax button. It was intended to be
 %acquired automatically, because DrRacket has an online check syntax, but it was
@@ -37,7 +51,7 @@ to the user.
 DrRacket already provides functions which computes the program's s-exp list and uses some of those
 functions in the online check syntax and in the check syntax button callback.
 
-[insert images here explaining that]
+%TODO add the functions?
 
 
 \subsubsection{Syntax Expression tree forms}
@@ -56,30 +70,22 @@ non expanded program.
 
 For example, the following program is represented in the expanded program,
 and in the non expanded program. %FIXME TODO FIXME change example to a and, or, when or unless
+
 \begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
-#lang racket
-(if (= (+ 1 2) 1)
-      #f
-      #t)
+(and #f #t)
 \end{lstlisting}
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Expanded program"]
-#<syntax:1:0 (module anonymous-module racket
-  (#%module-begin (module configure-runtime
-    (quote #%kernel)#%module-begin
-      (#%require racket/runtime-config)
-        (#%app configure (quote #f))))
-          (#%app call-with-values (lambda ()
-            (if (#%app < (quote 1) (quote 2))
-              (quote #t) (quote #f))) print-values)))>
+#<syntax:2:0
+ (#%app call-with-values
+  (lambda () (if (quote #f)
+   (quote #t) (quote #f)))
+   print-values)>
 \end{lstlisting}
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Non expanded program"]
-#<syntax:3:0 (if (< 1 2) #t #f)>
-\end{lstlisting} %%TODO FIXME TODO change example to a and, or, when or unless
-
-
-
+#<syntax:2:0 (and #f #t)>
+\end{lstlisting}
 %Expanded Program Vs Not expanded Program
 %Talk about difficulty, durability, Python (other languages)
 
@@ -275,7 +281,7 @@ or in any other level that is accessible from the top level.
 
 e.g: When extracting the \'(+ 1 2) to a function where should it be defined?
 Top-level? level-0 level-1 or in the current level, level-2?
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Extract function levels"]
 ;;top-level
 (define (level-0)
   (define (level-1)
@@ -328,11 +334,6 @@ notices that instead of a let form it should be a function. %FIXME missing comma
 There are several types of let forms, but the most common are the let and the let*.
 There is a subtle difference between this two keywords that influences directly the simplicity of the solution.
 The let defines variables independently, while let* can use the value of the variable defined before.
-e.g:
-There is a global variable a defined with value 10.
-In the let we define variable a with 1 and variable b = a + 1
-(let ([a 1]
-[b (+ a 1)]))
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="let form"]
 (define a 10)
@@ -364,7 +365,7 @@ In the vast majority of cases this refactoring is correct, but when a let is use
 it is not correct and it changes the meaning of the program, transforming a correct
 program in a incorrect one.
 e.g.
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Example"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Let in an expression"]
 (and (let* test ((a 1)) (< a 2)) (< b c))
 \end{lstlisting}
 Modifying this named let into a define would raise a syntax error because a
@@ -430,7 +431,7 @@ In order to solve this problem in a simple way we can use the expanded code to d
 the correctly duplicated code and use the non expand program
 to compute which code will be replaced.
 
-However this detection is a quadratic algorithm (TODO check this) which might
+However this detection is a quadratic algorithm which might
 have some performance problems for bigger programs. %TODO TODO TODO
 
 Detecting duplicated code can be added to the automatic detection of possible refactoring operations to be applied. %FIXME is this already done?
