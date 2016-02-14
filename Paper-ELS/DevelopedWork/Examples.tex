@@ -135,3 +135,66 @@
               coluna-interna
               #f)))))
 \end{lstlisting}
+
+
+%%%code 5
+(define (algum_inimigo? tabuleiro tipo_peca conjunto_coord)
+    (if (null? conjunto_coord)
+        #f
+        (if (inimigo? tabuleiro tipo_peca (first conjunto_coord))
+            #t
+            (algum_inimigo? tabuleiro tipo_peca (rest conjunto_coord)))))
+
+
+%%%code 6
+
+;verifica se a jogada efectuada n�o efectua qualquer captura e se � valido o movimento
+(define (jogada-peao-sem-captura-valida? tab jogada)
+  (if (and (eq? (jogador jogada) 'brancas)
+           (= (linha-destino jogada)
+              (+ (linha-origem jogada) 1))
+           (or (= (coluna-destino jogada)
+                  (+ (coluna-origem jogada) 1))
+               (= (coluna-destino jogada)
+                  (- (coluna-origem jogada) 1))))
+      #t
+      #f)
+  (if (and (eq? (jogador jogada) 'pretas)
+           (= (linha-destino jogada)
+              (- (linha-origem jogada) 1))
+           (or (= (coluna-destino jogada)
+                  (+ (coluna-origem jogada) 1))
+               (= (coluna-destino jogada)
+                  (- (coluna-origem jogada) 1))))
+      #t
+      #f))
+
+      ;verifica se a jogada efectuada tem captura e se � v�lida a captura e o movimento
+      (define (jogada-peao-com-captura-valida? tab jogada)
+        (if (and (eq? (jogador jogada) 'brancas)
+                 (= (linha-destino jogada)
+                    (+ (linha-origem jogada) 2))
+                 (or (and (= (coluna-destino jogada)
+                             (+ (coluna-origem jogada) 2))
+                          (not (string=? (tabuleiro-da-casa tab (+ (linha-origem jogada) 1) (+ (coluna-origem jogada) 1))
+                                         " p ")))
+
+                     (and (= (coluna-destino jogada)
+                             (- (coluna-origem jogada) 2))
+                          (not (string=? (tabuleiro-da-casa tab (+ (linha-origem jogada) 1) (- (coluna-origem jogada) 1))
+                                         " p ")))))
+            #t
+            #f)
+        (if (and (eq? (jogador jogada) 'pretas)
+                 (= (linha-destino jogada)
+                    (- (linha-origem jogada) 2))
+                 (or (and (= (coluna-destino jogada)
+                             (+ (coluna-origem jogada) 2))
+                          (not (string=? (tabuleiro-da-casa tab (+ (linha-origem jogada) 1) (+ (coluna-origem jogada) 1))
+                                         " b ")))
+                     (and (= (coluna-destino jogada)
+                             (- (coluna-origem jogada) 2))
+                          (not (string=? (tabuleiro-da-casa tab (+ (linha-origem jogada) 1) (- (coluna-origem jogada) 1))
+                                         " b ")))))
+            #t
+            #f))
