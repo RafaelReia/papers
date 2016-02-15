@@ -263,6 +263,30 @@ Furthermore, the possible solution would limit excessively this refactoring oper
 Considering Racket's reflection capabilities we would only apply this refactoring operation
 safely when the arguments of the function, in this case " < " were datums (number, boolean or string). %FIXME
 
+
+E.g.:
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Code sample"]
+(if ?x
+    (begin ?y ...)
+    #f)
+\end{lstlisting}
+The two different refactoring transformations are possible:
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring option 1"]
+(when ?x
+      ?y ...)
+\end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring option 2"]
+(and ?x (begin ?y ...))
+\end{lstlisting}
+
+The first refactoring option changes the meaning of the program, because if the
+test expression, in this case ?x, is false the result of the when expression is \#<void>.
+However, the programmer may still want in some situations choose one approach and in others
+choose the other one. For example if a programmer is creating a predicate may
+choose the "and" version, whereas if the programmer is using another control structure
+and do not care for the result of the expression may prefer the "when" version.
+
 \subsection{Extract Function}
 Extract function is an important refactoring operation that every refactoring tool
 should have.
@@ -443,35 +467,6 @@ Which might be difficulty for the user to remember if a piece of code was duplic
 
 %This runs after detecting the duplicated code, so the bindings are corrected identified.
 
-\subsection{Ambiguities}
-There are some cases where two types of syntax refactoring apply.
-E.g.:
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Code sample"]
-(if ?x
-    (begin ?y ...)
-    #f)
-\end{lstlisting}
-The two different refactoring transformations are possible:
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring option 1"]
-(when ?x
-      ?y ...)
-\end{lstlisting}
-
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring option 2"]
-(and ?x (begin ?y ...))
-\end{lstlisting}
-
-The programmer may want in some situations choose one approach and in others
-choose the other one. For example if a programmer is creating a predicate may
-choose the "and" version, whereas if the programmer is using another control structure
-may prefer the "when" version.
-
-This example shows how hard it is to have an semi-automated refactoring tool
-that gives suggestions.
-It could displays both possibilities, but that will create an precedent meaning
-that if a refactoring has several possibilities the tool has to display every one.
-Or it could only display that there is a refactoring opportunity.
-This requires further reflection to choose the best approach to the problem.
 
 
 %\subsection{Implemented Refactoring Operations:}

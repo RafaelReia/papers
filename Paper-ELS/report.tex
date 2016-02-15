@@ -9,6 +9,7 @@
 %\usepackage{epstopdf}
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
+\usepackage[usenames, dvipsnames]{color}
 %\usepackage[usenames,dvipsnames]{color}
 %\usepackage{url}
 %\usepackage{lipsum}
@@ -34,7 +35,11 @@
 %\url{http://tecnico.ulisboa.pt/}
 %}
 %\maketitle
-
+\newenvironment{absolutelynopagebreak}
+  {\par\nobreak\vfil\penalty0\vfilneg
+   \vtop\bgroup}
+  {\par\xdef\tpd{\the\prevdepth}\egroup
+   \prevdepth=\tpd}
 
 \begin{document}
 

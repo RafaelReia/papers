@@ -121,6 +121,8 @@
 \begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
 
 \end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+
 (define (traduz-coluna coluna valor-linha)
 
   (if (odd? valor-linha)
@@ -138,15 +140,19 @@
 
 
 %%%code 5
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+
 (define (algum_inimigo? tabuleiro tipo_peca conjunto_coord)
     (if (null? conjunto_coord)
         #f
         (if (inimigo? tabuleiro tipo_peca (first conjunto_coord))
             #t
             (algum_inimigo? tabuleiro tipo_peca (rest conjunto_coord)))))
+          \end{lstlisting}
 
 
 %%%code 6
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
 
 ;verifica se a jogada efectuada n�o efectua qualquer captura e se � valido o movimento
 (define (jogada-peao-sem-captura-valida? tab jogada)
@@ -198,3 +204,70 @@
                                          " b ")))))
             #t
             #f))
+
+          \end{lstlisting}
+
+            %%%39
+            \begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+
+            (if (casa-adjacente? origem destino)
+                            (if (eq? (tabuleiro-da-casa tab
+                                                        (linha-seguinte linha-origem)
+                                                        (- coluna-origem 1))
+                                     'casa-vazia)
+                                #t
+                                #f)
+                            (if (eq? (tabuleiro-da-casa tab
+                                                        (linha-seguinte linha-origem)
+                                                        (- coluna-origem 1))
+                                     'casa-vazia)
+                                (ciclo-captura (list (linha-seguinte linha-origem) (- coluna-origem 1))
+                                               destino
+                                               pecas-eliminadas)
+                                (if (peca-jogador? tab
+                                                   jogador
+                                                   (linha-seguinte linha-origem)
+                                                   (- coluna-origem 1))
+                                    #f
+                                    (ciclo-captura (list (linha-seguinte linha-origem) (- coluna-origem 1))
+                                                   destino
+                                                   (+ pecas-eliminadas 1)))))
+                                                 \end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+(define (procura-aux? tabuleiro linha coluna peca)
+ (if (> coluna 8)
+     #f
+     (if (= linha 1)
+         (if (eq? (tabuleiro-da-casa tabuleiro 1 coluna) peca)
+             #t
+             (procura-aux? tabuleiro linha (+ 2 coluna) peca))
+         (if (= linha 2)
+             (if (eq? (tabuleiro-da-casa tabuleiro 2 coluna) peca)
+                 #t
+                 (procura-aux? tabuleiro linha (+ 2 coluna) peca))
+             (if (= linha 3)
+                 (if (eq? (tabuleiro-da-casa tabuleiro 3 coluna) peca)
+                     #t
+                     (procura-aux? tabuleiro linha (+ 2 coluna) peca))
+                 (if (= linha 4)
+                     (if (eq? (tabuleiro-da-casa tabuleiro 4 coluna) peca)
+                         #t
+                         (procura-aux? tabuleiro linha (+ 2 coluna) peca))
+                     (if (= linha 5)
+                         (if (eq? (tabuleiro-da-casa tabuleiro 5 coluna) peca)
+                             #t
+                             (procura-aux? tabuleiro linha (+ 2 coluna) peca))
+                         (if (= linha 6)
+                             (if (eq? (tabuleiro-da-casa tabuleiro 6 coluna) peca)
+                                 #t
+                                 (procura-aux? tabuleiro linha (+ 2 coluna) peca))
+                             (if (= linha 7)
+                                 (if (eq? (tabuleiro-da-casa tabuleiro 7 coluna) peca)
+                                     #t
+                                     (procura-aux? tabuleiro linha (+ 2 coluna) peca))
+                                 (if (= linha 8)
+                                     (if (eq? (tabuleiro-da-casa tabuleiro 8 coluna) peca)
+                                         #t
+                                         (procura-aux? tabuleiro linha (+ 2 coluna) peca))))))))))))
+
+                                         \end{lstlisting}

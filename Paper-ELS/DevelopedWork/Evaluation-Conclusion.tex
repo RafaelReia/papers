@@ -1,54 +1,185 @@
-\section{Evaluation} %FIXME improvee!!!
-Case Study: (find a good ones) FP Project
 
-[INSERT EXAMPLES HERE]
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Sample code"]
-  (if (>= n_jogadas 35)
+
+\lstdefinestyle{racket}{
+  language=Lisp,
+  basicstyle=\tt\small,
+  columns=fullflexible,
+  commentstyle=\color{Gray},
+  keywordstyle=\color{Blue},
+  identifierstyle=\color{Blue},
+  stringstyle=\color{Green},
+  numbers=left,
+  numberstyle=\small\tt,
+  frame=lines,
+}
+
+
+\section{Evaluation}
+In this section we present some examples of code written by beginner programmers
+and their possible improvement using the refactoring operations available in our
+refactoring tool.
+We used the final projects of an one semester introductory course as the source
+of the code to be refactored.
+
+
+\lstset{style=racket}
+
+%, caption="If expression"
+The first example is a very typical error made beginner programmers.
+Almost every project has one or more piece of code similar to this one
+\begin{lstlisting}[basicstyle=\ttfamily]
+  (if (>= n_plays 35)
         #T
         #F)
 \end{lstlisting}
+It is rather a simple refactoring operation, but nevertheless it improves the code.
+%if after , caption="Refactored If expression"
+\begin{lstlisting}[basicstyle=\ttfamily]
+  (>= n_plays 35)
+\end{lstlisting}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{images/example1.png}
-\label{exampleIfTrueFalse}
-%\caption{Information flow between modules.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{images/transformation1.png}
-\label{exampleIfTrueFalse}
-%\caption{Information flow between modules.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{images/example2.png}
-\label{exampleIfTrueFalse}
-%\caption{Information flow between modules.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{images/transformation2.png}
-\label{exampleIfTrueFalse}
-%\caption{Information flow between modules.}
-\end{figure}
-
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Refactoring and expression"]
+%and before , caption="And expression"
+The next example is related with the conditional expressions, namely the "and"
+or "or" expressions. We decided to choose the "and" expression to exemplify a
+rather typical usage of this expression.
+\begin{lstlisting}[basicstyle=\ttfamily]
 (and
   (and
-   (eq? #t (movimento-valido? jogador jogada))
-   (eq? #t (peca-jogador? jogador jogada)))
+   (eq? #t (correct-moviment? player play))
+   (eq? #t (player-piece? player play)))
   (and
-   (eq? #t (casa-destino-vazia? jogada))
-   (eq? #t (casa-inicial-vazia? jogada))))
+   (eq? #t (empty-destination? play))
+   (eq? #t (empty-start? play))))
 \end{lstlisting}
 
 
-These are some real examples of pieces of code made for beginners, in the course
-project of the programming introductory course.
+%and after
+Transforming the code by removing the redundant "and" expression the code becomes
+cleaner and simpler to understand. Needless to say it is still a rather simpler
+refactoring operation.
+\begin{lstlisting}[basicstyle=\ttfamily]
+(and  (eq? #t (correct-moviment? player play))
+      (eq? #t (player-piece? player play))
+      (eq? #t (empty-destination? play))
+      (eq? #t (empty-start? play)))
+\end{lstlisting}
+
+However, this code could still be improved, the (eq? \#t ?x) is a redundant way
+of simple writing ?x.
+%remove eq
+\begin{lstlisting}[basicstyle=\ttfamily]
+(and  (correct-moviment? player play)
+      (player-piece? player play)
+      (empty-destination? play)
+      (empty-start? play))
+\end{lstlisting}
+
+The next example shows nested if expressions. This kind of nested if expressions
+is difficult to understand, error prone, and is a debugging nightmare.
+It is much simpler to have a "cond" expression.
+In addition, every true branch of this nested if contains if expressions that are
+or expressions and by refactoring those if expressions to ors it makes the code
+simpler to understand.
+%if to cond before
+\begin{lstlisting}[basicstyle=\ttfamily]
+(define (procura-aux? tabuleiro linha coluna peca)
+ (if
+  (> coluna 8)
+  #f
+  (if
+   (= linha 1)
+   (if
+    (eq? (tabuleiro-da-casa
+          tabuleiro 1 coluna) peca)
+    #t
+    (procura-aux? tabuleiro linha
+                    (+ 2 coluna) peca))
+   (if (= linha 2)
+    (if
+     (eq? (tabuleiro-da-casa
+            tabuleiro 2 coluna) peca)
+     #t
+     (procura-aux? tabuleiro linha
+                    (+ 2 coluna) peca))
+    (if (= linha 3)
+     (if
+      (eq? (tabuleiro-da-casa
+              tabuleiro 3 coluna) peca)
+      #t
+      (procura-aux? tabuleiro linha
+                    (+ 2 coluna) peca))
+     (if (= linha 4)
+      (if
+       (eq? (tabuleiro-da-casa
+                tabuleiro 4 coluna) peca)
+       #t
+       (procura-aux? tabuleiro linha
+                      (+ 2 coluna) peca))
+      (if (= linha 5)
+       (if
+        (eq? (tabuleiro-da-casa
+              tabuleiro 5 coluna) peca)
+        #t
+        (procura-aux? tabuleiro linha
+                        (+ 2 coluna) peca))
+       (if (= linha 6)
+        (if (eq? (tabuleiro-da-casa
+                   tabuleiro 6 coluna) peca)
+         #t
+         (procura-aux? tabuleiro linha
+                         (+ 2 coluna) peca))
+        (if (= linha 7)
+         (if (eq? (tabuleiro-da-casa
+                    tabuleiro 7 coluna) peca)
+          #t
+          (procura-aux? tabuleiro linha
+                          (+ 2 coluna) peca))
+         (if (= linha 8)
+          (if (eq? (tabuleiro-da-casa
+                     tabuleiro 8 coluna) peca)
+           #t
+           (procura-aux? tabuleiro
+              linha (+ 2 coluna) peca))))))))))))
+\end{lstlisting}
+%if to cond after
+
+
+While a student is still learning and experiencing it is easier to confuse whether
+or not an expression needs the the "begin" expression or not.
+The "when", "cond" and "let" expressions have a implicit "begin" expression and
+as a result it is not necessary to add the "begin" expression.
+Our refactoring tool checks for those mistakes and corrects them.
+%let with begin before, Chose a better example
+\begin{lstlisting}[basicstyle=\ttfamily]
+  (if (odd? line-value)
+      (begin
+        (let ((internal-column (sub1 (/ column 2))))
+          (if (integer? internal-column)
+              internal-column
+              #f)))
+      (begin
+        (let ((internal-column (/ (sub1 column) 2)))
+          (if (integer? internal-column)
+              internal-column
+              #f))))
+\end{lstlisting}
+%let with begin after
+\begin{lstlisting}[basicstyle=\ttfamily]
+  (if (odd? line-value)
+        (let ((internal-column (sub1 (/ column 2))))
+          (or (integer? internal-column)
+              internal-column))
+        (let ((internal-column (/ (sub1 column) 2)))
+          (or (integer? internal-column)
+              internal-column)))
+\end{lstlisting}
+
+%extract function before
+
+%extract function after
+
+%These are some real examples of pieces of code made for beginners, in the course
+%project of the programming introductory course.
 
 
 
@@ -73,7 +204,7 @@ could be improved, they probably would not have this kind of code.
 
 The growing interest in programming as a skill combined with the need of areas
 non related with any computation field creating the need to improve the support
-given to the beginner user. %FIXME
+given to the beginner programmer. %FIXME
 Therefore a refactoring tool designed for beginners in a pedagogical environment such as DrRacket %FIXME IMPROVE
  would benefit those users as it would help them in their first contact with a
  refactoring tool and improve their code safely. %suggest the refactorings?
