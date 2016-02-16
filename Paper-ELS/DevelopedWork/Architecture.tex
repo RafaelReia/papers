@@ -8,9 +8,8 @@
 
 In order to create correct refactoring operations, the refactoring tool uses two sources of
 information, the def-use-relations and the AST of the program.
-The def-use-relations are visually represented in a form of Arrows in DrRacket.
-That information is especially relevant for refactoring operations such as Extrac-Function,
-Add-Prefix, Organize-Imports, etc.
+The def-use-relations represent the definition of an identifier and their usage and is
+ visually represented in a form of Arrows in DrRacket.
 
 The AST is represented by the syntax expressions (s-exp) which composes the racket program.
 In Racket everything is a syntax-expression and therefore accessing the list (tree)
@@ -45,9 +44,7 @@ in the Definitions area.
 The s-exp list represent the AST, which provides information about
 the structure of the program.
 The s-exp list it is already being produced and used by the Racket language and
-in DrRacket.
-They represent the program and are computed in order to provide error information
-to the user.
+in DrRacket in order to provide error information to the user.
 DrRacket already provides functions which computes the program's s-exp list and uses some of those
 functions in the online check syntax and in the check syntax button callback.
 
@@ -83,7 +80,7 @@ and in the non expanded program. %FIXME TODO FIXME change example to a and, or, 
    print-values)>
 \end{lstlisting}
 
-\begin{lstlisting}[basicstyle=\ttfamily, caption="Non expanded program"]
+\begin{lstlisting}[basicstyle=\ttfamily, caption="Non-expanded program"]
 #<syntax:2:0 (and #f #t)>
 \end{lstlisting}
 %Expanded Program Vs Not expanded Program
@@ -94,8 +91,8 @@ and in the non expanded program. %FIXME TODO FIXME change example to a and, or, 
 %testing:
 %(if (= (+ 1 2) 1) \#f \#t) to (not (= (+ 1 2) 1))
 
-The expanded program transforms the "and", "or", "when" and "unless" forms into
-ifs and that makes refactoring operations harder to implement.
+The expanded program transforms the {\tt and}, {\tt or}, {\tt when}, and {\tt unless} forms into
+{\tt if}s which makes refactoring operations harder to implement.
 
 Racket adds internal representation information to the expanded-program which for
 most refactoring operations are not needed.
@@ -107,34 +104,20 @@ to detect if two identifiers refer to the same binding.
 In addition, the expanded program has a format that is likely to change
 in the future.
 Racket is an evolving language and the expanded form is a low level and internal
-form of representation of the program. %thus all improvements or changes in meaning will directly impact this representation
+form of representation of the program.
+Additionally we do not consider macros as part of a code that could be refactored,
+ since the refactoring tool is targeted at unexperienced programmers macros
+will not be used often and therefore it is not considered part of the scope of
+this refactoring tool capabilities.
 
 Therefore it is desirable to use the non expanded form for the refactoring %all things considered
 operations whenever possible and use the expanded form only for the necessary
 operations.
-
-
-%Sub Cap Code with Macros The Problem
-Macros usage could make the refactoring operations incorrect by modifying the   %FIXME rewrite
-program behavior.
-However, since the refactoring tool is targeted at unexperienced programmers macros
-will not be used often and therefore it is not considered part of the scope of
-this refactoring tool capabilities.
 Nevertheless, if we intended to create a tool that gives support to refactoring macros
 using the non expanded program would let to errors making the expanded program the
 representation of the program used.
-However, there are no guarantees that would be enough to ensure the correctness of
+Even considering that are no guarantees that would be enough to ensure the correctness of
 such refactoring operations due to the reflection capabilities of Racket.
-
-%Dependency of Racket evolution
-%Using the expanded program might simplify the refactoring for other languages,
-%for example it has a literal that says when the program returns in python, and
-%racket does not have it. In the expanded form there is syntax that explicitly says
-%where the program returns.
-
-%In the future it is possible to create a tool that uses both program expansions,
-%making it possible to have macros and the relation with other languages for the
-%more difficult problems and using the non expanded program for the simple cases.
 
 
 \subsection{Def-Use-Relations}
@@ -195,14 +178,14 @@ syntax is correctly fed to the refactoring operations. %actually?
 Producing correct output is an important part of the refactoring tool.
 It is necessary to be careful to produce indented code and we decided to use a pretty-printer
 that is already incorporated in the language.
-However this pretty-printer does not follow the convention in the cond clauses
+However this pretty-printer does not follow the convention in the {\tt cond} clauses
 should be surrounded by [ ] parenthesis. This is not considered a problem because
 Racket supports both representations.
 One possible solution is to use a different pretty-printer in
 order to keep the language convention.
 
 %Some syntax elements (s-expressions) lose some information about parenthesis.
-%For example it is a convention that cond clauses should be surrounded by [] parenthesis
+%For example it is a convention that {\tt cond} clauses should be surrounded by [] parenthesis
 %but the syntax element does not store that kind of information.
 %There are several pretty-printers developed for Racket and even the Racket language
 %has one incorporated.
@@ -261,7 +244,9 @@ We still kept this refactoring operation because in the vast majority
 of the cases this refactoring operation does not change the semantic of the program.
 Furthermore, the possible solution would limit excessively this refactoring operation.  %enormously
 Considering Racket's reflection capabilities we would only apply this refactoring operation
-safely when the arguments of the function, in this case " < " were datums (number, boolean or string). %FIXME
+safely when the arguments of the {\tt and} expression, in this case {\tt < } and the function {\tt foo}
+ were datums (number, boolean or string). This line of thought is also applicable to
+ the {\tt or} form.
 
 
 E.g.:
@@ -284,8 +269,8 @@ The first refactoring option changes the meaning of the program, because if the
 test expression, in this case ?x, is false the result of the when expression is \#<void>.
 However, the programmer may still want in some situations choose one approach and in others
 choose the other one. For example if a programmer is creating a predicate may
-choose the "and" version, whereas if the programmer is using another control structure
-and do not care for the result of the expression may prefer the "when" version.
+choose the {\tt and} version, whereas if the programmer is using another control structure
+and do not care for the result of the expression may prefer the {\tt when} version.
 
 \subsection{Extract Function}
 Extract function is an important refactoring operation that every refactoring tool
@@ -294,16 +279,15 @@ However there are some concerns to have into account.
 In order to extract a function it is necessary to compute the arguments needed
 to the correct use of the function.
 While giving the name to a function seams quite straightforward it is necessary to
-check for name duplication in order to produce a correct refactoring. (e.g. having
-two identifiers with the same name, in the same scope produces an incorrect program
-and therefore modifying the meaning of the program).
-%TODO we assume that the program is correct before applying the refactoring operation
+check for name duplication in order to produce a correct refactoring. e.g. having
+two identifiers with the same name and in the same scope produces an incorrect program
+and therefore modifying the meaning of the program.
 Then computing the body and replacing it by the call should be straightforward.
 Another problem is where should the function extracted to. A function can not
 be defined in an expression, (e.g inside a let) but it could be defined in the top-level
-or in any other level that is accessible from the top level.
+or in any other level that is accessible from the current level.
 
-e.g: When extracting the \'(+ 1 2) to a function where should it be defined?
+e.g: When extracting the {\tt (+ 1 2)} to a function where should it be defined?
 Top-level? level-0 level-1 or in the current level, level-2?
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Extract function levels"]
 ;;top-level
@@ -318,30 +302,29 @@ Top-level? level-0 level-1 or in the current level, level-2?
 The fact is that is extremely difficult to know the answer to this question because
 it depends on what the user is doing and the user interpretation.
 Accordingly we think that the best solution is to let the user decide where
-he want the function defined.
+the user wants the function defined.
 
 
 \subsubsection{Computing the arguments}
 %In previous versions of the online-comp information about the type of arrows
-%was available in the structure. However in the recent versions that type of
+%was available in the structure. However, in the recent versions that type of
 %information was removed.
 
 %With the previous version of the online-comp the framework was computing the argument for the
 %newly extracted function using the type information: "one of 'lexical, 'top-level, 'import".
 In order to compute the arguments we have to know in which scope the variables are being defined, in other words,
 if the variables are defined inside or outside the extracted function. %FIXME it is weird
-The variables defined outside the function to be extract are the candidates to be the argument %FIXME IMPROVE
-of that function, however imported variables, whether from the language or from other libraries
-does not have to be passed as arguments.
-%There are no information in the def-use-relations that indicates whether an variable is imported or not.
-We considered two possible solutions:
+The variables defined outside the function to be extracted are the candidates to be the argument %FIXME IMPROVE
+of that function.
+However, imported variables, whether from the language or from other libraries
+does not have to be passed as arguments, to solve this we considered two possible solutions:
 
   -Def-use-relations + Text information
 
   -Def-use-relations + AST
 
 The first approach is simpler to implement and more direct than the second one.
-However it is less tolerant to future changes and to errors.
+However, it is less tolerant to future changes and to errors.
 The second one combines the Arrow information with the syntax information to
 check whether it is imported from the language or from other library.
 
@@ -350,56 +333,43 @@ We choose the second approach in order to provide a more stable solution to comp
 
 \subsection{Let to Define} %implemented is it worth it?
 %Refactoring Let to Defines Usefulness Vs implementation difficulty
-%TODO implement
-Changing a let form to a define could be rather useful when the user
-notices that instead of a let form it should be a function. %FIXME missing commas?
 
-%let* vs let
-There are several types of let forms, but the most common are the let and the let*.
-There is a subtle difference between this two keywords that influences directly the simplicity of the solution.
-The let defines variables independently, while let* can use the value of the variable defined before.
+%there are several let forms, we want to focus on let* let and named let.
+We noticed the similarity of a {\tt let} expression with a function, therefore making
+it easy to choose one of them by mistake.
+Therefore we decided to provide a refactoring operation that would make that transition simpler.
 
-\begin{lstlisting}[basicstyle=\ttfamily, caption="let form"]
-(define a 10)
-(let ([a 1]
-      [b (+ a 1)])
-      ...
-      )
-\end{lstlisting}
-The let defines the variables independently thus the value of b is 11.
+There are several let forms, but we want to focus in the ones more similar to
+a function, namely {\tt let}, {\tt let*}, and {\tt named let}.
+The ones that closely represent a function is the  {\tt let} and the {\tt named let}
+because of the difference between the {\tt let} and {\tt let*} evaluate their
+values expressions.
+The {\tt let} defines variables independently, while {\tt let*} can use the value of the variable defined before.
 
-\begin{lstlisting}[basicstyle=\ttfamily, caption="let* form"]
-(define a 10)
-(let* ([a 1]
-      [b (+ a 1)])
-      ...
-      )
-\end{lstlisting}
-However in the case of let* the value of b is 2.
+The {\tt let} and the {\tt named let} can be directly mapped to a function, however the {\tt named let}
+ can be directly mapped to a define whereas the {\tt let} can only be directly mapped
+to an anonymous function.
+However, we did not consider the transformation of a {\tt let} to an anonymous function, {\tt lambda},
+making the code simpler and therefore it was not implemented yet.\\
 
-%Therefore only the let would be considered because it is a more directly
-%representation of a function.
 
-%named let.
-Named let is a let that has a name and can be called, like a function.
-The named let is directly mapped as a function and therefore might be useful to transform to a function.
-The same applies from a function to a named let.
-However this has a problem, a let form can be used in expressions, but the define can not.
+However, the refactoring operation that transform a {\tt named let} into a {\tt define} function,
+ could have syntax problems because a {\tt let} form can be used in expressions, but the {\tt define} can not.
 In the vast majority of cases this refactoring is correct, but when a let is used in an expression
 it is not correct and it changes the meaning of the program, transforming a correct
 program in a incorrect one.
 e.g.
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Let in an expression"]
-(and (let* test ((a 1)) (< a 2)) (< b c))
+(and (let xpto ((a 1)) (< a 2)) (< b c))
 \end{lstlisting}
-Modifying this named let into a define would raise a syntax error because a
+Modifying this {\tt named let} into a define would raise a syntax error because a
 define could not be used in an expression context.
-
 This could be solved by using the local keyword that is an expression like
 the let form.
-However the local is not used very often and can confuse the users. This reason
-made us keep the refactoring operation without the local keyword that works for
+However, the local is not used very often and can confuse the users.
+This reason made us keep the refactoring operation without the local keyword that works for
 most of the cases.
+
 
 
 %\subsection{Define to Let} %not yet implemented

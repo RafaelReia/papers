@@ -15,16 +15,16 @@
 
 
 \section{Evaluation}
-In this section we present some examples of code written by beginner programmers
-and their possible improvement using the refactoring operations available in our
-refactoring tool.
-We used the final projects of an one semester introductory course as the source
-of the code to be refactored.
-
-
+In this section we present some code examples written by beginner programmers
+in their final project of an introductory course and their possible improvements
+using the refactoring operations available in our refactoring tool.
+The examples show the usage of some of the refactoring operations previous presented
+and here is explained the motivation for their existence.
+This code mistakes appear repeatedly in almost every project supporting the need to
+this kind of refactoring.
 \lstset{style=racket}
 
-%, caption="If expression"
+
 The first example is a very typical error made beginner programmers.
 Almost every project has one or more piece of code similar to this one
 \begin{lstlisting}[basicstyle=\ttfamily]
@@ -39,8 +39,8 @@ It is rather a simple refactoring operation, but nevertheless it improves the co
 \end{lstlisting}
 
 %and before , caption="And expression"
-The next example is related with the conditional expressions, namely the "and"
-or "or" expressions. We decided to choose the "and" expression to exemplify a
+The next example is related with the conditional expressions, namely the {\tt and}
+or {\tt or} expressions. We decided to choose the {\tt and} expression to exemplify a
 rather typical usage of this expression.
 \begin{lstlisting}[basicstyle=\ttfamily]
 (and
@@ -54,7 +54,7 @@ rather typical usage of this expression.
 
 
 %and after
-Transforming the code by removing the redundant "and" expression the code becomes
+Transforming the code by removing the redundant {\tt and} expression the code becomes
 cleaner and simpler to understand. Needless to say it is still a rather simpler
 refactoring operation.
 \begin{lstlisting}[basicstyle=\ttfamily]
@@ -64,8 +64,8 @@ refactoring operation.
       (eq? #t (empty-start? play)))
 \end{lstlisting}
 
-However, this code could still be improved, the (eq? \#t ?x) is a redundant way
-of simple writing ?x.
+However, this code could still be improved, the {\tt (eq? \#t ?x)} is a redundant way
+of simple writing {\tt ?x}.
 %remove eq
 \begin{lstlisting}[basicstyle=\ttfamily]
 (and  (correct-moviment? player play)
@@ -74,80 +74,11 @@ of simple writing ?x.
       (empty-start? play))
 \end{lstlisting}
 
-The next example shows nested if expressions. This kind of nested if expressions
-is difficult to understand, error prone, and is a debugging nightmare.
-It is much simpler to have a "cond" expression.
-In addition, every true branch of this nested if contains if expressions that are
-or expressions and by refactoring those if expressions to ors it makes the code
-simpler to understand.
-%if to cond before
-\begin{lstlisting}[basicstyle=\ttfamily]
-(define (procura-aux? tabuleiro linha coluna peca)
- (if
-  (> coluna 8)
-  #f
-  (if
-   (= linha 1)
-   (if
-    (eq? (tabuleiro-da-casa
-          tabuleiro 1 coluna) peca)
-    #t
-    (procura-aux? tabuleiro linha
-                    (+ 2 coluna) peca))
-   (if (= linha 2)
-    (if
-     (eq? (tabuleiro-da-casa
-            tabuleiro 2 coluna) peca)
-     #t
-     (procura-aux? tabuleiro linha
-                    (+ 2 coluna) peca))
-    (if (= linha 3)
-     (if
-      (eq? (tabuleiro-da-casa
-              tabuleiro 3 coluna) peca)
-      #t
-      (procura-aux? tabuleiro linha
-                    (+ 2 coluna) peca))
-     (if (= linha 4)
-      (if
-       (eq? (tabuleiro-da-casa
-                tabuleiro 4 coluna) peca)
-       #t
-       (procura-aux? tabuleiro linha
-                      (+ 2 coluna) peca))
-      (if (= linha 5)
-       (if
-        (eq? (tabuleiro-da-casa
-              tabuleiro 5 coluna) peca)
-        #t
-        (procura-aux? tabuleiro linha
-                        (+ 2 coluna) peca))
-       (if (= linha 6)
-        (if (eq? (tabuleiro-da-casa
-                   tabuleiro 6 coluna) peca)
-         #t
-         (procura-aux? tabuleiro linha
-                         (+ 2 coluna) peca))
-        (if (= linha 7)
-         (if (eq? (tabuleiro-da-casa
-                    tabuleiro 7 coluna) peca)
-          #t
-          (procura-aux? tabuleiro linha
-                          (+ 2 coluna) peca))
-         (if (= linha 8)
-          (if (eq? (tabuleiro-da-casa
-                     tabuleiro 8 coluna) peca)
-           #t
-           (procura-aux? tabuleiro
-              linha (+ 2 coluna) peca))))))))))))
-\end{lstlisting}
-%if to cond after
-
 
 While a student is still learning and experiencing it is easier to confuse whether
 or not an expression needs the the "begin" expression or not.
-The "when", "cond" and "let" expressions have a implicit "begin" expression and
-as a result it is not necessary to add the "begin" expression.
+The {\tt when}, {\tt cond} and {\tt let} expressions have a implicit {\tt begin} expression and
+as a result it is not necessary to add the {\tt begin} expression.
 Our refactoring tool checks for those mistakes and corrects them.
 %let with begin before, Chose a better example
 \begin{lstlisting}[basicstyle=\ttfamily]
@@ -164,6 +95,9 @@ Our refactoring tool checks for those mistakes and corrects them.
               #f))))
 \end{lstlisting}
 %let with begin after
+It is a simple refactoring operation and it does not have a big impact, however
+it makes the code clear and helps the beginner programmer to learn that a {\tt let}
+does not need a {\tt begin}.
 \begin{lstlisting}[basicstyle=\ttfamily]
   (if (odd? line-value)
         (let ((internal-column (sub1 (/ column 2))))
@@ -174,6 +108,116 @@ Our refactoring tool checks for those mistakes and corrects them.
               internal-column)))
 \end{lstlisting}
 
+
+The next example shows nested if expressions. This kind of nested if expressions
+is difficult to understand, error prone, and is a debugging nightmare.
+It is much simpler to have a {\tt cond} expression.
+In addition, every true branch of this nested if contains if expressions that are
+or expressions and by refactoring those if expressions to ors it makes the code
+simpler to understand.
+%if to cond before
+\begin{lstlisting}[basicstyle=\ttfamily]
+  (define (search-aux? board line column piece)
+   (if
+    (> column 8)
+    #f
+    (if
+     (= line 1)
+     (if
+      (eq? (house-board
+            board 1 column) piece)
+      #t
+      (search-aux? board line
+                      (+ 2 column) piece))
+     (if (= line 2)
+      (if
+       (eq? (house-board
+              board 2 column) piece)
+       #t
+       (search-aux? board line
+                      (+ 2 column) piece))
+      (if (= line 3)
+       (if
+        (eq? (house-board
+                board 3 column) piece)
+        #t
+        (search-aux? board line
+                      (+ 2 column) piece))
+       (if (= line 4)
+        (if
+         (eq? (house-board
+                  board 4 column) piece)
+         #t
+         (search-aux? board line
+                        (+ 2 column) piece))
+        (if (= line 5)
+         (if
+          (eq? (house-board
+                board 5 column) piece)
+          #t
+          (search-aux? board line
+                          (+ 2 column) piece))
+         (if (= line 6)
+          (if (eq? (house-board
+                     board 6 column) piece)
+           #t
+           (search-aux? board line
+                           (+ 2 column) piece))
+          (if (= line 7)
+           (if (eq? (house-board
+                      board 7 column) piece)
+            #t
+            (search-aux? board line
+                            (+ 2 column) piece))
+           (if (= line 8)
+            (if (eq? (house-board
+                       board 8 column) piece)
+             #t
+             (search-aux? board
+                line (+ 2 column) piece))
+            null))))))))))
+\end{lstlisting}
+%if to cond after
+
+This transformation consists in an aggregation of two refactoring operations, {\tt if-to-cond} and {\tt if-to-or}.
+The {\tt if-to-cond} has the biggest impact and reduces drastically the number of lines.
+In addition the if-to-or helps to make the code clearer.
+It drastically reduced the lines of code, from 59 to 28 that accounts
+for a 52\% reduction of the lines of code.
+
+\begin{lstlisting}[basicstyle=\ttfamily]
+  (define (search-aux? board line column piece)
+   (cond
+   [(> column 8) #f]
+   [(= line 1)
+    (or (eq? (house-board board 1 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 2)
+    (or (eq? (house-board board 2 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 3)
+    (or (eq? (house-board board 3 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 4)
+    (or (eq? (house-board board 4 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 5)
+    (or (eq? (house-board board 5 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 6)
+    (or (eq? (house-board board 6 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 7)
+    (or (eq? (house-board board 7 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 8)
+    (or (eq? (house-board board 8 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [else null]))
+\end{lstlisting}
+
+
+
 %extract function before
 
 %extract function after
@@ -181,12 +225,6 @@ Our refactoring tool checks for those mistakes and corrects them.
 %These are some real examples of pieces of code made for beginners, in the course
 %project of the programming introductory course.
 
-
-
-The examples show the usage of some of the refactoring operations previous presented
-and here is explained the motivation for their existence.
-This examples appear repeatedly in almost every project supporting the need to
-this kind of refactoring.
 
 Beginners often use error and trial approach in code writing which led %FIXME
 to peaces of code like the presented above.

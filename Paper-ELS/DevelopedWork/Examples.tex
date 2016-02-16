@@ -271,3 +271,157 @@
                                          (procura-aux? tabuleiro linha (+ 2 coluna) peca))))))))))))
 
                                          \end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+  (define (search-aux? board line column piece)
+   (if
+    (> column 8)
+    #f
+    (if
+     (= line 1)
+     (if
+      (eq? (house-board
+            board 1 column) piece)
+      #t
+      (search-aux? board line
+                      (+ 2 column) piece))
+     (if (= line 2)
+      (if
+       (eq? (house-board
+              board 2 column) piece)
+       #t
+       (search-aux? board line
+                      (+ 2 column) piece))
+      (if (= line 3)
+       (if
+        (eq? (house-board
+                board 3 column) piece)
+        #t
+        (search-aux? board line
+                      (+ 2 column) piece))
+       (if (= line 4)
+        (if
+         (eq? (house-board
+                  board 4 column) piece)
+         #t
+         (search-aux? board line
+                        (+ 2 column) piece))
+        (if (= line 5)
+         (if
+          (eq? (house-board
+                board 5 column) piece)
+          #t
+          (search-aux? board line
+                          (+ 2 column) piece))
+         (if (= line 6)
+          (if (eq? (house-board
+                     board 6 column) piece)
+           #t
+           (search-aux? board line
+                           (+ 2 column) piece))
+          (if (= line 7)
+           (if (eq? (house-board
+                      board 7 column) piece)
+            #t
+            (search-aux? board line
+                            (+ 2 column) piece))
+           (if (= line 8)
+            (if (eq? (house-board
+                       board 8 column) piece)
+             #t
+             (search-aux? board
+                line (+ 2 column) piece))
+            null)
+           )))))))))
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+  (define (search-aux? board line column piece)
+   (cond
+   [(> column 8) #f]
+   [(= line 1)
+    (if (eq? (house-board board 1 column) piece)
+      #t
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 2)
+    (if (eq? (house-board board 2 column) piece)
+      #t
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 3)
+    (if (eq? (house-board board 3 column) piece)
+      #t
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 4)
+    (if (eq? (house-board board 4 column) piece)
+      #t
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 5)
+    (if (eq? (house-board board 5 column) piece)
+      #t
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 6)
+    (if (eq? (house-board board 6 column) piece)
+      #t
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 7)
+    (if (eq? (house-board board 7 column) piece)
+      #t
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 8)
+    (if (eq? (house-board board 8 column) piece)
+      #t
+      (search-aux? board line (+ 2 column) piece))]
+   [else null]))
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+  (define (search-aux? board line column piece)
+   (cond
+   [(> column 8) #f]
+   [(= line 1)
+    (or (eq? (house-board board 1 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 2)
+    (or (eq? (house-board board 2 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 3)
+    (or (eq? (house-board board 3 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 4)
+    (or (eq? (house-board board 4 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 5)
+    (or (eq? (house-board board 5 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 6)
+    (or (eq? (house-board board 6 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 7)
+    (or (eq? (house-board board 7 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [(= line 8)
+    (or (eq? (house-board board 8 column) piece)
+      (search-aux? board line (+ 2 column) piece))]
+   [else null]))
+\end{lstlisting}
+
+
+%cond with begin inside %%60
+\begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
+(cond ((not (list? comando)) (begin (display "O comando n�o � v�lido. Por favor insira um novo comando")
+                                                        (newline)
+                                                        (apresenta-prox-jogada tab jogador jogada-valida?)))
+                          ((eq? (first comando) 'fim) (display "FIM DO JOGO, POR DESISTENCIA"))
+                          ((comando-tipo-jogada? comando)
+                           (let ((jogada (le-jogada jogador tab comando)))
+                             (cond ((jogada-valida? jogada tab)
+                                    (apresenta-prox-jogada (efectua-jogada tab jogada)
+                                                           (proximo-jogador jogador)
+                                                           jogada-valida?))
+                                   (else (display " A jogada n�o � v�lida! Insere novo comando!")
+                                         (newline)
+                                         (apresenta-prox-jogada tab
+                                                                jogador
+                                                                jogada-valida?)))))
+                          (else (display "O comando n�o � v�lido. Por favor insira um novo comando")
+                                (newline)
+                                (apresenta-prox-jogada tab jogador jogada-valida?)))
+\end{lstlisting}
