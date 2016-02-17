@@ -13,15 +13,13 @@ While the PDG explicitly represents the key relationship of dependence between
 operations in the program. %control flow!
 The graph vertices's represent program operations and the edges represent the flow of
 data and control between operations.
-However the PDG only has dependency information of the program and relying only 
+However, the PDG only has dependency information of the program and relying only
 in this information to represent the program could create problems.
 For example, if two semantically unrelated statements they could be placed arbitrarily with
 respect to each other.
-%Whitout the constraints given by the AST two semantically unrelated statements
-%could be placed arbitrarily with respect to each other. %rewrite!
 Using the AST as the main representation of the program ensures that statements
 are not arbitrarily reordered.
-And the PDG is only used as a notation to prove that transformations preserve
+While the PDG is only used as a notation to prove that transformations preserve
 the meaning and as a quick way to retrieve needed dependence information.
 Contours are used with the PDG providing scope information, which is non existent in the PDG,
 to help reason about transformations in the PDG.
@@ -48,9 +46,7 @@ In order to make it easier to create refactoring operations, Rope assumes that a
 Python program only has assignments and functions calls. %(can this be a bad thing?)
 Thus, by limiting the complexity of the language it reduces the complexity of the
 refactoring tool.
-%The tool can easily get information about the assignments.
-%However, for function calls it is necessary to have other approaches in order to
-%obtain the necessary information.
+
 Rope uses a Static Object Analysis, which analyses the modules or scope to get
 information about functions.
 Rope only analyses the scopes when they change and it only analyses the modules
@@ -64,43 +60,42 @@ It stores the information collected by the analysis in a database.
 If Rope needs the information and there is nothing on the database the Static
 object inference starts trying to infer the object information.
 This approach makes the program run much slower, thus it is only active when
-the user decides.%TODO improve "user decides"
+the user decides. %TODO improve "user decides"
 Rope uses an AST in order to store the syntax information about the programs.
 
 \subsubsection{Bicycle Repair Man}
-Bicycle Repair Man
-Bicycle Repair Man is a Refactoring Tool for Python written in Python.
+Bicycle Repair Man\footnote{https://pypi.python.org/pypi/bicyclerepair/0.7.1} is a refactoring tool for Python written in Python.
  This refactoring tool can be added to IDEs and editors, such as Emacs, Vi, Eclipse,
   and Sublime Text.
-Bicycle Repair Man is an attempt to create the refactoring browser functionality for
+It attempts to create the refactoring browser functionality for
  Python and has the following refactoring operations:
  extract method, extract variable, inline variable, move to module, and rename.
 
 The tool has an AST to represent the program and a database that has information
 about several program entities and dependency information.
 
-\subsubsection{Pycharm-edu} %%%ADD references %TODO choose one definition to Pycharm Edu or Pycharm edu
+\subsubsection{Pycharm Edu}
 Pycharm Educational Edition\footnote{https://www.jetbrains.com/pycharm-edu/},
- or Pycharm edu, is a IDE for Python created by JetBrains,
+ or Pycharm Edu, is a IDE for Python created by JetBrains,
 the creator of IntelliJ.
 The IDE was specially designed for the educational purpose, for programmers
 with little or no previous coding experience.
-Pycharm EDU is a simpler version of Pycharm community which is the free
+Pycharm Edu is a simpler version of Pycharm community which is the free
 python IDE created by JetBrains.
 Therefore it is very similar to their normal IDEs and it has interesting features
 such as code completion, version control tools integration.
-However it has a simpler interface when compared with
+However, it has a simpler interface when compared with
 Pycharm Community and other IDEs such as Eclipse or Visual Studio. %good for beginners, explain
 
 It has integrated a python tutorial and the big advantage is the possibility of
 the teachers creating tasks/tutorials for the students.
-However the Refactoring Tool did not received the same care as the IDE itself.
+However, the refactoring tool did not received the same care as the IDE itself.
 The refactoring operations are exactly the as the Pycharm community IDE which were made
 for more advanced users.
 Therefore it does not provide specific refactoring operations to beginners.
 The embedded refactoring tool uses the AST and Def-use relations in the refactoring
 operations.
-%TODO add AST + def-use-relations check site!
+
 \subsection{Javascript}
 There are few refactoring tools for JavaScript but there is a framework
 \cite{feldthaus2011tool} for refactoring JavaScript programs. %FIXME I do not like it
@@ -111,8 +106,9 @@ have correct refactoring operations.
 For example, while doing a rename operation, it over-approximates the set of expressions
 that must be modified when a property is renamed in a safe manner.
 %FIXME explained enough?
-%a set L of object labels over-approximates a set O of runtime objects if every
-%object o ∈ O is represented by some l ∈ L.
+e.g: A set {\tt L} of object labels over-approximates a set {\tt O} of runtime objects if every
+object {\tt o $\in$ O} is represented by some {\tt l $\in$ L}.
+
 To prove the concept, three refactoring operations were implemented, namely rename,
 encapsulate property, and extract module.
 By using over-approximations it is possible to be sure when a refactoring
@@ -121,10 +117,3 @@ However, this approach has the disadvantage of not applying every possible refac
 because the refactoring operations for which the framework cannot guarantee behavior
 preservation are prevented.
 The wrongly prevented operations accounts for 6.2\% of all rejections.
-
-%It was expectable that this framework would prevent a big percentage of refactoring
-%operations, but after testing with 50 JavaScript programs,
-%the overall unjustified rejections were 6.2\% of all the rejections.
-%The rejections regarding imprecise preconditions represent 8.2\%.
-%Finally, the unjustified rejections due to imprecise pointer analysis were of
-%5.9\% for the rename and 7.0\% for the encapsulate property.
