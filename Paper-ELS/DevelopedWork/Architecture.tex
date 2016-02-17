@@ -69,19 +69,19 @@ For example, the following program is represented in the expanded program,
 and in the non expanded program. %FIXME TODO FIXME change example to a and, or, when or unless
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="example"]
-(and #f #t)
+(and alfa beta)
 \end{lstlisting}
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Expanded program"]
 #<syntax:2:0
  (#%app call-with-values
-  (lambda () (if (quote #f)
-   (quote #t) (quote #f)))
-   print-values)>
+   (lambda ()
+    (if alfa beta (quote #f)))
+  print-values)>
 \end{lstlisting}
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption="Non-expanded program"]
-#<syntax:2:0 (and #f #t)>
+#<syntax:2:0 (and alfa beta)>
 \end{lstlisting}
 %Expanded Program Vs Not expanded Program
 %Talk about difficulty, durability, Python (other languages)
