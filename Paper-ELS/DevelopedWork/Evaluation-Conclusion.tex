@@ -209,47 +209,39 @@ for a 52\% reduction of the lines of code.
    [else null]))
 \end{lstlisting}
 
-However, this code could still be further improved by refactoring it into a {\tt case}.
-
-%extract function before
-
-%extract function after
-
-%These are some real examples of pieces of code made for beginners, in the course
-%project of the programming introductory course.
+However, this code could still be further improved by refactoring it into a {\tt case}. \\
 
 
-The exemples presented above appear repeatedly in almost every code submission of this final project supporting the need to
+The examples presented above appear repeatedly in almost every code submission of this final project supporting the need to
 proper support to beginner programmers.
 %if the users had a refactoring tool that highlighted their code in areas that
 %could be improved, they probably would not have this kind of code.
 
 
 \section{Conclusion}
-Beginner programmers would benefit from a refactoring tool designed for beginners
-giving them the possibility of improving their code. Such refactoring tool needs
-to have simple refactoring operations adequate to their needs and proper feedback.
+A refactoring tool designed for beginner programmers would benefit them
+by providing a tool to restructure the programs and improve what more knowledgeable programmers call ``poor style,''
+``bad smells,'' etc.
+In order to help those users it is necessary to be usable from a pedagogical IDE,
+to inform the programmer of the presence of the typical mistakes made by beginners, and
+to correctly apply refactoring operations preserving semantics.
 
-Our solution tries to help those users to improve their programs and to facilitate
-the first contact with a refactoring tool.
-By having a refactoring tool with simple refactoring operations in a pedagogical environment
-that suggests possible refactoring operations.
+Our solution tries to help those users to improve their programs by using the AST of
+the program and the def-use-relations to create refactoring operations that do not
+change the program's semantics. This structure is then used to analyze the code
+to detect typical mistakes using automatic suggestions and correct them using the
+refactoring operations provided.
 
-We also shown the practicability of the refactoring tool with simple refactoring operations
-that improved safely the beginners code.
 
-There are some improvements that we consider important and in the future it would  %FIXME
-be a huge improvement detecting when a developer is refactoring in order to help the developer finish the
-refactoring by doing it automatically \cite{ge2012reconciling}.
-
-The detection of duplicated code is still very naive and improving to understand if
+There are still some improvements that we consider important for the user.
+Firstly, the detection of duplicated code is still very naive and improving to understand if
 two variables represent the same even if the names are different or even if the
  order of some commutative expressions is not the same would make a huge improvement
  on the automatic suggestion.
-
-It is possible to improve the automatic suggestion of refactoring operations by
+Then it is possible to improve the automatic suggestion of refactoring operations by
 having different colors for different types of refactoring operations.
-%Another improvement that could be made is the color intensity of the suggestion.
-%With a lower intensity for low "priority" refactoring operations and a high intensity
-%for higher "priority". Thus giving the user a better knowledge of what is a better
-%way to solve a problem or what is a strongly recommendation to change the code.
+With a lower intensity for low "priority" refactoring operations and a high intensity
+for higher "priority". Thus giving the user a better knowledge of what is a better
+way to solve a problem or what is a strongly recommendation to change the code.
+Lastly it would be interesting to detect when a developer is refactoring in order to help the developer finish the
+refactoring by doing it automatically \cite{ge2012reconciling}.

@@ -16,16 +16,19 @@ The AST is represented by a list of syntax-objecs which composes the racket prog
 
 \begin{figure}
 \centering
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=2cm, minimum height=1cm,text centered, draw=black, fill=red!30] %start
-\tikzstyle{process} = [rectangle, rounded corners, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=orange!30] %process
-\tikzstyle{process2} = [rectangle, rounded corners, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{startstop} = [rectangle,  minimum width=2cm, minimum height=1cm,text centered, draw=black, fill=red!30] %start
+\tikzstyle{process} = [rectangle,  minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=orange!30] %process
+\tikzstyle{process2} = [rectangle,  minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{process3} = [rectangle,  minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{process4} = [rectangle,  minimum width=3cm, minimum height=2.5cm, draw=black, fill=blue!30]
 \tikzstyle{arrow} = [thick,->,>=stealth]
 \begin{tikzpicture}[node distance=2cm]
 \node (pro1) [process] {Reader};
 \node (pro2) [process, below of=pro1] {Expander};
 \node (pro3) [process, below of=pro2] {Def-Use-Relations};
-\node (pro4) [process2, right of=pro1,xshift=1cm] {Code Walker};
-\node (pro5) [process2, right of=pro2, xshift=1cm] {Transformer};
+\node (pro5) [process4, right of=pro2, xshift=1cm, align=left] { \\[2em] Transformer};
+\node (pro4) [process3, xshift=-1.03cm, yshift=0.75cm] at (pro5.east) {Code
+ Walker};
 \node (pro6) [process2, right of=pro5, xshift=1cm] {Writer};
 \draw [arrow] (pro1) -- (pro2);
 \draw [arrow] (pro2) -- (pro3);
@@ -33,19 +36,18 @@ The AST is represented by a list of syntax-objecs which composes the racket prog
 \draw [arrow] (pro2) -- (pro5);
 \draw [arrow] (pro3) -| (pro5);
 %\draw [arrow] (pro4) -- (pro5);
-\draw [arrow] (pro5) -- node[anchor=east] {use} (pro4);
+%\draw [arrow] (pro5) -- node[anchor=east] {use} (pro4);
 \draw [arrow] (pro5) -- (pro6);
 \end{tikzpicture}
-%\phantomcaption
 \caption{Main modules and information flow between modules. Unlabeled arrows represent information
-flow between modules.
-The labeled arrow represents a use relationship between modules - module A uses ($\rightarrow$) module B}
+flow between modules.}
 \label{flow-chart}
 \end{figure}
+
 Figure~\ref{flow-chart} summarizes the work flow of the refactoring tool where
 the Reader produces the non expanded AST of the program while the Expander expands the
 AST produced by the Reader.
-In order to produce the Def-Use-Relations it is necessary to use the expanded AST produced by the
+In order to produce the def-use-Relations it is necessary to use the expanded AST produced by the
 Expander because it has the correct dependency information.
 The Transformer uses the Code Walker to parse the ASTs and the information of the Def-Use-Relations
 to correctly perform the refactoring operations.
@@ -149,8 +151,7 @@ The Code-walker is a core part of the refactoring tool ensuring that the selecte
 syntax is correctly fed to the refactoring operations. %actually?
 
 
-\subsection{Pretty-printer} %output?
-%FIXME comments, how to solve this?
+\subsection{Pretty-printer}
 Producing correct output is an important part of the refactoring tool.
 It is necessary to be careful to produce indented code and we decided to use a pretty-printer
 that is already incorporated in the language.
