@@ -4,9 +4,9 @@ refactoring tool to beginner programmers. %TODO shall I name them?
 \subsection{User FeedBack}
 It is important to give proper feedback to the user while the user is attempting or
 preforming refactoring operations.
-By previewing the outcome of a refactoring operation is an efficient form to
+Previewing the outcome of a refactoring operation is an efficient form to
 help the users understand the result of a refactoring before even applying the refactoring. %FIXME or understand what a refactoring operation is/do
-Previewing works by applying the refactoring operation in a copy version of the AST
+It works by applying the refactoring operation in a copy version of the AST
 and displaying those changes to the user.
 It was also studied the possibility of giving feedback to the user instead of
 just disabling the refactoring operation button when the tool could not perform the refactoring operation.
@@ -45,7 +45,7 @@ increases with the number of duplicated code found) %maybe produce an example?
 \begin{table}[]
 \centering
 \caption{Data Structures}
-\label{my-label}
+\label{tab:my-table}
 \begin{tabular}{c|c|c|c|c}
 Name       & AST & PDG & Database & Others \\ \hline
 Griswold   & X   & X   &          &        \\ \hline
@@ -57,7 +57,7 @@ Javascript &     &     &          & X
 \end{tabular}
 \end{table}
 
-The table summarizes the data structures of the refactoring tools deeply analyzed.
+The Table~\ref{tab:my-table} summarizes the data structures of the analyzed refactoring tools.
 It is clear that the AST of a program is an essential part of the refactoring
 tool information with every refactoring tool having an AST to represent the program.
 Regarding the PDG and Database it has mainly information about the def-use-relation

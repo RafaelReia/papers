@@ -23,19 +23,18 @@ and here is explained the motivation for their existence.
 
 
 The first example is a very typical error made beginner programmers.
-Almost every project has one or more piece of code similar to this one
 \begin{lstlisting}[basicstyle=\ttfamily]
   (if (>= n_plays 35)
         #T
         #F)
 \end{lstlisting}
 It is rather a simple refactoring operation, but nevertheless it improves the code.
-%if after , caption="Refactored If expression"
+%if after , caption=Refactored If expression
 \begin{lstlisting}[basicstyle=\ttfamily]
   (>= n_plays 35)
 \end{lstlisting}
 
-%and before , caption="And expression"
+%and before , caption=And expression
 The next example is related with the conditional expressions, namely the {\tt and}
 or {\tt or} expressions. We decided to choose the {\tt and} expression to exemplify a
 rather typical usage of this expression.
@@ -80,13 +79,13 @@ Our refactoring tool checks for those mistakes and corrects them.
 %let with begin before, Chose a better example
 \begin{lstlisting}[basicstyle=\ttfamily]
   (if (odd? line-value)
-      (begin
-        (let ((internal-column (sub1 (/ column 2))))
+      (let ((internal-column (sub1 (/ column 2))))
+        (begin
           (if (integer? internal-column)
               internal-column
               #f)))
-      (begin
-        (let ((internal-column (/ (sub1 column) 2)))
+      (let ((internal-column (/ (sub1 column) 2)))
+        (begin
           (if (integer? internal-column)
               internal-column
               #f))))
@@ -106,8 +105,8 @@ does not need a {\tt begin}.
 \end{lstlisting}
 
 
-The next example shows nested if expressions. This kind of nested if expressions
-is difficult to understand, error prone, and is a debugging nightmare.
+The next example shows a nested {\tt if}. Nested {\tt if}s are
+ difficult to understand, error prone, and a debugging nightmare.
 It is much simpler to have a {\tt cond} expression.
 In addition, every true branch of this nested if contains {\tt if} expressions that are
 or expressions and by refactoring those {\tt if} expressions to {\tt or}s it makes the code
@@ -115,64 +114,64 @@ simpler to understand.
 %if to cond before
 \begin{lstlisting}[basicstyle=\ttfamily]
   (define (search-aux? board line column piece)
-   (if
-    (> column 8)
-    #f
     (if
-     (= line 1)
-     (if
-      (eq? (house-board
-            board 1 column) piece)
-      #t
-      (search-aux? board line
-                      (+ 2 column) piece))
-     (if (= line 2)
+      (> column 8)
+      #f
       (if
-       (eq? (house-board
-              board 2 column) piece)
-       #t
-       (search-aux? board line
-                      (+ 2 column) piece))
-      (if (= line 3)
-       (if
-        (eq? (house-board
-                board 3 column) piece)
-        #t
-        (search-aux? board line
-                      (+ 2 column) piece))
-       (if (= line 4)
+        (= line 1)
         (if
-         (eq? (house-board
-                  board 4 column) piece)
-         #t
-         (search-aux? board line
-                        (+ 2 column) piece))
-        (if (= line 5)
-         (if
           (eq? (house-board
-                board 5 column) piece)
+               board 1 column) piece)
           #t
           (search-aux? board line
-                          (+ 2 column) piece))
-         (if (= line 6)
-          (if (eq? (house-board
-                     board 6 column) piece)
-           #t
-           (search-aux? board line
-                           (+ 2 column) piece))
-          (if (= line 7)
-           (if (eq? (house-board
-                      board 7 column) piece)
+            (+ 2 column) piece))
+        (if (= line 2)
+          (if
+            (eq? (house-board
+              board 2 column) piece)
             #t
             (search-aux? board line
-                            (+ 2 column) piece))
-           (if (= line 8)
-            (if (eq? (house-board
-                       board 8 column) piece)
-             #t
-             (search-aux? board
-                line (+ 2 column) piece))
-            null))))))))))
+              (+ 2 column) piece))
+          (if (= line 3)
+            (if
+              (eq? (house-board
+                board 3 column) piece)
+              #t
+              (search-aux? board line
+                (+ 2 column) piece))
+            (if (= line 4)
+              (if
+                (eq? (house-board
+                  board 4 column) piece)
+                #t
+                (search-aux? board line
+                  (+ 2 column) piece))
+              (if (= line 5)
+                (if
+                  (eq? (house-board
+                    board 5 column) piece)
+                  #t
+                  (search-aux? board line
+                    (+ 2 column) piece))
+                (if (= line 6)
+                  (if (eq? (house-board
+                        board 6 column) piece)
+                    #t
+                    (search-aux? board line
+                           (+ 2 column) piece))
+                  (if (= line 7)
+                    (if (eq? (house-board
+                          board 7 column) piece)
+                      #t
+                      (search-aux? board line
+                        (+ 2 column) piece))
+                    (if (= line 8)
+                      (if (eq? (house-board
+                        board 8 column) piece)
+                        #t
+                       (search-aux? board
+                         line (+ 2 column) piece))
+                    null))))))))))
 \end{lstlisting}
 %if to cond after
 
@@ -185,32 +184,32 @@ for a 52\% reduction of the lines of code.
    [(> column 8) #f]
    [(= line 1)
     (or (eq? (house-board board 1 column) piece)
-      (search-aux? board line (+ 2 column) piece))]
+          (search-aux? board line (+ 2 column) piece))]
    [(= line 2)
     (or (eq? (house-board board 2 column) piece)
-      (search-aux? board line (+ 2 column) piece))]
+          (search-aux? board line (+ 2 column) piece))]
    [(= line 3)
     (or (eq? (house-board board 3 column) piece)
-      (search-aux? board line (+ 2 column) piece))]
+          (search-aux? board line (+ 2 column) piece))]
    [(= line 4)
     (or (eq? (house-board board 4 column) piece)
-      (search-aux? board line (+ 2 column) piece))]
+          (search-aux? board line (+ 2 column) piece))]
    [(= line 5)
     (or (eq? (house-board board 5 column) piece)
-      (search-aux? board line (+ 2 column) piece))]
+          (search-aux? board line (+ 2 column) piece))]
    [(= line 6)
     (or (eq? (house-board board 6 column) piece)
-      (search-aux? board line (+ 2 column) piece))]
+          (search-aux? board line (+ 2 column) piece))]
    [(= line 7)
     (or (eq? (house-board board 7 column) piece)
-      (search-aux? board line (+ 2 column) piece))]
+          (search-aux? board line (+ 2 column) piece))]
    [(= line 8)
     (or (eq? (house-board board 8 column) piece)
-      (search-aux? board line (+ 2 column) piece))]
+          (search-aux? board line (+ 2 column) piece))]
    [else null]))
 \end{lstlisting}
 
-
+However, this code could still be further improved by refactoring it into a {\tt case}.
 
 %extract function before
 
@@ -220,10 +219,10 @@ for a 52\% reduction of the lines of code.
 %project of the programming introductory course.
 
 
-This code mistakes appear repeatedly in almost every code submission of this final project supporting the need to
+The exemples presented above appear repeatedly in almost every code submission of this final project supporting the need to
 proper support to beginner programmers.
-If the users had a refactoring tool that highlighted their code in areas that
-could be improved, they probably would not have this kind of code.
+%if the users had a refactoring tool that highlighted their code in areas that
+%could be improved, they probably would not have this kind of code.
 
 
 \section{Conclusion}
