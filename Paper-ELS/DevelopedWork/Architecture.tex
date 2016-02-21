@@ -301,8 +301,8 @@ We choose the second approach in order to provide a more stable solution to comp
 %Refactoring Let to Defines Usefulness Vs implementation difficulty
 
 %there are several let forms, we want to focus on let* let and named let.
-We noticed the similarity of a {\tt let} expression with a function, therefore making
-it easy to choose one of them by mistake.
+A {\tt let} expression with a function has similarities with a function, which may led
+to mistakenly choose the {\tt let} expression instead of a function and vice-versa.
 Therefore we decided to provide a refactoring operation that would make that transition simpler.
 
 There are several let forms, but we want to focus in the ones more similar to
