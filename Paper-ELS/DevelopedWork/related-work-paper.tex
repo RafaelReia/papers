@@ -40,7 +40,6 @@ The system also allows the users to design their own refactoring operations
 using the HaRe API.
 \subsection{Python}
 
-\subsubsection{Rope}
 Rope\cite[p.~109]{govindaraj2015test} is a Python refactoring tool written in Python, which works like a Python library.
 In order to make it easier to create refactoring operations, Rope assumes that a
 Python program only has assignments and functions calls. %(can this be a bad thing?)
@@ -61,9 +60,8 @@ If Rope needs the information and there is nothing on the database the Static
 object inference starts trying to infer the object information.
 This approach makes the program run much slower, thus it is only active when
 the user decides. %TODO improve "user decides"
-Rope uses an AST in order to store the syntax information about the programs.
+Rope uses an AST in order to store the syntax information about the programs. \\
 
-\subsubsection{Bicycle Repair Man}
 Bicycle Repair Man\footnote{https://pypi.python.org/pypi/bicyclerepair/0.7.1} is a refactoring tool for Python written in Python.
  This refactoring tool can be added to IDEs and editors, such as Emacs, Vi, Eclipse,
   and Sublime Text.
@@ -72,9 +70,9 @@ It attempts to create the refactoring browser functionality for
  extract method, extract variable, inline variable, move to module, and rename.
 
 The tool has an AST to represent the program and a database that has information
-about several program entities and dependency information.
+about several program entities and dependency information. \\
 
-\subsubsection{Pycharm Edu}
+
 Pycharm Educational Edition,\footnote{https://www.jetbrains.com/pycharm-edu/}
  or Pycharm Edu, is a IDE for Python created by JetBrains,
 the creator of IntelliJ.

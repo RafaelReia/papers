@@ -1,6 +1,6 @@
 \lstdefinestyle{racket}{
   language=Lisp,
-  basicstyle=\tt\small,
+  basicstyle=\tt\scriptsize,
   columns=fullflexible,
   commentstyle=\color{Gray},
   keywordstyle=\color{Blue},
@@ -11,6 +11,22 @@
   frame=lines,
 }
 
+\lstdefinestyle{racket}{
+  language=Lisp,
+  basicstyle=\tt\scriptsize,
+  columns=fullflexible,
+  commentstyle=\color{gray},
+  keywordstyle=\color{blue},
+  identifierstyle=\color{black},
+  stringstyle=\color{green},
+  numbers=left,
+  numberstyle=\small\tt,
+  frame=none,
+  morekeywords={define,if,else,cond},
+  literate={% replace strings with symbols
+    {lambda}{{$\lambda$}}{1}
+  },
+}
 
 \section{Evaluation}
 In this section we present some code examples written by beginner programmers
@@ -23,14 +39,14 @@ and here is explained the motivation for their existence.
 
 
 The first example is a very typical error made beginner programmers.
-\begin{lstlisting}[basicstyle=\ttfamily]
+\begin{lstlisting}
   (if (>= n_plays 35)
         #T
         #F)
 \end{lstlisting}
 It is rather a simple refactoring operation, but nevertheless it improves the code.
 %if after , caption=Refactored If expression
-\begin{lstlisting}[basicstyle=\ttfamily]
+\begin{lstlisting}
   (>= n_plays 35)
 \end{lstlisting}
 
@@ -38,7 +54,7 @@ It is rather a simple refactoring operation, but nevertheless it improves the co
 The next example is related with the conditional expressions, namely the {\tt and}
 or {\tt or} expressions. We decided to choose the {\tt and} expression to exemplify a
 rather typical usage of this expression.
-\begin{lstlisting}[basicstyle=\ttfamily]
+\begin{lstlisting}
 (and
   (and
    (eq? #t (correct-moviment? player play))
@@ -52,7 +68,7 @@ rather typical usage of this expression.
 %and after
 Transforming the code by removing the redundant {\tt and} expression makes the code
 cleaner and simpler to understand.
-\begin{lstlisting}[basicstyle=\ttfamily]
+\begin{lstlisting}
 (and  (eq? #t (correct-moviment? player play))
       (eq? #t (player-piece? player play))
       (eq? #t (empty-destination? play))
@@ -61,7 +77,7 @@ cleaner and simpler to understand.
 
 However, this code could still be improved, the {\tt (eq? \#t ?x)} is a redundant way
 of simple writing {\tt ?x}.
-\begin{lstlisting}[basicstyle=\ttfamily]
+\begin{lstlisting}
 (and  (correct-moviment? player play)
       (player-piece? player play)
       (empty-destination? play)
@@ -77,7 +93,7 @@ Moreover, sometimes they still kept the {\tt begin} keyword because often use er
 in writing code.
 Our refactoring tool checks for those mistakes and corrects them.
 %let with begin before, Chose a better example
-\begin{lstlisting}[basicstyle=\ttfamily]
+\begin{lstlisting}
   (if (odd? line-value)
       (let ((internal-column (sub1 (/ column 2))))
         (begin
@@ -94,7 +110,7 @@ Our refactoring tool checks for those mistakes and corrects them.
 It is a simple refactoring operation and it does not have a big impact, however
 it makes the code clear and helps the beginner programmer to learn that a {\tt let}
 does not need a {\tt begin}.
-\begin{lstlisting}[basicstyle=\ttfamily]
+\begin{lstlisting}
   (if (odd? line-value)
         (let ((internal-column (sub1 (/ column 2))))
           (or (integer? internal-column)
@@ -112,7 +128,7 @@ In addition, every true branch of this nested if contains {\tt if} expressions t
 or expressions and by refactoring those {\tt if} expressions to {\tt or}s it makes the code
 simpler to understand.
 %if to cond before
-\begin{lstlisting}[basicstyle=\ttfamily]
+\begin{lstlisting}
   (define (search-aux? board line column piece)
     (if
       (> column 8)
@@ -178,7 +194,7 @@ simpler to understand.
 This transformations drastically reduced the lines of code, from 59 to 28 that accounts
 for a 52\% reduction of the lines of code.
 
-\begin{lstlisting}[basicstyle=\ttfamily]
+\begin{lstlisting}
   (define (search-aux? board line column piece)
    (cond
    [(> column 8) #f]
