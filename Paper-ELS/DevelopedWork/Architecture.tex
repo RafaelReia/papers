@@ -178,7 +178,7 @@ the correct syntax expression.
 
 \subsection{Syntax-Parse}
 
-The Syntax-Parse function provided by Racket is rather useful for the refactoring
+The Syntax-Parse\cite{tobin2011languages} function provided by Racket is rather useful for the refactoring
 operations regarding mainly syntax information.
 It provides a wide range of options to help matching the correct syntax with  %fine tunning
 backtracking making it possible to have several rules to be matched
@@ -384,10 +384,10 @@ have some performance problems for bigger programs.
 
 \subsection{Refactoring Python}
 Python is being promoted as a good replacement for Scheme and Racket in science introductory courses.
-It is an high-level, dynamically typed programming language it supports the functional, imperative and object
+It is an high-level, dynamically typed programming language and it supports the functional, imperative and object
 oriented paradigms.
-Using the capabilities offered by Racket and DrRacket with an implementation of Python for Racket\cite{ramos2014implementation} \cite{ramos2014reaching}
-we also can also have refactoring operations in Python.
+Using this refactoring tool and the capabilities offered by Racket and DrRacket with an implementation of Python for Racket\cite{ramos2014implementation} \cite{ramos2014reaching}
+we can also have refactoring operations in Python.
 %focus in the functional paradigm of Python
 Using Racket's syntax-objects to represent Python like a meta-language like it was used in FAMIX\cite{tichelaar2000meta}.
 It is possible use the same structure to parse and analyze the code used for the refactoring operations in Racket.
@@ -395,3 +395,39 @@ It is possible use the same structure to parse and analyze the code used for the
 However, there are some limitations regarding the refactoring operations in Python.
 Since Python is a statement base language instead of expression base, it raises
 some problems regarding the possibility of some refactoring operations.
+
+\lstdefinestyle{python}{
+  language=Python,
+  basicstyle=\tt\small,
+  columns=fullflexible,
+  commentstyle=\color{Gray},
+  keywordstyle=\color{Orange},
+  identifierstyle=\color{Blue},
+  stringstyle=\color{Green},
+  numbers=left,
+  numberstyle=\small\tt,
+  frame=lines,
+}
+
+\lstset{style=python}
+\begin{lstlisting}
+True if (alpha < beta) else False
+\end{lstlisting}
+
+\begin{lstlisting}
+(alpha < beta)
+\end{lstlisting}
+
+\begin{lstlisting}
+def complexFunction(a, b, c):
+    a + b + c
+    c + b - a
+\end{lstlisting}
+
+\begin{lstlisting}
+def simpleAddition( a,b,c):
+    return a + b + c
+def complexFunction(a, b, c):
+    simpleAddition( a,b,c)
+    c + b - a
+\end{lstlisting}
