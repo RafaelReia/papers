@@ -228,8 +228,32 @@ for a 52\% reduction of the lines of code.
 However, this code could still be further improved by refactoring it into a {\tt case}. \\
 
 
+\begin{table}[]
+\centering
+\caption{My caption}
+\label{my-label}
+\begin{tabular}{l|l|l|l|l|l|l}
+                 & Code 1 & Code 2 & Code 3 & Code 4 & Code 5 & Total/average \\ \hline
+Initial LOC      & 582    & 424    & 332    & 1328   & 810    & 3476          \\ \hline
+Final LOC        & 545    & 373    & 300    & 1259   & 701    & 3178          \\ \hline
+Difference       & 37     & 51     & 32     & 69     & 109    & 298           \\ \hline
+Percentage       & -6.36  & -12.03 & -9.64  & -5.19  & -13.46 & -9.34         \\ \hline
+Remove Begin     & 11     & 4      & 6      & 9      & 5      & 35            \\ \hline
+If to When       & 4      & 0      & 0      & 0      & 0      & 4             \\ \hline
+If to And        & 3      & 1      & 0      & 0      & 0      & 4             \\ \hline
+If to Or         & 6      & 6      & 1      & 13     & 20     & 46            \\ \hline
+Remove If        & 0      & 3      & 7      & 6      & 3      & 19            \\ \hline
+Remove And       & 0      & 2      & 0      & 4      & 0      & 6             \\ \hline
+Remove Eq        & 0      & 4      & 0      & 0      & 0      & 4             \\ \hline
+Extract Function & 0      & 3      & 0      & 0      & 4      & 7             \\ \hline
+If to Cond       & 0      & 0      & 0      & 2      & 3      & 5
+\end{tabular}
+\end{table}
+
+
 The examples presented above appear repeatedly in almost every code submission of this final project supporting the need to
 proper support to beginner programmers.
+
 %if the users had a refactoring tool that highlighted their code in areas that
 %could be improved, they probably would not have this kind of code.
 
