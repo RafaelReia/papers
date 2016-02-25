@@ -27,6 +27,18 @@
     {lambda}{{$\lambda$}}{1}
   },
 }
+\lstdefinestyle{python}{
+  language=Python,
+  basicstyle=\tt\scriptsize,
+  columns=fullflexible,
+  commentstyle=\color{Gray},
+  keywordstyle=\color{Orange},
+  identifierstyle=\color{Blue},
+  stringstyle=\color{Green},
+  numbers=left,
+  numberstyle=\small\tt,
+  frame=lines,
+}
 
 \section{Evaluation}
 In this section we present some code examples written by beginner programmers
@@ -254,12 +266,51 @@ If to Cond                                                  & 0     & 0      & 0
 
 As seen in Table~\ref{tab:ref-ops} the average reduction in LOC is 9.34\% which
 shows how useful are these refactoring operations. It also shows how many
-refactoring operations were applied. Some more than others but overall they are
-useful. 
+refactoring operations were applied.
 %if the users had a refactoring tool that highlighted their code in areas that
 %could be improved, they probably would not have this kind of code.
 
+\subsection{Refactoring Python}
+Python is being promoted as a good replacement for Scheme and Racket in science introductory courses.
+It is an high-level, dynamically typed programming language and it supports the functional, imperative and object
+oriented paradigms.
+Using this architecture and the capabilities offered by Racket and DrRacket with an implementation of Python for Racket\cite{ramos2014implementation} \cite{ramos2014reaching}
+we can also have refactoring operations in Python. \\
+%focus in the functional paradigm of Python
+Using Racket's syntax-objects to represent Python like a meta-language like it was used in FAMIX\cite{tichelaar2000meta}.
+It is possible use the same structure to parse and analyze the code used for the refactoring operations in Racket.
 
+However, there are some limitations regarding the refactoring operations in Python.
+Since Python is a statement base language instead of expression base, it raises
+some problems regarding the possibility of some refactoring operations.
+
+Example of removing an If expression:
+\lstset{style=python}
+\begin{lstlisting}
+True if (alpha < beta) else False
+\end{lstlisting}
+
+\begin{lstlisting}
+(alpha < beta)
+\end{lstlisting}
+
+The next one shows the extract a function:
+\begin{lstlisting}
+def complexFunction(a, b, c):
+    a + b + c
+    c + b - a
+\end{lstlisting}
+
+\begin{lstlisting}
+def simpleAddition( a,b,c):
+    return a + b + c
+def complexFunction(a, b, c):
+    simpleAddition( a,b,c)
+    c + b - a
+\end{lstlisting}
+
+This refactoring operations for Python are just only a prototype and it is a work
+in progress.
 \section{Conclusion}
 A refactoring tool designed for beginner programmers would benefit them
 by providing a tool to restructure the programs and improve what more knowledgeable programmers call ``poor style,''
