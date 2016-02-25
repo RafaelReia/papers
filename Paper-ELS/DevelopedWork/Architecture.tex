@@ -396,9 +396,10 @@ However, there are some limitations regarding the refactoring operations in Pyth
 Since Python is a statement base language instead of expression base, it raises
 some problems regarding the possibility of some refactoring operations.
 
+
 \lstdefinestyle{python}{
   language=Python,
-  basicstyle=\tt\small,
+  basicstyle=\tt\scriptsize,
   columns=fullflexible,
   commentstyle=\color{Gray},
   keywordstyle=\color{Orange},
@@ -408,7 +409,7 @@ some problems regarding the possibility of some refactoring operations.
   numberstyle=\small\tt,
   frame=lines,
 }
-
+Here we show the remove If refactoring operation:
 \lstset{style=python}
 \begin{lstlisting}
 True if (alpha < beta) else False
@@ -418,6 +419,7 @@ True if (alpha < beta) else False
 (alpha < beta)
 \end{lstlisting}
 
+The next one shows the extract a function:
 \begin{lstlisting}
 def complexFunction(a, b, c):
     a + b + c
