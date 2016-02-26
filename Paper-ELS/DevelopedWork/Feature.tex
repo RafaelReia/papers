@@ -63,27 +63,24 @@ tool information with every refactoring tool having an AST to represent the prog
 Regarding the PDG and Database it has mainly information about the def-use-relation
 of the program. The PDG has also control flow information among others.
 
-HaRe only uses the AST as a source of information of the program. Thus, by not having
-the def-use-relation or a PDG it has less information to perform the refactoring operations.
-However, because HaRe is for the Haskell program language that is purely-functional
-programming language that extra information is not necessary to perform a good set of
-refactoring operations correctly.
-
-
+%HaRe only uses the AST as a source of information of the program. Thus, by not having
+%the def-use-relation or a PDG it has less information to perform the refactoring operations.
+%However, because HaRe is for the Haskell program language that is purely-functional
+%programming language that extra information is not necessary to perform a good set of
+%refactoring operations correctly.
 
 Our implementation uses the same data structures, the AST and
 def-use-relations. The def-use-relation is often represented as a database,
 some refactoring tools annotate that information in the AST, %haskell v2
 some tools extract the information from the AST itself when it is possible and
-it is possible to extract that information from the PDG.
+it is possible to extract that information from the PDG.\\
 
 
 Some tools have more information about the program, either because they need that
 information to perform the refactoring operation or because they need to prove that
 the refactoring is correct.  %case of pycharm/python && Griswold
-
 %Undoubtedly the main difference is in the objectives of each refactoring tool.
-Some tools like the one build by Griswold focus on the correctness of the refactoring
+Other tools like the one build by Griswold focus on the correctness of the refactoring
 operations.
 Others, focus in offering refactoring operations for professional or advanced users.
 However, the goal of our refactoring tool is to provide refactoring operations

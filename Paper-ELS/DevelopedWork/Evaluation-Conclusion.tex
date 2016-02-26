@@ -294,19 +294,40 @@ True if (alpha < beta) else False
 (alpha < beta)
 \end{lstlisting}
 
-The next one shows the extract a function:
+The next one shows the extract function:
+%\begin{lstlisting}
+%def complexFunction(a, b, c):
+%    a + b + c
+%    c + b - a
+%\end{lstlisting}
+
+%\begin{lstlisting}
+%def simpleAddition( a,b,c):
+%    return a + b + c
+%def complexFunction(a, b, c):
+%    simpleAddition( a,b,c)
+%    c + b - a
+%\end{lstlisting}
 \begin{lstlisting}
-def complexFunction(a, b, c):
-    a + b + c
-    c + b - a
+def mandelbrot(iterations, c):
+    z = 0+0j
+    for i in range(iterations+1):
+        if abs(z) > 2:
+            return i
+        z = z*z + c
+    return i+1
 \end{lstlisting}
 
 \begin{lstlisting}
-def simpleAddition( a,b,c):
-    return a + b + c
-def complexFunction(a, b, c):
-    simpleAddition( a,b,c)
-    c + b - a
+def computeZ( z,c):
+    return z*z + c
+def mandelbrot(iterations, c):
+    z = 0+0j
+    for i in range(iterations+1):
+        if abs(z) > 2:
+            return i
+        z = computeZ( z,c)
+    return i+1
 \end{lstlisting}
 
 This refactoring operations for Python are just only a prototype and it is a work
