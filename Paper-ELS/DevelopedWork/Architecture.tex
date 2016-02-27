@@ -3,13 +3,27 @@
 
 %FIXME The Chosen IDE here??
 
+In this section we present the architecture of our refactoring tool.
+Although the tool can work with different programming languages, its
+main focus is, at this moment, the Racket programming language and,
+more specifically, the DrRacket IDE.
 
-In order to create correct refactoring operations, the refactoring tool uses two sources of
-information, the def-use-relations and the AST of the program.
-The def-use-relations represent the definition of an identifier and its usage, it is
- visually represented in a form of arrows in DrRacket.
+Racket is a language designed to support meta-programming and, in
+fact, most of the syntax forms of the language are macro-expanded into
+combinations of simpler forms.  This has the important consequence
+that programs can be analyzed either in their original form or in
+their expanded form.
 
-The AST is represented by a list of syntax-objecs which composes the racket program.
+In order to create correct refactoring operations, the refactoring
+tool uses two sources of information, the def-use relations and the
+AST of the program.  The def-use relations represent the links between
+definition of an identifier and its usage.  In the DrRacket IDE these
+relations are visually represented as arrows that point from a
+definition to its use.  The opposite relation, the use-def relation is
+also visually represented as an arrow from the use of an identifier to
+its definition.  The AST is the abstract syntax tree of the program
+which, in the case of the Racket language, is represented by a list of
+syntax-objecs.  Given that Racket
 %In Racket everything is a syntax-object and therefore accessing the list
 %of syntax-objects has all the information that a normal AST provides. %FIXME incorrect
 
@@ -25,7 +39,7 @@ The AST is represented by a list of syntax-objecs which composes the racket prog
 \begin{tikzpicture}[node distance=2cm]
 \node (pro1) [process] {Reader};
 \node (pro2) [process, below of=pro1] {Expander};
-\node (pro3) [process, below of=pro2] {Def-Use-Relations};
+\node (pro3) [process, below of=pro2] {def-use relations};
 \node (pro5) [process4, right of=pro2, xshift=1cm, align=left] { \\[2em] Transformer};
 \node (pro4) [process3, xshift=-1.03cm, yshift=0.75cm] at (pro5.east) {Code
  Walker};
@@ -44,40 +58,41 @@ flow between modules.}
 \label{flow-chart}
 \end{figure}
 
-Figure~\ref{flow-chart} summarizes the work flow of the refactoring tool where
-the Reader produces the non expanded AST of the program while the Expander expands the
-AST produced by the Reader.
-In order to produce the def-use-Relations it is necessary to use the expanded AST produced by the
-Expander because it has the correct dependency information.
-The Transformer uses the Code Walker to parse the ASTs and the information of the Def-Use-Relations
-to correctly perform the refactoring operations.
- Then it goes to the Writing module to produce the output in DrRacket's definitions area.
+Figure~\ref{flow-chart} summarizes the workflow of the refactoring
+tool, where the Reader produces the non expanded AST of the program
+while the Expander expands the AST produced by the Reader.  In order
+to produce the def-use relations it is necessary to use the expanded
+AST produced by the Expander because it has the correct dependency
+information.  The Transformer uses the Code Walker to parse the ASTs
+and the information of the def-use relations to correctly perform the
+refactoring operations.  Then it goes to the Writing module to produce
+the output in DrRacket's definitions pane.
 
 
 \subsection{Syntax Expressions}
 %intro and explain the importance of the S-Exp
-The syntax-object list represent the AST, which provides information about
-the structure of the program.
-The syntax-object list is already being produced and used by the Racket language and
-in DrRacket in order to provide error information to the user.
-DrRacket already provides functions which computes the program's syntax-object list and uses some of those
-functions in the Background Check Syntax and in the Check Syntax button callback.
+The syntax-object list represents the AST, which provides information
+about the structure of the program.  The syntax-object list is already
+being produced and used by the Racket language and, in DrRacket, in
+order to provide error information to the user.  DrRacket already
+provides functions which computes the program's syntax-object list and
+uses some of those functions in the Background Check Syntax and in the
+Check Syntax button callback.
 
 
 \subsubsection{Syntax Expression tree forms}
-DrRacket provides functions to compute the syntax-object list in two different formats.
-One format is the expanded program, which computes the program with all the macros expanded.
-The other format is the non-expanded program and computes the program with the macros
+DrRacket provides functions to compute the syntax-object list in two
+different formats.  One format is the expanded program, which computes
+the program with all the macros expanded.  The other format is the
+non-expanded program and computes the program with the macros
 unexpanded.
 
-The expanded program has the macros expanded and the identifier information correctly
-computed.
-However, it is harder to extract the relevant information when compared with the
-non expanded program.
+The expanded program has the macros expanded and the identifier
+information correctly computed.  However, it is harder to extract the
+relevant information when compared with the non expanded program.
 
-
-For example, the following program is represented in the expanded program,
-and in the non expanded program.
+For example, the following program is represented in the expanded
+form, and in the non expanded form.
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption=Original Code]
 (and alpha beta)
@@ -95,126 +110,146 @@ and in the non expanded program.
 #<syntax:2:0 (and alpha beta)>
 \end{lstlisting}
 
+Note that the expanded program transforms the {\tt and}, {\tt or},
+{\tt when}, and {\tt unless} forms into {\tt if}s which makes
+refactoring operations harder to implement.
 
-The expanded program transforms the {\tt and}, {\tt or}, {\tt when}, and {\tt unless} forms into
-{\tt if}s which makes refactoring operations harder to implement.
+Racket adds internal representation information to the expanded
+program which for most refactoring operations is not necessary.  In
+addition, the expanded program has a format that is likely to change
+in the future.  Racket is an evolving language and the expanded form
+is a low level and internal form of representation of the program.
+However, the expanded program has important information regarding the
+binding information that is not available in the non-expanded form,
+and this information might be useful, e.g., to detect if two
+identifiers refer to the same binding.  Additionally, we do not
+consider macro definitions as part of the code that needs to be
+refactored, since the refactoring tool is targeted at unexperienced
+programmers and these programmers typically do not define macros.
 
-Racket adds internal representation information to the expanded-program which for
-most refactoring operations is not necessary.
-In addition, the expanded program has a format that is likely to change
-in the future.
-Racket is an evolving language and the expanded form is a low level and internal
-form of representation of the program.
-However, the expanded program has important information regarding the binding
-information that is not available in the non-expanded form and is rather useful
-to detect if two identifiers refer to the same binding.
-Additionally we do not consider macros as part of a code that could be refactored,
- since the refactoring tool is targeted at unexperienced programmers macros
-will not be used often and therefore it is not considered part of the scope of
-this refactoring tool capabilities.
-
-Therefore it is desirable to use the non expanded form for the refactoring %all things considered
-operations whenever possible and use the expanded form only for the necessary
-operations.
-Nevertheless, if we intended to create a tool that gives support to refactoring macros
-we would need to use the expanded program.
-However, there are no guarantees that would be enough to ensure the correctness of
-such refactoring operations due to the reflection capabilities of Racket.
+Taking the previous discussion into consideration, it becomes clear
+that it is desirable to use the non expanded form for the
+refactoring %all things considered
+operations whenever possible and use the expanded form only when
+needed.%   Nevertheless, if we intended to create a tool that gives
+% support to refactoring macros we would need to use the expanded
+% program.  However, there are no guarantees that would be enough to
+% ensure the correctness of such refactoring operations due to the
+% reflection capabilities of Racket.
 
 
-\subsection{Def-Use-Relations}
-Def-Use-Relations holds an important information in order to produce correct refactoring operations.
-They can be used to check whether or not there will be a duplicated name
-or even to compute the arguments of a function to be extracted.
+\subsection{Def-use relations}
+Def-use relations hold important information needed in order to
+produce correct refactoring operations.  They can be used to check
+whether there will be a duplicated name or to compute the arguments of
+a function that is going to be extracted.
 
-DrRacket already uses the def-use-relations in the system and they are visually  %TODO they are or it is?
-represented by arrows in the GUI.
-The def-use-relations is computed by the online-compiler that runs in the background.
-However, it is only computed when a program is syntactically correct.
+% DrRacket already uses the def-use-relations in the system and they are
+% visually %TODO they are or it is?
+% represented by arrows in the GUI.
+The def-use-relations is computed by the % online-
+compiler that runs in the background.  However, it is only computed
+when a program is syntactically correct.
 
 \subsection{Code-walker}
-The code-walker is used to parse the syntax tree represented by a syntax elements
-that is a list of syntax-object in Racket.
-A syntax-object can contain either a symbol, a syntax-pair, a datum (number, boolean or string),
-or an empty list.
-While a syntax-pair is a pair containing a syntax object as it first element and
-either a syntax pair, a syntax element or an empty list as the second argument.
-Each syntax-object has information about the line where they are defined and this
-information is to search for the correct elements.
+The code-walker is used to parse the syntax tree represented by a
+syntax element that is a list of syntax-object in Racket.  A
+syntax-object can contain either a symbol, a syntax-pair, a datum
+(number, boolean or string), or an empty list.  While a syntax-pair is
+a pair containing a syntax object as it first element and either a
+syntax pair, a syntax element or an empty list as the second argument.
+Each syntax-object has information about the line where they are
+defined and this information is used to search for the correct
+elements.
 
 
-Most of the time using the code-walker we are searching for a specific syntax element
-and location information contained in the syntax-object  is used to skip the syntax
- blocks that are before the syntax element wanted in the first place.
+Most of the time, the code-walker is used to search for a specific
+syntax element and the location information contained in the
+syntax-object is used to skip the syntax blocks that are before the
+syntax element wanted in the first place.
 
-The Code-walker is a core part of the refactoring tool ensuring that the selected
-syntax is correctly fed to the refactoring operations. %actually?
+The Code-walker is a core part of the refactoring tool, ensuring that
+the selected syntax is correctly fed to the refactoring
+operations. %actually?
 
 
 \subsection{Pretty-printer}
 Producing correct output is an important part of the refactoring tool.
-It is necessary to be careful to produce indented code and we decided to use a pretty-printer
-that is already incorporated in the language.
-However, this pretty-printer does not follow the convention in the {\tt cond} clauses
-should be surrounded by {\tt [ ] } parenthesis. This is not considered a problem because
-Racket supports both representations.
-One possible solution is to use a different pretty-printer in
-order to keep the language convention.
+It is necessary to be careful to produce indented code and we decided
+to use a pretty-printer that is already available in the Racket
+language.  However, it should be noted that this pretty-printer does
+not follow some of the Racket style convention, such as {\tt cond}
+clauses surrounded by square brackets. This is not considered a
+problem because Racket supports both representations.  One possible
+solution is to use a different pretty-printer in order to keep the
+language conventions.
 
 
 \subsection{Comments preservation}
-Preserving the comment information after a refactoring transformation is an important task
-of the refactoring tool. If the comment in determined place of the program
-changes its location affecting another structure it could confuse the programmer.
-However, comment preservation is not implemented yet, making it a limitation of
-this prototype.
+Preserving the comment information after a refactoring transformation
+is an important task of the refactoring tool. If the comment in
+determined place of the program changes its location, affecting a
+different part of the program, it could confuse the programmer.
+However, comment preservation is not implemented yet, making it a
+limitation of this prototype.
 
-One possible solution is to modify the syntax reader and add a comment node to the
-AST.
-While the new node will not be used during refactoring transformations it is used
-during the output part of the refactoring operation preserving the comment with
-the correct syntax expression.
+One possible solution is to modify the syntax reader and add a comment
+node to the AST.  While the new node will not be used during
+refactoring transformations it is used during the output part of the
+refactoring operation, preserving the comment with the correct syntax
+expression.
 
 
 \subsection{Syntax-Parse}
 
-The Syntax-Parse\cite{tobin2011languages} function provided by Racket is rather useful for the refactoring
-operations regarding mainly syntax information.
-It provides a wide range of options to help matching the correct syntax with  %fine tunning
-backtracking making it possible to have several rules to be matched
-in the same syntax parser, which helps to create more sophisticated rules.
+The Syntax-Parse\cite{tobin2011languages} function provided by Racket
+is very useful for the refactoring operations. It provides a wide
+range of options to help matching the correct syntax,
+using %fine tunning
+backtracking to allow have several rules to be matched in the same
+syntax parser, which helps to create more sophisticated rules.
 
 \section{Refactoring operations}
-%TODO do introduction
 In this section we explain some of the  more relevant refactoring operations and
 some limitations of the refactoring tool.
 
 \subsection{Semantic problems}
-There are some known semantic problems that might occur after doing a refactoring
-operation.
-One of them occurs in the refactoring operation that removes redundant {\tt and}s
-in numeric comparisons, since Racket supports more than two arguments.
-\begin{lstlisting}[basicstyle=\ttfamily, caption=And example]
-  (and (< 1 (foo 2)) (< (foo 2) 3))
-  (define (foo arg)
-    (displayln "foo")
-    arg)
-\end{lstlisting}
-The refactoring transforms the code into this:
-\begin{lstlisting}[basicstyle=\ttfamily, caption=Refactored code]
-  (< 1 (foo 2) 3)
-\end{lstlisting}
+There are some well-known semantic problems that might occur after
+doing a refactoring operation.  One of them occurs in the refactoring
+operation that removes redundant {\tt and}s in numeric comparisons.
+Although rarely known by beginner programmers, in Racket, numeric
+comparisons support more than two arguments, as in \verb|(< 0 ?x 9)|,
+meaning the same as %
+\verb|(and (< 0 ?x) (< ?x 9)|, where, we use the notation \verb|?x| to
+represent an expression. Thus, it is natural to think about a
+refactoring operation that eliminates the \verb|and|.  However, when
+the \verb|?x| expression somehow produces side-effects, the
+refactoring operation will change the meaning of the program.
+% \begin{lstlisting}[basicstyle=\ttfamily, caption=And example]
+%   (define (foo arg)
+%     (displayln "foo")
+%     arg)
+%   (and (< 1 (foo 2)) (< (foo 2) 3))
+% \end{lstlisting}
+% The refactoring transforms the code into this:
+% \begin{lstlisting}[basicstyle=\ttfamily, caption=Refactored code]
+%   (< 1 (foo 2) 3)
+% \end{lstlisting}
 
 
-Instead of applying the side effect that is displaying the the string "foo"
- twice it will only display it once. Therefore changing the meaning of the program.
+% Instead of applying the side effect that is displaying the the string "foo"
+%  twice it will only display it once. Therefore changing the meaning of the program.
 
-We still kept this refactoring operation because in the vast majority
-of the cases this refactoring operation do not change the semantic of the program.
-Furthermore, the possible solution would limit excessively this refactoring operation.  %enormously
-Considering Racket's reflection capabilities we would only apply this refactoring operation
-safely when the arguments of the {\tt <} expressions, in this case the numbers 1, 2, 3, and the function {\tt foo}
- were datums (number, boolean or string).
+Despite this problem, we support this refactoring operation because,
+in the vast majority of the cases, there are no side-effects being
+done in the middle of numerical comparisons and, therefore, the
+refactoring operation does not change the meaning of the program.
+% Furthermore, the possible solution would limit excessively this
+% refactoring operation.  %enormously
+% Considering Racket's reflection capabilities we would only apply this
+% refactoring operation safely when the arguments of the {\tt <}
+% expressions, in this case the numbers 1, 2, 3, and the function {\to
+%   the foo} were datums (number, boolean or string).
 
 
 Another example of a semantic problem occurs when refactoring the following {\tt if}
@@ -227,39 +262,41 @@ expression.
 There are two different refactoring transformations possible:
 \begin{lstlisting}[basicstyle=\ttfamily, caption=Refactoring option 1]
 (when ?x
-      ?y ...)
+  ?y ...)
 \end{lstlisting}
 
 \begin{lstlisting}[basicstyle=\ttfamily, caption=Refactoring option 2]
 (and ?x (begin ?y ...))
 \end{lstlisting}
 
-The first refactoring option changes the meaning of the program, because if the
-test expression, in this case {\tt ?x}, is false the result of the {\tt when} expression is {\tt \#<void>}.
-However, the programmer may still want to choose the first refactoring option if
-the return value when the {\tt if} is false is not important creating a dilemma,
-there are two possible refactoring operations applicable.
-For example, if a programmer is creating a predicate may
-choose the {\tt and} version, whereas if the programmer is using another control structure
-and do not care for the result of the expression may prefer the {\tt when} version.
+Note that the first refactoring option changes the meaning of the
+program, because if the test expression, in this case {\tt ?x}, is
+false, the result of the {\tt when} expression is {\tt \#<void>}.
+However, the programmer may still want to choose the first refactoring
+option if the return value when the {\tt ?x} is false is not
+important.% ,
+% there are two possible refactoring operations applicable.
+% For example, if a programmer is creating a predicate may
+% choose the {\tt and} version, whereas if the programmer is using another control structure
+% and do not care for the result of the expression may prefer the {\tt when} version.
 
 \subsection{Extract Function}
-Extract function is an important refactoring operation that every refactoring tool
-should have.
-In order to extract a function it is necessary to compute the arguments needed
-to the correct use of the function.
-While giving the name to a function seams quite straightforward it is necessary to
-check for name duplication in order to produce a correct refactoring. e.g. Having
-two identifiers with the same name and in the same scope produces an incorrect program
-and therefore modifying the meaning of the program.
-Lastly, computing the function body and replacing it by the call should be straightforward.
+Extract function is an important refactoring operation that every
+refactoring tool should have.  In order to extract a function it is
+necessary to compute the arguments needed to the correct use of the
+function.  While giving the name to a function seams quite
+straightforward, it is necessary to check for name duplication in
+order to produce a correct refactoring as having two identifiers with
+the same name in the same scope produces an incorrect program.  After
+the previous checks, it is straightforward to compute the function
+body and replacing the original expression by the function call.
 
-However, it raises the problem where should the function be extracted to. A function can not
-be defined in an expression, (e.g inside a {\tt let}) but it could be defined in the top-level
-or in any other level that is accessible from the current level.
+However, the refactoring raises the problem where should the function
+be extracted to. A function can not be defined inside an expression,
+but it can be defined at the top-level or at any other level that is
+accessible from the current level.
 
-e.g: When extracting the {\tt (+ 1 2)} to a function where should it be defined?
-Top-level, Level-0, level-1, or in the current level, the level-2?
+As an example, consider the following program:
 \begin{lstlisting}[basicstyle=\ttfamily, caption=Extract function levels]
 ;;top-level
 (define (level-0)
@@ -270,97 +307,96 @@ Top-level, Level-0, level-1, or in the current level, the level-2?
   (level-1))
 \end{lstlisting}
 
-The fact is that is extremely difficult to know the answer to this question because
-it depends on what the user is doing and the user interpretation.
-Accordingly we decided that the best solution is to let the user decide where
-the user wants the function defined.
+When extracting the {\tt (+ 1 2)} to a function where should it be
+defined?  Top-level, Level-0, level-1, or in the current level, the
+level-2?  The fact is that is extremely difficult to know the answer
+to this question because it depends on what the user is doing and the
+user intent.  Accordingly, we decided that the best solution is to let
+the user decide where the user wants the function defined.
 
 
 \subsubsection{Computing the arguments}
 
-In order to compute the arguments we have to know in which scope the variables are being defined, in other words,
-if the variables are defined inside or outside the extracted function. %FIXME it is weird
-The variables defined outside the function to be extracted are the candidates to be the arguments %FIXME IMPROVE
-of that function.
-However, imported variables, whether from the language base or from other libraries
-does not have to be passed as arguments, to solve this we considered two possible solutions:
+In order to compute the function call arguments we have to know in
+which scope the variables are being defined, in other words, if the
+variables are defined inside or outside the extracted
+function. %FIXME it is weird
+The variables defined outside the function to be extracted are
+candidates to be the arguments %FIXME IMPROVE
+of that function.  However, imported variables, whether from the
+language base or from other libraries do not have to be passed as
+arguments. To solve this problem, we considered two possible
+solutions:
 
-  -Def-use-relations + Text information
+\begin{itemize}
+\item Def-use relations + Text information
+\item Def-use relations + AST
+\end{itemize}
 
-  -Def-use-relations + AST
+The first approach is simpler to implement and more direct than the
+second one.  However, it is less tolerant to future changes and to
+errors.  The second one combines the def-use relations information
+with the syntax information to check whether it is imported from the
+language or from other library.
 
-The first approach is simpler to implement and more direct than the second one.
-However, it is less tolerant to future changes and to errors.
-The second one combines the def-use-relations information with the syntax information to
-check whether it is imported from the language or from other library.
+We choose the second approach in order to provide a more stable
+solution to correctly compute the arguments of the new function.
 
-We choose the second approach in order to provide a more stable solution to compute
- correctly the arguments of the new function.
-
-\subsection{Let to Define Function} %implemented is it worth it?
-%Refactoring Let to Defines Usefulness Vs implementation difficulty
-
+\subsection{Let to Define Function}
 %there are several let forms, we want to focus on let* let and named let.
-A {\tt let} expression with a function has similarities with a function, which may led
-to mistakenly choose the {\tt let} expression instead of a function and vice-versa.
-Therefore we decided to provide a refactoring operation that would make that transition simpler.
-
-There are several let forms, but we want to focus in the ones more similar to
-a function, namely the {\tt let} and the {\tt named let}.
-
-The {\tt let} and the {\tt named let} can be directly mapped to a function, however, the {\tt named let}
- can be directly mapped to a named function, the {\tt define} keyword, whereas the {\tt let} can only be directly mapped
-to an anonymous function.
-However, we did not consider the transformation of a {\tt let} to an anonymous function, {\tt lambda},
-making the code simpler and therefore it was not implemented yet.\\
+A {\tt let} expression is very similar to a function, which may led the user
+to mistakenly use one instead of the other.
+Therefore we decided to provide a refactoring operation that would make such transition simpler.
 
 
-A refactoring operation that transform a {\tt named let} into a {\tt define} function,
- could have syntax problems because a {\tt let} form can be used in expressions, but the {\tt define} can not.
-In the vast majority of cases this refactoring is correct, but when a {\tt let} is used in an expression
-it is not correct and it changes the meaning of the program, transforming a correct
-program in a incorrect one.
+There are several let forms, but since we want to explore the similarity between the {\tt let} and the function
+we are going to focus in the ones that are more similar to a function, namely the {\tt let} and the {\tt named let}.
+
+There are some differences between them, the {\tt named let} can be directly mapped to a named function, using the {\tt define} keyword,
+whereas the {\tt let} can only be directly mapped to an anonymous function, {\tt lambda}.
+We decided to focus first in the transformation of a {\tt named let} to a function.
+
+However, this refactoring operation which transforms a {\tt named let} into a {\tt define} function,
+ could have syntax problems since a {\tt let} form can be used in expressions, but the {\tt define} can not.
+In the vast majority of cases this refactoring is correct, however, when a {\tt named let} is used in an expression
+it transforms the program in an incorrect one.
 e.g.
 \begin{lstlisting}[basicstyle=\ttfamily, caption=Let in an expression]
 (and (let xpto ((a 1)) (< a 2)) (< b c))
 \end{lstlisting}
-Modifying this {\tt named let} into a define would raise a syntax error because a
-define could not be used in an expression context.
-This could be solved by using the local keyword that is an expression like
-the let form.
+Modifying this {\tt named let} into a {\tt define} would raise a syntax error since a
+{\tt define} could not be used in an expression context.
+Encapsulate the {\tt define} with the {\tt local} keyword, which is an expression like
+the {\tt named let}, can solve the problem.
 However, the {\tt local} keyword is not used very often and might confuse the users.
-This reason made us keep the refactoring operation without the local keyword that works for
+Therefore we decided keep the refactoring operation without the local keyword that works for
 most of the cases.
 
 
-\subsection{Wide-Scope Replacement} %is this a feature or a refactoring?
-The Wide-Scope replacement extends the functionality of the extract function refactoring
-by replacing the duplicated of the extracted code with a function call to the new function.
+\subsection{Wide-Scope Replacement}
+The Wide-Scope replacement extends the extract function functionality by replacing
+the duplicated of the extracted code with the function call of the extracted function.
 
 
 The Wide-Scope replacement refactoring operation searches for the code that is duplicated of the extracted
 function and then replaces it for the call of the
-extracted function and it is divided in two steps: %FIXME Improve
+extracted function and it is divided in two steps:
+\begin{itemize}
+\item Detect duplicated code
+\item Replace the duplicated code
+\end{itemize}
 
-- Detect duplicated code
-
-- Replace the duplicated code
-
-Replacing the duplicated code is the easy part, however the tool might has to compute %have?
+Replacing the duplicated code is the easy part, however the tool might has to compute
 the arguments for the duplicated code itself.
 
-\subsubsection{Detecting duplicated code}
-Correctly detect duplicated code is a key part for the correctness of this refactoring.
-Even the simplest form of duplicated code detection, when it only detects duplicated code
+Correctly detecting duplicated code is a key part for the correctness of this refactoring.
+Even the simplest form of duplicated code detection, where it only detects duplicated code
 when the code is exactly equal, may have some problems regarding the binding information.
 For example, if the duplicated code is inside a {\tt let} that changes some bindings that must
 be taken into consideration.
 In order to solve the binding problem we can use functions already provided in Racket.
 However, that does not work if we use the program in the not expanded
-form to do the binding comparisons because there is not enough information for those bindings to work. %FIXME improve :(
-
-%[TODO Recently racket changed binding expansion and it brought interesting improvements to racket and that might be useful for this, read paper before]
-
+form to do the binding comparisons because there is not enough information for those bindings to work.
 Therefore, in order to compute the correct bindings, it is necessary to use the expanded form
 of the program.
 
@@ -369,12 +405,12 @@ The naive solution is to use the expanded program to detect the duplicated
 However, when expanding the program Racket adds necessary internal information to
 run the program itself that are not visible for the user.
 While this does not change the detecting of the duplicated code, it adds unnecessary information
-that would have to be removed. %FIXME
-In order to solve this problem in a simple way we can use the expanded code to detect
+that would have to be removed.
+In order to solve this in a simple way we can use the expanded code to detect
 the correctly duplicated code and use the non expand program
 to compute which code will be replaced.
 
-However, this detection is a quadratic algorithm which might
+However, this duplicated code detection is a quadratic algorithm which might
 have some performance problems for bigger programs.
 
 %Detecting duplicated code can be added to the automatic detection of possible refactoring operations to be applied. %FIXME is this already done?

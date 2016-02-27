@@ -1,20 +1,20 @@
 \section{Features}
-This section describes some of the features that improve the utility of this
-refactoring tool to beginner programmers. %TODO shall I name them?
+This section describes some of the features created to improve the usability by providing
+sufficient feedback to the user, and way to inform the user of the presence
+of the typical mistakes made by beginners.
 \subsection{User FeedBack}
 It is important to give proper feedback to the user while the user is attempting or
-preforming refactoring operations.
+preforming a refactoring operation.
 Previewing the outcome of a refactoring operation is an efficient form to
 help the users understand the result of a refactoring before even applying the refactoring. %FIXME or understand what a refactoring operation is/do
 It works by applying the refactoring operation in a copy version of the AST
 and displaying those changes to the user.
 It was also studied the possibility of giving feedback to the user instead of
 just disabling the refactoring operation button when the tool could not perform the refactoring operation.
-The tool should provide information about the steps needed in order to be possible to apply
- that refactoring operation.
-However, after an analysis it was clear that these situations rarely occur
-in Racket language and therefore it was not implemented.
-
+%The tool should provide information about the steps needed in order to be possible to apply
+% that refactoring operation.
+%However, after an analysis it was clear that these situations rarely occur
+%in Racket language and therefore it was not implemented.
 
 \subsection{Automatic Suggestions}
 Beginner programmers usually do not know which refactoring operations exist or
@@ -34,14 +34,11 @@ that there is a possible refactoring.
 This feature could be improved by having a set of colors for the different types
 of refactoring operations.
 Moreover, the color intensity could be proportional to the level
-of suggestion. (e.g the recommended level to use extract function refactoring
-increases with the number of duplicated code found) %maybe produce an example?
+of suggestion. e.g the recommended level to use extract function refactoring
+increases with the number of duplicated code found.
 
 
 \section{Analysis}
-%It was made an analysis to compare the refactoring tool with the others
-%table information is available in GIT repository
-%what my tool is different, what it is equal
 \begin{table}[]
 \centering
 \caption{Data Structures}
@@ -49,7 +46,6 @@ increases with the number of duplicated code found) %maybe produce an example?
 \begin{tabular}{c|c|c|c|c}
 Name       & AST & PDG & Database & Others \\ \hline
 Griswold   & X   & X   &          &        \\ \hline
-HaRe       & X   &     &          &        \\ \hline
 Rope       & X   &     & X        &        \\ \hline
 Bicycle    & X   &     & X        &        \\ \hline
 Pycharm Edu & X   &     & X        &        \\ \hline
@@ -60,8 +56,10 @@ Javascript &     &     &          & X
 The Table~\ref{tab:my-table} summarizes the data structures of the analyzed refactoring tools.
 It is clear that the AST of a program is an essential part of the refactoring
 tool information with every refactoring tool having an AST to represent the program.
-Regarding the PDG and Database it has mainly information about the def-use-relation
-of the program. The PDG has also control flow information among others.
+Regarding the PDG and Database it contains mainly information about the def-use-relation
+of the program. The PDG has also control flow information of the program.
+Our implementation uses the same data structures, the AST and
+the def-use-relations.
 
 %HaRe only uses the AST as a source of information of the program. Thus, by not having
 %the def-use-relation or a PDG it has less information to perform the refactoring operations.
@@ -69,27 +67,19 @@ of the program. The PDG has also control flow information among others.
 %programming language that extra information is not necessary to perform a good set of
 %refactoring operations correctly.
 
-Our implementation uses the same data structures, the AST and
-def-use-relations. The def-use-relation is often represented as a database,
-some refactoring tools annotate that information in the AST, %haskell v2
-some tools extract the information from the AST itself when it is possible and
-it is possible to extract that information from the PDG.\\
 
-
-Some tools have more information about the program, either because they need that
-information to perform the refactoring operation or because they need to prove that
-the refactoring is correct.  %case of pycharm/python && Griswold
-%Undoubtedly the main difference is in the objectives of each refactoring tool.
-Other tools like the one build by Griswold focus on the correctness of the refactoring
-operations.
+Some tools like the one build by Griswold focus on the correctness of the refactoring
+operations and therefore need more information about the program, such as the information
+provided by the PDG.
 Others, focus in offering refactoring operations for professional or advanced users.
 However, the goal of our refactoring tool is to provide refactoring operations
-designed for beginners. %FIXME suited aimed targeted
-Therefore we are not interested in refactoring operations formerly proven %FIXME REWRITE
-correct or provide refactoring operations only used in advanced and complex use cases. %FIXME where is the comma??
-We intend to have simple, useful, and correct refactoring operations for the usual use cases a beginner would use.
-With this set of scope we exclude macros usage, classes and other complex structures %TODO check this!
-not used by beginners.
+designed for beginners.
+Therefore we are not interested in refactoring operations formerly proven
+correct or provide refactoring operations only used in advanced and complex use cases.
 
-%TODO add I already used the refactoring tool to do a refactoring operation in
+We intend to have simple, useful, and correct refactoring operations to correct the typical mistakes made by beginners.
+With this we exclude from the refactoring tool scope  macros usage, classes, and other complex structures
+not often used by beginners.
+
+%Added in evaluation: I already used the refactoring tool to do a refactoring operation in
 %the source code of the refactoring tool. However this is only applicable in the parts that are supported by this refactoring tool.

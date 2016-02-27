@@ -4,29 +4,29 @@ master the syntax and semantics of a programming language, but also
 the style rules adopted in that language and, more important, the
 logical rules that allow him to write simple and understandable
 programs.  Given that beginner programmers have insufficient knowledge
-about these rules, it should not be surprising to verify that their
-code reveals what more knowledgeable programmers call ``poor style,''
-``bad smells,'' etc.  As time goes by, it is usually the case that the
-beginner programmer will learn those rules and will start producing
-correct code written in an adequate style.  However, that learning
+about all these rules, it should not be surprising to verify that
+their code reveals what more knowledgeable programmers call ``poor
+style,'' ``bad smells,'' etc.  As time goes by, it is usually the case
+that the beginner programmer learns those rules and starts producing
+correct code written in an adequate style.  However, the learning
 process might take a considerable amount of time and, as a result,
-considerable amounts of poorly-written code might be produced.  It is
-then important to speed up this learning process by showing, from the
-early learning phases, how a poorly-written fragment of code can be
-improved.
+large amounts of poorly-written code might be produced before the end
+of the process.  It is then important to speed up this learning
+process by showing, from the early learning phases, how a
+poorly-written fragment of code can be improved.
 
 After learning how to write code in a good style, programmers become
 critics of their own former code and, whenever they have to work with
-it, they tend to take advantage of the opportunity to restructure it
-so that it becomes easier to understand and conforms to the style
-rules.  However, in most cases, these modifications are done without
-complete knowledge of the requirements and constraints that were
-considered when the code was originally written and, as result, there
-is a serious risk that the modifications might introduce bugs.  It is
-thus important to help the programmer in this task so that he can be
-confident that the code improvements he anticipate are effectively
-applicable and will not change the meaning of the program.  This has
-been the main goal of \emph{code refactoring}.
+it again, they are tempted to take advantage of the opportunity to
+restructure it so that it conforms to the style rules and becomes
+easier to understand.  However, in most cases, these modifications are
+done without complete knowledge of the requirements and constraints
+that were considered when the code was originally written and, as
+result, there is a serious risk that the modifications might introduce
+bugs.  It is thus important to help the programmer in this task so
+that he can be confident that the code improvements he anticipate are
+effectively applicable and will not change the meaning of the program.
+This has been the main goal of \emph{code refactoring}.
 
 Code refactoring is the process of changing a software system in such
 a way that it does not alter the external behavior of the code yet
@@ -37,22 +37,23 @@ interfaces from classes, and to transform anonymous classes into
 nested classes.  It is important to note, however, that these IDEs
 were designed for advanced programmers, and that the provided
 refactorings require a level of code sophistication that is not
-present in programs written by beginners.  This makes the refactoring
+present in the programs written by beginners.  This makes the refactoring
 tools inaccessible to beginners.
 %For instance, Eclipse\cite{carlson2005eclipse} has around 300 menu bar options and VisualStudio\cite{ford2011coding} 280, which is a massive amount
 %of options for the user to select.
 
 In this paper, we present a tool that was designed to address the
 previous problems.  In particular, our tool (1) is usable from a
-pedagogical IDE designed for beginners \cite{pears2007survey}\cite{kolling2003bluej}, (2) is capable of analyzing
+pedagogical IDE designed for beginners
+\cite{pears2007survey,kolling2003bluej}, (2) is capable of analyzing
 the programmer's code and inform him of the presence of the typical
 mistakes made by beginners, and finally (3) can apply refactoring
 rules that restructure the program without changing its semantics.
 
-We implemented our idea for a refactoring tool in DrRacket a pedagogical IDE \cite{drscheme}\cite{drscheme_pegadogy},
-used in schools around the world which provides a simple and straightforward interface.
-DrRacket is tailor made for the Racket programming language, that is well known for its
-use in introductory programming courses, and currently has only one simple refactoring
-operation which allows renaming a variable.
-Our implementation significantly extends the set of refactoring operations available
-in Drracket.
+To evaluate our proposal, we implemented a refactoring tool in
+DrRacket, a pedagogical IDE \cite{drscheme,drscheme_pegadogy} used in
+schools around the world to teach basic programming concepts and
+techniques.  Currently, DrRacket has only one simple refactoring
+operation which allows renaming a variable.  Our work significantly
+extends the set of refactoring operations available in DrRacket and
+promotes their use as part of the learning process.

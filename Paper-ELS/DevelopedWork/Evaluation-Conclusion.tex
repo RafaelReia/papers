@@ -52,14 +52,14 @@ and here is explained the motivation for their existence.
 
 The first example is a very typical error made beginner programmers.
 \begin{lstlisting}
-  (if (>= n_plays 35)
-        #T
-        #F)
+(if (>= n_plays 35)
+  #t
+  #f)
 \end{lstlisting}
 It is rather a simple refactoring operation, but nevertheless it improves the code.
 %if after , caption=Refactored If expression
 \begin{lstlisting}
-  (>= n_plays 35)
+(>= n_plays 35)
 \end{lstlisting}
 
 %and before , caption=And expression
@@ -81,160 +81,133 @@ rather typical usage of this expression.
 Transforming the code by removing the redundant {\tt and} expression makes the code
 cleaner and simpler to understand.
 \begin{lstlisting}
-(and  (eq? #t (correct-moviment? player play))
-      (eq? #t (player-piece? player play))
-      (eq? #t (empty-destination? play))
-      (eq? #t (empty-start? play)))
+(and (eq? #t (correct-moviment? player play))
+     (eq? #t (player-piece? player play))
+     (eq? #t (empty-destination? play))
+     (eq? #t (empty-start? play)))
 \end{lstlisting}
 
-However, this code could still be improved, the {\tt (eq? \#t ?x)} is a redundant way
+However, this code can still be improved, the {\tt (eq? \#t ?x)} is a redundant way
 of simple writing {\tt ?x}.
 \begin{lstlisting}
-(and  (correct-moviment? player play)
-      (player-piece? player play)
-      (empty-destination? play)
-      (empty-start? play))
+(and (correct-moviment? player play)
+     (player-piece? player play)
+     (empty-destination? play)
+     (empty-start? play))
 \end{lstlisting}
 
-
-While a student is still learning and experiencing it is easier to confuse whether
-or not an expression needs the {\tt begin} expression or not.
-The {\tt when}, {\tt cond} and {\tt let} expressions have a implicit {\tt begin} expression and
-as a result it is not necessary to add the {\tt begin} expression.
-Moreover, sometimes they still kept the {\tt begin} keyword because often use error and trial approach
-in writing code.
-Our refactoring tool checks for those mistakes and corrects them.
+While a student is still learning is common to forget whether or not a
+sequence of expressions need to be wrapped in a {\tt begin} form.  The
+{\tt when}, {\tt cond} and {\tt let} expressions have a implicit {\tt
+  begin} and as a result it is not necessary to add the {\tt begin}
+expression.  Moreover, sometimes they still kept the {\tt begin}
+keyword because they often use a trial and error approach in writing
+code.  Our refactoring tool checks for those mistakes and corrects
+them.
 %let with begin before, Chose a better example
 \begin{lstlisting}
-  (if (odd? line-value)
-      (let ((internal-column (sub1 (/ column 2))))
-        (begin
-          (if (integer? internal-column)
-              internal-column
-              #f)))
-      (let ((internal-column (/ (sub1 column) 2)))
-        (begin
-          (if (integer? internal-column)
-              internal-column
-              #f))))
+(if (odd? line-value)
+    (let ((internal-column (sub1 (/ column 2))))
+      (begin
+        (if (integer? internal-column)
+            internal-column
+            #f)))
+    (let ((internal-column (/ (sub1 column) 2)))
+      (begin
+        (if (integer? internal-column)
+            internal-column
+            #f))))
 \end{lstlisting}
 %let with begin after
-It is a simple refactoring operation and it does not have a big impact, however
-it makes the code clear and helps the beginner programmer to learn that a {\tt let}
-does not need a {\tt begin}.
+This is a simple refactoring operation and it does not have a big
+impact, however it makes the code clear and helps the beginner
+programmer to learn that a {\tt let} does not need a {\tt begin}.
 \begin{lstlisting}
-  (if (odd? line-value)
-        (let ((internal-column (sub1 (/ column 2))))
-          (and (integer? internal-column)
-              internal-column))
-        (let ((internal-column (/ (sub1 column) 2)))
-          (and (integer? internal-column)
-              internal-column)))
+(if (odd? line-value)
+    (let ((internal-column (sub1 (/ column 2))))
+      (and (integer? internal-column)
+           internal-column))
+    (let ((internal-column (/ (sub1 column) 2)))
+      (and (integer? internal-column)
+           internal-column)))
 \end{lstlisting}
 
 
 The next example shows a nested {\tt if}. Nested {\tt if}s are
  difficult to understand, error prone, and a debugging nightmare.
-It is much simpler to have a {\tt cond} expression.
+\begin{lstlisting}
+(define (search-aux? board line column piece)
+  (if (> column 8)
+    #f
+    (if (= line 1)
+      (if (eq? (house-board board 1 column) piece)
+        #t
+        (search-aux? board line (+ 2 column) piece))
+      (if (= line 2)
+        (if (eq? (house-board board 2 column) piece)
+          #t
+          (search-aux? board line (+ 2 column) piece))
+        (if (= line 3)
+          (if (eq? (house-board board 3 column) piece)
+            #t
+            (search-aux? board line (+ 2 column) piece))
+          (if (= line 4)
+            (if (eq? (house-board board 4 column) piece)
+              #t
+              (search-aux? board line (+ 2 column) piece))
+            (if (= line 5)
+              (if (eq? (house-board board 5 column) piece)
+                #t
+                (search-aux? board line (+ 2 column) piece))
+              (if (= line 6)
+                (if (eq? (house-board board 6 column) piece)
+                  #t
+                  (search-aux? board line (+ 2 column) piece))
+                (if (= line 7)
+                  (if (eq? (house-board board 7 column) piece)
+                    #t
+                    (search-aux? board line (+ 2 column) piece))
+                  (if (= line 8)
+                    (if (eq? (house-board board 8 column) piece)
+                      #t
+                     (search-aux? board line (+ 2 column) piece))
+                    null))))))))))
+\end{lstlisting}
+
+It is much simpler to have a {\tt cond} expression instead of the nested {\tt if}.
 In addition, every true branch of this nested if contains {\tt if} expressions that are
 or expressions and by refactoring those {\tt if} expressions to {\tt or}s it makes the code
 simpler to understand.
-%if to cond before
-\begin{lstlisting}
-  (define (search-aux? board line column piece)
-    (if
-      (> column 8)
-      #f
-      (if
-        (= line 1)
-        (if
-          (eq? (house-board
-               board 1 column) piece)
-          #t
-          (search-aux? board line
-            (+ 2 column) piece))
-        (if (= line 2)
-          (if
-            (eq? (house-board
-              board 2 column) piece)
-            #t
-            (search-aux? board line
-              (+ 2 column) piece))
-          (if (= line 3)
-            (if
-              (eq? (house-board
-                board 3 column) piece)
-              #t
-              (search-aux? board line
-                (+ 2 column) piece))
-            (if (= line 4)
-              (if
-                (eq? (house-board
-                  board 4 column) piece)
-                #t
-                (search-aux? board line
-                  (+ 2 column) piece))
-              (if (= line 5)
-                (if
-                  (eq? (house-board
-                    board 5 column) piece)
-                  #t
-                  (search-aux? board line
-                    (+ 2 column) piece))
-                (if (= line 6)
-                  (if (eq? (house-board
-                        board 6 column) piece)
-                    #t
-                    (search-aux? board line
-                           (+ 2 column) piece))
-                  (if (= line 7)
-                    (if (eq? (house-board
-                          board 7 column) piece)
-                      #t
-                      (search-aux? board line
-                        (+ 2 column) piece))
-                    (if (= line 8)
-                      (if (eq? (house-board
-                        board 8 column) piece)
-                        #t
-                       (search-aux? board
-                         line (+ 2 column) piece))
-                    null))))))))))
-\end{lstlisting}
-%if to cond after
 
-This transformations drastically reduced the lines of code, from 59 to 28 that accounts
-for a 52\% reduction of the lines of code.
 
 \begin{lstlisting}
-  (define (search-aux? board line column piece)
-   (cond
-   [(> column 8) #f]
-   [(= line 1)
-    (or (eq? (house-board board 1 column) piece)
-          (search-aux? board line (+ 2 column) piece))]
-   [(= line 2)
-    (or (eq? (house-board board 2 column) piece)
-          (search-aux? board line (+ 2 column) piece))]
-   [(= line 3)
-    (or (eq? (house-board board 3 column) piece)
-          (search-aux? board line (+ 2 column) piece))]
-   [(= line 4)
-    (or (eq? (house-board board 4 column) piece)
-          (search-aux? board line (+ 2 column) piece))]
-   [(= line 5)
-    (or (eq? (house-board board 5 column) piece)
-          (search-aux? board line (+ 2 column) piece))]
-   [(= line 6)
-    (or (eq? (house-board board 6 column) piece)
-          (search-aux? board line (+ 2 column) piece))]
-   [(= line 7)
-    (or (eq? (house-board board 7 column) piece)
-          (search-aux? board line (+ 2 column) piece))]
-   [(= line 8)
-    (or (eq? (house-board board 8 column) piece)
-          (search-aux? board line (+ 2 column) piece))]
-   [else null]))
+(define (search-aux? board line column piece)
+  (cond [(> column 8) #f]
+        [(= line 1)
+         (or (eq? (house-board board 1 column) piece)
+             (search-aux? board line (+ 2 column) piece))]
+        [(= line 2)
+         (or (eq? (house-board board 2 column) piece)
+             (search-aux? board line (+ 2 column) piece))]
+        [(= line 3)
+         (or (eq? (house-board board 3 column) piece)
+             (search-aux? board line (+ 2 column) piece))]
+        [(= line 4)
+         (or (eq? (house-board board 4 column) piece)
+             (search-aux? board line (+ 2 column) piece))]
+        [(= line 5)
+         (or (eq? (house-board board 5 column) piece)
+             (search-aux? board line (+ 2 column) piece))]
+        [(= line 6)
+         (or (eq? (house-board board 6 column) piece)
+             (search-aux? board line (+ 2 column) piece))]
+        [(= line 7)
+         (or (eq? (house-board board 7 column) piece)
+             (search-aux? board line (+ 2 column) piece))]
+        [(= line 8)
+         (or (eq? (house-board board 8 column) piece)
+             (search-aux? board line (+ 2 column) piece))]
+        [else null]))
 \end{lstlisting}
 
 However, this code could still be further improved by refactoring it into a {\tt case}. \\
@@ -267,6 +240,10 @@ If to Cond                                                  & 0     & 0      & 0
 As seen in Table~\ref{tab:ref-ops} the average reduction in LOC is 9.34\% which
 shows how useful are these refactoring operations. It also shows how many
 refactoring operations were applied.
+This tool is not only for beginners, during the development of the tool we already
+used some of the refactoring operations, namely the extract function, in order to
+improve the structure of the code.
+
 %if the users had a refactoring tool that highlighted their code in areas that
 %could be improved, they probably would not have this kind of code.
 
@@ -319,8 +296,9 @@ def mandelbrot(iterations, c):
 \end{lstlisting}
 
 \begin{lstlisting}
-def computeZ( z,c):
+def computeZ(z, c):
     return z*z + c
+
 def mandelbrot(iterations, c):
     z = 0+0j
     for i in range(iterations+1):
