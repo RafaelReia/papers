@@ -51,6 +51,7 @@ and here is explained the motivation for their existence.
 
 
 The first example is a very typical error made beginner programmers.
+\begin{absolutelynopagebreak}
 \begin{lstlisting}
 (if (>= n_plays 35)
   #t
@@ -61,7 +62,7 @@ It is rather a simple refactoring operation, but nevertheless it improves the co
 \begin{lstlisting}
 (>= n_plays 35)
 \end{lstlisting}
-
+\end{absolutelynopagebreak}
 %and before , caption=And expression
 The next example is related with the conditional expressions, namely the {\tt and}
 or {\tt or} expressions. We decided to choose the {\tt and} expression to exemplify a
@@ -135,6 +136,9 @@ programmer to learn that a {\tt let} does not need a {\tt begin}.
 
 The next example shows a nested {\tt if}. Nested {\tt if}s are
  difficult to understand, error prone, and a debugging nightmare.
+ \begin{absolutelynopagebreak}
+
+
 \begin{lstlisting}
 (define (search-aux? board line column piece)
   (if (> column 8)
@@ -173,7 +177,7 @@ The next example shows a nested {\tt if}. Nested {\tt if}s are
                      (search-aux? board line (+ 2 column) piece))
                     null))))))))))
 \end{lstlisting}
-
+\end{absolutelynopagebreak}
 It is much simpler to have a {\tt cond} expression instead of the nested {\tt if}.
 In addition, every true branch of this nested if contains {\tt if} expressions that are
 or expressions and by refactoring those {\tt if} expressions to {\tt or}s it makes the code
@@ -251,40 +255,31 @@ improve the structure of the code.
 Python is being promoted as a good replacement for Scheme and Racket in science introductory courses.
 It is an high-level, dynamically typed programming language and it supports the functional, imperative and object
 oriented paradigms.
-Using this architecture and the capabilities offered by Racket and DrRacket with an implementation of Python for Racket\cite{ramos2014implementation} \cite{ramos2014reaching}
-we can also have refactoring operations in Python. \\
+Using the architecture of this refactoring tool and the capabilities offered by Racket combined
+with an implementation of Python for Racket\cite{ramos2014implementation} \cite{ramos2014reaching}
+it is also possible to provide refactoring operations in Python. \\
 %focus in the functional paradigm of Python
-Using Racket's syntax-objects to represent Python like a meta-language like it was used in FAMIX\cite{tichelaar2000meta}.
-It is possible use the same structure to parse and analyze the code used for the refactoring operations in Racket.
+Using Racket's syntax-objects to represent Python as a meta-language \cite{tichelaar2000meta}
+it is possible use the same structure used for the refactoring operations in Racket to parse and analyze the code in Python.
 
 However, there are some limitations regarding the refactoring operations in Python.
 Since Python is a statement base language instead of expression base, it raises
-some problems regarding the possibility of some refactoring operations.
+some problems regarding the possibility of some refactoring operations. \\
 
+%\vspace{5mm}
 Example of removing an If expression:
 \lstset{style=python}
 \begin{lstlisting}
 True if (alpha < beta) else False
 \end{lstlisting}
 
+
 \begin{lstlisting}
 (alpha < beta)
 \end{lstlisting}
 
-The next one shows the extract function:
-%\begin{lstlisting}
-%def complexFunction(a, b, c):
-%    a + b + c
-%    c + b - a
-%\end{lstlisting}
-
-%\begin{lstlisting}
-%def simpleAddition( a,b,c):
-%    return a + b + c
-%def complexFunction(a, b, c):
-%    simpleAddition( a,b,c)
-%    c + b - a
-%\end{lstlisting}
+\vspace{5mm}
+The next one shows an extract function:
 \begin{lstlisting}
 def mandelbrot(iterations, c):
     z = 0+0j
@@ -294,7 +289,7 @@ def mandelbrot(iterations, c):
         z = z*z + c
     return i+1
 \end{lstlisting}
-
+\begin{absolutelynopagebreak}
 \begin{lstlisting}
 def computeZ(z, c):
     return z*z + c
@@ -307,9 +302,9 @@ def mandelbrot(iterations, c):
         z = computeZ( z,c)
     return i+1
 \end{lstlisting}
-
-This refactoring operations for Python are just only a prototype and it is a work
-in progress.
+\end{absolutelynopagebreak}
+It is important to note that this refactoring operations for Python are just only a prototype and
+the work is still in progress.
 \section{Conclusion}
 A refactoring tool designed for beginner programmers would benefit them
 by providing a tool to restructure the programs and improve what more knowledgeable programmers call ``poor style,''
