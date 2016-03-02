@@ -31,9 +31,27 @@ Python was chosen because there is already an implementation of Python for the
  refactoring operations for new languages when compared with the necessary effort to create
  the refactoring operations directly for that language.
 
- Framework architecture.
-(link in drive)
+Ideally we should only have refactoring operations for the meta-language which represents
+all languages. And then specialized pretty printers to output the changes in the
+desireble language.
+However, since we instead of having a general representation that can represent all the languages
+supported we have the languages represented in Racket's syntax objects we can not do that.
 
+We indeed have a meta-language that abstracts all the supported languages and
+we have trully language independent refactoring operations. However, it is only
+for a small set of refactoring opeartions, the more simple ones. We did it like
+this because we would lose some of the possible refactoring operations or we would
+have to have a lot of concerns. And since we have a restrict amount of time, having
+a meta-language that have language-independent refactoring operations combined
+with the "semi-meta-languages" that have similar refactoring operations but
+language dependent and therefore more specialized.
+
+With this we do not have a language-independent framework. However we have a framework
+for refactoring operations, even tough that is more aimed at dynamic and functional languages.
+Framework architecture.
+\begin{figure}[h]
+\includegraphics[width=8cm]{../framework-arch.png}
+\end{figure}
 
 \subsection{Statement based languages}
 This Framework was build with a base of expression based languages. The flow of
