@@ -8,25 +8,27 @@ Another advantage is the incorporation with git. A plugin can be a link for a gi
 repository and because of that it becomes simple to keep the refactoring tool up to date.
 
 However, the main reason to create a plugin is to become independent from DrRacket
-evolution. With a plugin that is possible and it is manageable.
+internal changes.
 \section{FrameWork}
-Python: [framework]
-One of the goals of this thesis is to create refactoring for dynamic languages in general,
-in other words, to create a Framework for refactoring tools.
-//by using the same structure (program, framework, choose one better)
-After creating several refactoring operations for Racket Python was chosen next.
-POC (prove of concept)
-It was created a prove of concept in Python consistent in several refactoring operations, such as:
-[TODO] say which refactoring operations were implemented.
-Python was chosen because there is already an implementation of Python for the
- DrRacket environment in which the refactoring tool for Racket was first developed.
+Refactoring tools have similar architecture with each other, and such similarities
+create the possibility of reusing some modules. And instead of creating every
+module of the refactoring tool if there was already ready to use modules refactoring
+tool development would become a lot faster.
+Since we desire to create a refactoring tool targeted to beginner programmers with
+specialized refactoring operations and we want such refactoring tool to be available
+for several languages used in introductory courses around the world and not just for
+Racket programming language.
+Creating a framework for refactoring tools increases both the speed and the simplicity (??)
+of creating a refactoring tool and therefore it is able to provide the features already available
+for one refactoring tool in the others without extra effort. Such features highly improve
+the usefulness of the refactoring tool, for example the highlight of possible refactoring
+operations, the previewing of the result and support to detect duplicated code.
 
-%[TODO say what parts of the code were reused]
 
  %[TODO Explain META-LANGUAGE]
- The implementation for DrRacket is what does the trick, because by implementing
- the language with Racket syntax we use it as a meta-language which then
- can represent several different languages. Being the meta-language a language that are
+ Impementing the framework in Racket combined with the implmented languages for DrRacket is what does the trick,
+ since we use the implemetnation as a meta-language which creates syntax objects as the ones used to represent the racket language.
+  Being the meta-language a language that are
  composed only by syntax elements is a huge advantage to compute effortless new
  refactoring operations for new languages when compared with the necessary effort to create
  the refactoring operations directly for that language.
@@ -48,10 +50,21 @@ language dependent and therefore more specialized.
 
 With this we do not have a language-independent framework. However we have a framework
 for refactoring operations, even tough that is more aimed at dynamic and functional languages.
-Framework architecture.
+Framework architecture.%FIXME this is super weird
 \begin{figure}[h]
-\includegraphics[width=8cm]{../framework-arch.png}
+\includegraphics[width=8cm]{../framework-arch2.png}
+\label{fig:framework}
 \end{figure}
+
+As it is described in Figure~\ref{fig:framework} we have a module that provides
+independent refactoring operations and a module for each language supported that
+have specialized refactoring operations. We also have pretty-printing modules for
+each supported language.
+
+We already have refactoring operations for Racket, Python, and Processing. We choose
+this languages because they are already implemented in Racket and they are both
+often used by beginners.
+
 
 \subsection{Statement based languages}
 This Framework was build with a base of expression based languages. The flow of
@@ -60,6 +73,20 @@ or even to decide where and how many returns a function needs. However this coul
 be minimized with a PDG (program depedence graph) that has the control flow information
 needed to compute correct refactorings.
 
+\subsection{Language Independent refactoring operations}
+Creating a fully language independent refactoring tool is difficult since programming
+languages differ from each other, even some operations that seams to be equal can
+have small differences. %TODO give an example.
+However, for simple refactoring opeartions that not require much program semantics,
+such as refactoring operations that focus only in the syntax.
+With this it is possible to have only the refactoring operation in the meta-language
+and use it to refactor code in the implemented languages.
+\subsection{Language dependent refactoring operations}
+It is necessary to have refactoring operations that are language dependent, since
+some refactoring operatons have som particularties for each supported language.
+Having specific refactoring operations, language dependent ones, it is possible
+to implement some useful refactoring operations in a simple way that otherwise would
+be too complex.
 \section{Features}
 how easy it is to add new refactoring operations and languages
 The framework it is simply to use, it is only necessary to have a specification file
@@ -84,7 +111,6 @@ the problem of the difficulty and lacking of refactoring operations for dynamic 
 %evaluation of this refactoring tool and to use in battery tests.
 
 
-%FIXME change to the FRAMEWORK
 A refactoring tool is a quite complex piece of software and therefore requires maintenance.
 Automatic testing is used in general by developers to ensure that the software
 is bug free for those test cases.
@@ -114,7 +140,6 @@ so it is necessary to recompute the AST.
 %After testing it with several (or huge) programs if every test passes (or the exact same tests, because refactoring operations should not fix bugs)
 %we can consider that the refactoring operations are correct.
 \section{Analysis}
-\subsection{Famix}
 
 \section{Conclusion}
 \section{Future Work}
