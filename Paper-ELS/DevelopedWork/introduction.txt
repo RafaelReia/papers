@@ -1,0 +1,52 @@
+
+The support provided to beginner programmers is increasing and there are already
+several languages known to be suited for the initial contact with programming, such as Scheme, Racket,
+Python and JavaScript which are used in introductory courses around the world.
+In addition, there are integrated development environments (IDEs) targeted for
+ users with little or no previous contact with programming \cite{kolling2003bluej}. %system pedagogy 2.2 and 3.4
+The pedagogically-aware %educational
+ IDE provides the tools and the means to create better programs while simplifying
+the complexity of a typical IDE \cite{pears2007survey}.%pedagogy 3.3 and 3.4
+
+After learning the fundamentals of programming a beginner programmer should have the
+capacity to transform the code systematically.
+In order to help with that there are the refactoring tools,
+which provides support to refactoring operations intended to improve the design
+of an existing code base \cite{fowler1999refactoring} without changing the behavior of the program.
+Languages used in introductory courses already have refactoring tools available,
+however they were made for more advanced users and not for beginners.
+The lack of refactoring operations for beginner programmers makes those refactoring tools
+unfit for a beginner.
+
+A refactoring tool for beginner programmers needs to improve code made by them, %must help to improve / should help to improve / ?
+with refactoring operations for the typical errors made, and simple enough to be
+used by a beginner programmers.
+Automatic detection of possible refactorings would also help the users to know
+which refactoring operations available and where they are applicable.
+
+In contrast, the typical refactoring tools do not provide any support for the detection of code which might or should
+be refactored.
+On top of that, the IDEs in which most of those tools are embedded, such as Eclipse\cite{carlson2005eclipse},
+ IntelliJ \cite{bock2011intellij}, NetBeans \cite{boudreau2002netbeans}, VisualStudio\cite{ford2011coding},
+ Vim\cite{moolenaar2008vim}, and Emacs\cite{stallman2007gnu}, are too complex for beginners
+ to use, requiring the user to understand several complex menus or to learn
+ the special commands to properly use the IDE.
+As a result this IDEs have a steep learning curve, which makes it difficult for beginners
+to explore the tool. %take advantage, fully use the tool, etc
+For instance, Eclipse has around 300 menu bar options and Visual studio 280, which is a massive amount
+of options for the user to select.
+
+In this paper we present a refactoring tool aimed for beginner programmers which typically
+had one introductory course.
+Our tool helps to detect the typical programming mistakes made by students and in
+addition can make suggestions showing the possible refactoring operations found.
+This refactoring tool brings a new set of options for the beginners to use
+in order to safely improve their code.
+
+
+We implemented our idea for a refactoring tool in DrRacket, formerly known as
+DrScheme is a pedagogical IDE \cite{drscheme}\cite{drscheme_pegadogy}.
+DrRacket was tailor made for the Racket programming language, which currently
+has only one simple refactoring operation which allows renaming a variable.
+Our implementation significantly extends the set of refactoring operations available
+in Drracket.
