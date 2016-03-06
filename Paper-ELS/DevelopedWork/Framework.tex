@@ -75,19 +75,23 @@ needed to compute correct refactorings.
 
 \subsection{Language Independent refactoring operations}
 Creating a fully language independent refactoring tool is difficult since programming
-languages differ from each other, even some operations that seams to be equal can
-have small differences. %TODO give an example.
-However, for simple refactoring opeartions that not require much program semantics,
-such as refactoring operations that focus only in the syntax.
-With this it is possible to have only the refactoring operation in the meta-language
-and use it to refactor code in the implemented languages.
+languages differ semantically from each other, even some operations that are semantically
+equal for most of the cases, for the cases that they are not semantically equal makes it very
+difficult to do a general refactoring operation.
+%TODO give an example. (+ in python?) (< ?)
+However, for simple refactoring opeartions, which do not require much program semantics,
+it is possible to have language independente refactoring operations in a meta-language that
+represents the semanatic of the other implemented languages. %TODO CHECK THIS
+
 \subsection{Language dependent refactoring operations}
 It is necessary to have refactoring operations that are language dependent, since
-some refactoring operatons have som particularties for each supported language.
+some refactoring operatons have particular cases for each supported language.
 Having specific refactoring operations, language dependent ones, it is possible
 to implement some useful refactoring operations in a simple way that otherwise would
 be too complex.
-\section{Features}
+%TODO give an example
+
+\section{Features} %talk about one feature fits all
 how easy it is to add new refactoring operations and languages
 The framework it is simply to use, it is only necessary to have a specification file
 of each refactoring operation.
@@ -102,6 +106,10 @@ This Framework makes it easier to implement refactoring operations for dynamic l
 with only the catch that they have to be implemented for DrRacket. Helping minimizing
 the problem of the difficulty and lacking of refactoring operations for dynamic languages.
 (for at least every language implemented for DrRacket)
+
+Automatic detection
+Preview
+duplicated code detection
 \section{Tool Maintenance} %Framework maintenance!
 %Developer Point of view
 %%%% Nor for the paper tough %%%%
@@ -139,8 +147,34 @@ so it is necessary to recompute the AST.
 %And finally by running again the test cases of the program.
 %After testing it with several (or huge) programs if every test passes (or the exact same tests, because refactoring operations should not fix bugs)
 %we can consider that the refactoring operations are correct.
-\section{Analysis}
 
-\section{Conclusion}
+\section{Examples}  %evaluation?
+
+\section{Analysis} %and conclusion
+Combining the two approaches can simply create refactoring operations for several
+languages targetted at beginner programmers. Some of this refactoring operations
+are rather simple, when compared to more advanced ones, and some can even be reproduced
+in a meta-language and therefore only implemented once for several programming languages.
+For the rest of the refactoring operations they can be added to the dependent language
+module in which it is possible to have the special cases covered.
+
+With the combination usage of reader + expander + code-walker working for the several
+implemented languages most of the work is already done and when combined with the
+powerfulness offered by the syntax-parser it is possible to create refactoring operations
+using only one line of code, e.g. %TODO add an example
+Even having some refactoring operations that are more complex it is way quicker and
+simpler only to have to implement the refactoring operation itself.
+However, there is still lacking of program information that is rather useful for
+statement based languages (or even object oriented ones?) which is program dependence.
+%extract function for python + processing, atm is kinda tricky!
+Having more program information available, such as the dependence, it is possible to
+create even more complex refactoring operations which would be a great improvement.
+
+
+%\section{Conclusion}
+
 \section{Future Work}
 Add a PDG to the framework.
+Simplify adding langauges to the framework
+Simplify create features for all languages.
+Create an API??
