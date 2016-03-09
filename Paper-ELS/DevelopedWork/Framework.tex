@@ -1,5 +1,6 @@
 
-\section{Plugin}
+\section{Plugin} %interoperability?
+
 In order to improve the deployment and usage of the refactoring tool a plugin
 for DrRacket was created.
 DrRacket has several advantages and the plugin support is another one, because
@@ -11,14 +12,22 @@ However, the main reason to create a plugin is to become independent from DrRack
 internal changes.
 
 %TODO TODO intro? TODO TODO TODO
-we do not explore type information to do refactoring operations to static typified
-programing languages, however there are fragments of those languages that may be refactored.
-That subset can be refactored. %TODO explain further!
+Refactoring static languages
+As we do not explore type information to do refactoring operations to static typified
+programing languages we can not say that we do refactoring for static langauges.
+However, there are fragments/subsets of those languages that may be refactored by our
+framework. Those fragments are parts of the code that can be reason upon without using
+the type information, for example:
+%That subset can be refactored. %TODO explain further!
 \section{FrameWork}
-Refactoring tools have similar architecture with each other, and such similarities
-create the possibility of reusing some modules. And instead of creating every
-module of the refactoring tool if there was already ready to use modules refactoring
-tool development would become a lot faster.
+Since refactoring tools often require the same information about the program, such as
+the AST and the def-use-relations, and therefore they have similar architecture.
+This similarity between refactoring tools creates the possibility of reusing some modules
+instead of creating every module from scratch therefore making refactoring tools
+development become a lot faster.
+Having a framework to create refactoring tools can ease up the pain and in addition
+it is posssible to share features created for a refactoring tool with the other refactoring
+tools developed using the framework, for example: .
 Since we desire to create a refactoring tool targeted to beginner programmers with
 specialized refactoring operations and we want such refactoring tool to be available
 for several languages used in introductory courses around the world and not just for
