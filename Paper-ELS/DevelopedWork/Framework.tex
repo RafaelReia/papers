@@ -106,16 +106,16 @@ be too complex.
 %TODO give an example
 
 \section{Features} %talk about one feature fits all
-how easy it is to add new refactoring operations and languages
+%how easy it is to add new refactoring operations and languages
 The framework it is simply to use, it is only necessary to have a specification file
 of each refactoring operation.
 That file must have a function that receives two arguments,
 one is the AST of the program and the other is the def-use-relation.
 This information makes it possible to have several refactoring operations that help
 the programmer.
-what was "reused"
-everything except the refactoring operations itself.
-the advantages of that
+%what was "reused"
+%everything except the refactoring operations itself.
+%the advantages of that
 This Framework makes it easier to implement refactoring operations for dynamic languages,
 with only the catch that they have to be implemented for DrRacket. Helping minimizing
 the problem of the difficulty and lacking of refactoring operations for dynamic languages.
@@ -136,20 +136,21 @@ duplicated code detection
 A refactoring tool is a quite complex piece of software and therefore requires maintenance.
 Automatic testing is used in general by developers to ensure that the software
 is bug free for those test cases.
-By having a way to automatically perform all the refactoring operations found,
-the developer of a refactoring tool can test and ensure if the changes made did not introduce
-bugs in other refactoring operations of the refactoring tool.
+Automatically testing all the refactoring operations is a good way to test if
+the changes inserted any bugs in the refactoring tool.
 One way to automatic test the refactoring operations is to apply every refactoring
-operations possible to a piece of code. By having this possibility it is simpler
-to the developer to create specific test cases that simplify tool maintenance.
+operations possible in a piece of code. By having such possibility it is simpler
+to the developer to create specific test cases simplifying tool maintenance.
 In order to do this it is necessary to correctly identify all the possible refactoring
-operations in one piece of code. Such operation is already implemented in the refactoring
-tool, the automatic suggesting.
-Therefore the remaining part of the algorithm is to apply all of those operations.
-The trick part is  that every refactoring operation changes the AST, so after
-applying one refactoring operation it is necessary to recompute the program AST.
-By changing the AST the possible refactoring operations applicable also might change,
-so it is necessary to recompute the AST.
+operations in one piece of code, which is already implemented in the refactoring
+tool, and apply all of refactoring operations found.
+Since every refactoring operation changes the AST which changes the position of the
+lines of code and it also may change the possible refactoring operations it is necesasry to recompute the
+program AST before the next iteration of the algorithm.
+%The trick part is that every refactoring operation changes the AST, so after
+%applying one refactoring operation it is necessary to recompute the program AST.
+%By changing the AST the possible refactoring operations applicable also might change,
+%so it is necessary to recompute the AST.
 
 %First the automated refactoring displays all the possible refactoring found thus making it easier
 %to detect the refactoring operations in projects.
@@ -161,7 +162,12 @@ so it is necessary to recompute the AST.
 %And finally by running again the test cases of the program.
 %After testing it with several (or huge) programs if every test passes (or the exact same tests, because refactoring operations should not fix bugs)
 %we can consider that the refactoring operations are correct.
+\section{Translator}
+Using the meta-language capabilities it is even possible to translate code
+from one language to another.
 
+Example: Python -> Racket -> Processing
+%TODO insert example:
 \section{Examples}  %evaluation?
 
 \section{Analysis} %and conclusion
