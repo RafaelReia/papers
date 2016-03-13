@@ -1,69 +1,44 @@
+\section{FrameWork}
+Since refactoring tools to correcly transform the program often require the same information about the program, such as
+the AST and the def-use-relations, they often have similar architecture.
+This similarity between refactoring tools creates the possibility of reusing some modules
+instead of creating every module from scratch which makes refactoring tools
+development a lot faster.
+Creating a framework for refactoring tools increases both the speed and the simplicity (??)
+of creating a refactoring tool. In addition the framework is able to reuse the features already available
+for one refactoring tool in the others without extra effort. Such features highly improve
+the usefulness of a refactoring tool, for example the highlight of possible refactoring
+operations, the previewing of the result and support to detect duplicated code.
 
-\section{Plugin} %interoperability?
-
-In order to improve the deployment and usage of the refactoring tool a plugin
-for DrRacket was created.
-DrRacket has several advantages and the plugin support is another one, because
-it allows a simple integration with DrRacket itself a simple managing interface.
-Another advantage is the incorporation with git. A plugin can be a link for a git
-repository and because of that it becomes simple to keep the refactoring tool up to date.
-
-However, the main reason to create a plugin is to become independent from DrRacket
-internal changes.
-
-%TODO TODO intro? TODO TODO TODO
-Refactoring static languages
+%Refactoring static languages
 As we do not explore type information to do refactoring operations to static typified
-programing languages we can not say that we do refactoring for static langauges.
+programing languages we can not say that we do refactoring for static languages.
 However, there are fragments/subsets of those languages that may be refactored by our
 framework. Those fragments are parts of the code that can be reason upon without using
 the type information, for example:
-%That subset can be refactored. %TODO explain further!
-\section{FrameWork}
-Since refactoring tools often require the same information about the program, such as
-the AST and the def-use-relations, and therefore they have similar architecture.
-This similarity between refactoring tools creates the possibility of reusing some modules
-instead of creating every module from scratch therefore making refactoring tools
-development become a lot faster.
-Having a framework to create refactoring tools can ease up the pain and in addition
-it is posssible to share features created for a refactoring tool with the other refactoring
-tools developed using the framework, for example: .
-Since we desire to create a refactoring tool targeted to beginner programmers with
-specialized refactoring operations and we want such refactoring tool to be available
-for several languages used in introductory courses around the world and not just for
-Racket programming language.
-Creating a framework for refactoring tools increases both the speed and the simplicity (??)
-of creating a refactoring tool and therefore it is able to provide the features already available
-for one refactoring tool in the others without extra effort. Such features highly improve
-the usefulness of the refactoring tool, for example the highlight of possible refactoring
-operations, the previewing of the result and support to detect duplicated code.
-
-
- %[TODO Explain META-LANGUAGE]
- Impementing the framework in Racket combined with the implmented languages for DrRacket is what does the trick,
- since we use the implemetnation as a meta-language which creates syntax objects as the ones used to represent the racket language.
-  Being the meta-language a language that are
- composed only by syntax elements is a huge advantage to compute effortless new
- refactoring operations for new languages when compared with the necessary effort to create
- the refactoring operations directly for that language.
 
 Ideally we should only have refactoring operations for the meta-language which represents
-all languages. And then specialized pretty printers to output the changes in the
+all the implemented languages combined with specialized pretty printers to output the changes in the
 desireble language.
-However, since we instead of having a general representation that can represent all the languages
-supported we have the languages represented in Racket's syntax objects we can not do that.
+However, such general representation would be complex and would also reduce the languages
+expressiveness.
+Instead of having a general representation that can represent all the languages
+supported we have the languages represented in syntax objects representative of the language.
 
-We indeed have a meta-language that abstracts all the supported languages and
+In addition, we also have a meta-language that abstracts all the supported languages and
 we have trully language independent refactoring operations. However, it is only
-for a small set of refactoring opeartions, the more simple ones. We did it like
-this because we would lose some of the possible refactoring operations or we would
-have to have a lot of concerns. And since we have a restrict amount of time, having
+for a small set of refactoring opeartions, the simpler ones.
+And since we have a restrict amount of time, having
 a meta-language that have language-independent refactoring operations combined
-with the "semi-meta-languages" that have similar refactoring operations but
+with the syntax-objects representation which have similar refactoring operations but
 language dependent and therefore more specialized.
 
-With this we do not have a language-independent framework. However we have a framework
-for refactoring operations, even tough that is more aimed at dynamic and functional languages.
+%[TODO Explain META-LANGUAGE]
+We decided to implement the framework in Racket since it were already some programming
+languages implmented languages for DrRacket which made the development of the framework easier.
+
+With this combination we do not have a language-independent framework. However we have a framework
+for refactoring dynamic languages.
 Framework architecture.%FIXME this is super weird
 \begin{figure}[h]
 \includegraphics[width=8cm]{../framework-arch2.png}
@@ -76,8 +51,7 @@ have specialized refactoring operations. We also have pretty-printing modules fo
 each supported language.
 
 We already have refactoring operations for Racket, Python, and Processing. We choose
-this languages because they are already implemented in Racket and they are both
-often used by beginners.
+this languages since they are already implemented in Racket and they are often used by beginners.
 
 
 \subsection{Statement based languages}
@@ -107,6 +81,19 @@ be too complex.
 
 \section{Features} %talk about one feature fits all
 %how easy it is to add new refactoring operations and languages
+One important part of this framework is to seamsly provide the features created
+having in mind one refactoring tool to every refactoring tool developed within this
+framework.
+This is possible because the refactoring tools use the same information represented
+in the form of syntax objects. The syntax-objects have several information regarding
+location and position that can be used.
+For example it is possible to use the highlight of the possible refactoring operations
+in the several languages.
+
+%Automatic detection
+%Preview
+%duplicated code detection
+\section{Requirements?Goals}
 The framework it is simply to use, it is only necessary to have a specification file
 of each refactoring operation.
 That file must have a function that receives two arguments,
@@ -121,18 +108,22 @@ with only the catch that they have to be implemented for DrRacket. Helping minim
 the problem of the difficulty and lacking of refactoring operations for dynamic languages.
 (for at least every language implemented for DrRacket)
 
-Automatic detection
-Preview
-duplicated code detection
+
+
+
+\subsection{Interoperability} %interoperability?
+
+IDEs are always evolving and DrRacket is no execption. Therefore developing a refactoring tool
+inside the editor itself is not a good idea. The solution to cope with all the future changes
+is to create a plugin. This plugin ensures that for the vast majority of modifications in DrRacket
+our refactoring tool will be able to work properly without any modification.
+The plugin itself also makes it easier to port the refactoring tool to another editor.
+Another advantage of the plugin relies on how DrRacket manages the plugins. If the plugin
+is deployed in a git repository any commits made to that repository will trigger
+a reinstalation from DrRacket therefore providing the most updated version of the refactoring tool.
+
 \section{Tool Maintenance} %Framework maintenance!
 %Developer Point of view
-%%%% Nor for the paper tough %%%%
-%%automatic might help save work when the user nows what exactly the tool will do.
-
-%This feature combined with the automatic suggesting is a huge help to do the
-%evaluation of this refactoring tool and to use in battery tests.
-
-
 A refactoring tool is a quite complex piece of software and therefore requires maintenance.
 Automatic testing is used in general by developers to ensure that the software
 is bug free for those test cases.
@@ -147,29 +138,18 @@ tool, and apply all of refactoring operations found.
 Since every refactoring operation changes the AST which changes the position of the
 lines of code and it also may change the possible refactoring operations it is necesasry to recompute the
 program AST before the next iteration of the algorithm.
-%The trick part is that every refactoring operation changes the AST, so after
-%applying one refactoring operation it is necessary to recompute the program AST.
-%By changing the AST the possible refactoring operations applicable also might change,
-%so it is necessary to recompute the AST.
 
-%First the automated refactoring displays all the possible refactoring found thus making it easier
-%to detect the refactoring operations in projects.
-%It makes it easier to evaluate the need to do the refactoring and to evaluate
-%if the refactoring tool (frameowork) is working correctly.
-%Second the automatic refactoring makes it easier to test if the refactoring operations are correct (**** for a limited test cases ****)
-%This is possible by running the test cases of the program before any refactoring.
-%Then using automatic refactoring in the program that applies all the refactoring that the tool finds.
-%And finally by running again the test cases of the program.
-%After testing it with several (or huge) programs if every test passes (or the exact same tests, because refactoring operations should not fix bugs)
-%we can consider that the refactoring operations are correct.
-\section{Translator}
+
+\section{Examples}  %evaluation?
+%examples in python:
+%examples in processing:
+
+\subsection{Translator}
 Using the meta-language capabilities it is even possible to translate code
 from one language to another.
 
 Example: Python -> Racket -> Processing
 %TODO insert example:
-\section{Examples}  %evaluation?
-
 \section{Analysis} %and conclusion
 Combining the two approaches can simply create refactoring operations for several
 languages targetted at beginner programmers. Some of this refactoring operations
@@ -194,7 +174,7 @@ create even more complex refactoring operations which would be a great improveme
 %\section{Conclusion}
 
 \section{Future Work}
-Add a PDG to the framework.
-Simplify adding langauges to the framework
-Simplify create features for all languages.
+Add a PDG to the framework. and other forms of representing the program information.
+Simplify even further adding languages to the framework
+Simplify even further create features for all languages.
 Create an API??
