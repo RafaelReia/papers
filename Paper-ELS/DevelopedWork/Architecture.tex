@@ -23,7 +23,8 @@ definition to its use.  The opposite relation, the use-def relation is
 also visually represented as an arrow from the use of an identifier to
 its definition.  The AST is the abstract syntax tree of the program
 which, in the case of the Racket language, is represented by a list of
-syntax-objecs.  Given that Racket
+syntax-objecs.  %Given that Racket %TODO
+
 %In Racket everything is a syntax-object and therefore accessing the list
 %of syntax-objects has all the information that a normal AST provides. %FIXME incorrect
 
@@ -156,7 +157,7 @@ The code-walker is used to parse the syntax tree represented by a
 syntax element that is a list of syntax-object in Racket.  A
 syntax-object can contain either a symbol, a syntax-pair, a datum
 (number, boolean or string), or an empty list.  While a syntax-pair is
-a pair containing a syntax object as it first element and either a
+a pair containing a syntax-object as it first element and either a
 syntax pair, a syntax element or an empty list as the second argument.
 Each syntax-object has information about the line where they are
 defined and this information is used to search for the correct
@@ -206,7 +207,7 @@ The Syntax-Parse\cite{tobin2011languages} function provided by Racket
 is very useful for the refactoring operations. It provides a wide
 range of options to help matching the correct syntax,
 using %fine tunning
-backtracking to allow have several rules to be matched in the same
+backtracking to allow several rules to be matched in the same
 syntax parser, which helps to create more sophisticated rules.
 
 \section{Refactoring operations}
@@ -242,8 +243,10 @@ refactoring operation will change the meaning of the program.
 
 Despite this problem, we support this refactoring operation because,
 in the vast majority of the cases, there are no side-effects being
-done in the middle of numerical comparisons and, therefore, the
-refactoring operation does not change the meaning of the program.
+done in the middle of numerical comparisons, it is not often to have the same
+argument repeated in a comparison, and with the short-circuit evaluation there
+is no guarantee that the side effect will occur twice.
+Therefore, the refactoring operation does not change the meaning of the program.
 % Furthermore, the possible solution would limit excessively this
 % refactoring operation.  %enormously
 % Considering Racket's reflection capabilities we would only apply this
@@ -284,7 +287,7 @@ important.% ,
 Extract function is an important refactoring operation that every
 refactoring tool should have.  In order to extract a function it is
 necessary to compute the arguments needed to the correct use of the
-function.  While giving the name to a function seams quite
+function.  While giving the name to a function seems quite
 straightforward, it is necessary to check for name duplication in
 order to produce a correct refactoring as having two identifiers with
 the same name in the same scope produces an incorrect program.  After
@@ -312,7 +315,7 @@ defined?  Top-level, Level-0, level-1, or in the current level, the
 level-2?  The fact is that is extremely difficult to know the answer
 to this question because it depends on what the user is doing and the
 user intent.  Accordingly, we decided that the best solution is to let
-the user decide where the user wants the function defined.
+the user decide where the user wants the function to be defined.
 
 
 \subsubsection{Computing the arguments}
@@ -372,6 +375,16 @@ However, the {\tt local} keyword is not used very often and might confuse the us
 Therefore we decided keep the refactoring operation without the local keyword that works for
 most of the cases.
 
+\begin{lstlisting}[basicstyle=\ttfamily, caption=Let example]
+(let loop ((x 1))
+  (when (< x 10)
+    (loop (+ x 1))))
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily, caption=Let to Define Function example]
+(define (loop x)
+  (when (< x 10)
+    (loop (+ x 1))))
+\end{lstlisting}
 
 \subsection{Wide-Scope Replacement}
 The Wide-Scope replacement extends the extract function functionality by replacing

@@ -44,13 +44,13 @@
 In this section we present some code examples written by beginner programmers
 in their final project of an introductory course and their possible improvements
 using the refactoring operations available in our refactoring tool.
-The examples show the usage of some of the refactoring operations previous presented
+The examples show the usage of some of the refactoring operations previously presented
 and here is explained the motivation for their existence.
 
 \lstset{style=racket}
 
 
-The first example is a very typical error made beginner programmers.
+The first example is a very typical error made by beginner programmers.
 \begin{absolutelynopagebreak}
 \begin{lstlisting}
 (if (>= n_plays 35)
@@ -70,7 +70,7 @@ rather typical usage of this expression.
 \begin{lstlisting}
 (and
   (and
-   (eq? #t (correct-moviment? player play))
+   (eq? #t (correct-movement? player play))
    (eq? #t (player-piece? player play)))
   (and
    (eq? #t (empty-destination? play))
@@ -82,7 +82,7 @@ rather typical usage of this expression.
 Transforming the code by removing the redundant {\tt and} expression makes the code
 cleaner and simpler to understand.
 \begin{lstlisting}
-(and (eq? #t (correct-moviment? player play))
+(and (eq? #t (correct-movement? player play))
      (eq? #t (player-piece? player play))
      (eq? #t (empty-destination? play))
      (eq? #t (empty-start? play)))
@@ -97,15 +97,18 @@ of simple writing {\tt ?x}.
      (empty-start? play))
 \end{lstlisting}
 
-While a student is still learning is common to forget whether or not a
+While a student is still learning, it is common to forget whether or not a
 sequence of expressions need to be wrapped in a {\tt begin} form.  The
 {\tt when}, {\tt cond} and {\tt let} expressions have a implicit {\tt
   begin} and as a result it is not necessary to add the {\tt begin}
-expression.  Moreover, sometimes they still kept the {\tt begin}
+expression.  Moreover, sometimes they still keep the {\tt begin}
 keyword because they often use a trial and error approach in writing
 code.  Our refactoring tool checks for those mistakes and corrects
-them.
+them. \\
 %let with begin before, Chose a better example
+
+%\begin{absolutelynopagebreak}
+%\vspace{50mm}
 \begin{lstlisting}
 (if (odd? line-value)
     (let ((internal-column (sub1 (/ column 2))))
@@ -119,6 +122,9 @@ them.
             internal-column
             #f))))
 \end{lstlisting}
+
+%\end{absolutelynopagebreak}
+
 %let with begin after
 This is a simple refactoring operation and it does not have a big
 impact, however it makes the code clear and helps the beginner
@@ -136,7 +142,7 @@ programmer to learn that a {\tt let} does not need a {\tt begin}.
 
 The next example shows a nested {\tt if}. Nested {\tt if}s are
  difficult to understand, error prone, and a debugging nightmare.
- \begin{absolutelynopagebreak}
+ %\begin{absolutelynopagebreak}
 
 
 \begin{lstlisting}
@@ -177,7 +183,7 @@ The next example shows a nested {\tt if}. Nested {\tt if}s are
                      (search-aux? board line (+ 2 column) piece))
                     null))))))))))
 \end{lstlisting}
-\end{absolutelynopagebreak}
+%\end{absolutelynopagebreak}
 It is much simpler to have a {\tt cond} expression instead of the nested {\tt if}.
 In addition, every true branch of this nested if contains {\tt if} expressions that are
 or expressions and by refactoring those {\tt if} expressions to {\tt or}s it makes the code
@@ -218,30 +224,58 @@ However, this code could still be further improved by refactoring it into a {\tt
 
 The examples presented above appear repeatedly in almost every code submission of this final project supporting the need to
 proper support to beginner programmers.
+%\tiny
+% \begin{table}[]
+% \centering
+% \caption{Refactoring Operations}
+% \label{tab:ref-ops}
+% \begin{tabular}{c|c|c|c|c|c|c}
+% Code \#                                                     & 1     & 2      & 3     & 4     & 5      & Total \\ \hline
+% Initial LOC                                                 & 582   & 424    & 332   & 1328  & 810    & 3476  \\ \hline
+% Final LOC                                                   & 545   & 373    & 300   & 1259  & 701    & 3178  \\ \hline
+% Difference                                                  & 37    & 51     & 32    & 69    & 109    & 298   \\ \hline
+% Percentage                                                  & -6.36 & -12.03 & -9.64 & -5.19 & -13.46 & -9.34 \\ \hline
+% Remove Begin                                                & 11    & 4      & 6     & 9     & 5      & 35    \\ \hline
+% If to When                                                  & 4     & 0      & 0     & 0     & 0      & 4     \\ \hline
+% If to And                                                   & 3     & 1      & 0     & 0     & 0      & 4     \\ \hline
+% If to Or                                                    & 6     & 6      & 1     & 13    & 20     & 46    \\ \hline
+% Remove If                                                   & 0     & 3      & 7     & 6     & 3      & 19    \\ \hline
+% Remove And                                                  & 0     & 2      & 0     & 4     & 0      & 6     \\ \hline
+% Remove Eq                                                   & 0     & 4      & 0     & 0     & 0      & 4     \\ \hline
+% \begin{tabular}[c]{@{}c@{}}Extract \\ Function\end{tabular} & 0     & 3      & 0     & 0     & 4      & 7     \\ \hline
+% If to Cond                                                  & 0     & 0      & 0     & 2     & 3      & 5
+% \end{tabular}
+% \end{table}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
 \begin{table}[]
 \centering
 \caption{Refactoring Operations}
-\label{tab:ref-ops}
-\begin{tabular}{c|c|c|c|c|c|c}
-Code \#                                                     & 1     & 2      & 3     & 4     & 5      & Total \\ \hline
-Initial LOC                                                 & 582   & 424    & 332   & 1328  & 810    & 3476  \\ \hline
-Final LOC                                                   & 545   & 373    & 300   & 1259  & 701    & 3178  \\ \hline
-Difference                                                  & 37    & 51     & 32    & 69    & 109    & 298   \\ \hline
-Percentage                                                  & -6.36 & -12.03 & -9.64 & -5.19 & -13.46 & -9.34 \\ \hline
-Remove Begin                                                & 11    & 4      & 6     & 9     & 5      & 35    \\ \hline
-If to When                                                  & 4     & 0      & 0     & 0     & 0      & 4     \\ \hline
-If to And                                                   & 3     & 1      & 0     & 0     & 0      & 4     \\ \hline
-If to Or                                                    & 6     & 6      & 1     & 13    & 20     & 46    \\ \hline
-Remove If                                                   & 0     & 3      & 7     & 6     & 3      & 19    \\ \hline
-Remove And                                                  & 0     & 2      & 0     & 4     & 0      & 6     \\ \hline
-Remove Eq                                                   & 0     & 4      & 0     & 0     & 0      & 4     \\ \hline
-\begin{tabular}[c]{@{}c@{}}Extract \\ Function\end{tabular} & 0     & 3      & 0     & 0     & 4      & 7     \\ \hline
-If to Cond                                                  & 0     & 0      & 0     & 2     & 3      & 5
-\end{tabular}
+\label{my-label}
+\resizebox{0.5\textwidth}{!}{%
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c}
+\hline
+Code \#                                                     & 1     & 2      & 3     & 4     & 5      & 6     & 7     & 8      & Total  \\ \hline
+Initial LOC                                                 & 582   & 424    & 332   & 1328  & 810    & 569   & 798   & 614    & 4045   \\ \hline
+Final LOC                                                   & 545   & 373    & 300   & 1259  & 701    & 527   & 733   & 457    & 3705   \\ \hline
+Difference                                                  & 37    & 51     & 32    & 69    & 109    & 42    & 65    & 140    & 340    \\ \hline
+Percentage                                                  & -6.36 & -12.03 & -9.64 & -5.19 & -13.46 & -7.38 & -8.14 & -22.80 & -10.63 \\ \hline
+\begin{tabular}[c]{@{}c@{}}Remove \\ Begin\end{tabular}     & 11    & 4      & 6     & 9     & 5      & 2     & 0     & 7      & 44     \\ \hline
+If to When                                                  & 4     & 0      & 0     & 0     & 0      & 7     & 0     & 0      & 11     \\ \hline
+If to And                                                   & 3     & 1      & 0     & 0     & 0      & 2     & 0     & 0      & 6      \\ \hline
+If to Or                                                    & 6     & 6      & 1     & 13    & 20     & 3     & 2     & 0      & 51     \\ \hline
+Remove If                                                   & 0     & 3      & 7     & 6     & 3      & 5     & 0     & 2      & 26     \\ \hline
+\begin{tabular}[c]{@{}c@{}}Remove \\ And\end{tabular}       & 0     & 2      & 0     & 4     & 0      & 0     & 0     & 0      & 6      \\ \hline
+\begin{tabular}[c]{@{}c@{}}Remove \\ Eq\end{tabular}        & 0     & 4      & 0     & 0     & 0      & 0     & 0     & 0      & 4      \\ \hline
+\begin{tabular}[c]{@{}c@{}}Extract \\ function\end{tabular} & 0     & 3      & 0     & 0     & 4      & 0     & 1     & 5      & 13     \\ \hline
+If to Cond                                                  & 0     & 0      & 0     & 2     & 3      & 0     & 1     & 0      & 6      \\ \hline
+\end{tabular}%
+}
 \end{table}
 
 
-As seen in Table~\ref{tab:ref-ops} the average reduction in LOC is 9.34\% which
+As seen in Table~\ref{tab:ref-ops} the average reduction in LOC is 10.63\% which
 shows how useful are these refactoring operations. It also shows how many
 refactoring operations were applied.
 This tool is not only for beginners, during the development of the tool we already
@@ -278,7 +312,7 @@ True if (alpha < beta) else False
 (alpha < beta)
 \end{lstlisting}
 
-\vspace{5mm}
+\vspace{50mm}
 The next one shows an extract function:
 \begin{lstlisting}
 def mandelbrot(iterations, c):
@@ -289,7 +323,7 @@ def mandelbrot(iterations, c):
         z = z*z + c
     return i+1
 \end{lstlisting}
-\begin{absolutelynopagebreak}
+%\begin{absolutelynopagebreak}
 \begin{lstlisting}
 def computeZ(z, c):
     return z*z + c
@@ -302,7 +336,7 @@ def mandelbrot(iterations, c):
         z = computeZ( z,c)
     return i+1
 \end{lstlisting}
-\end{absolutelynopagebreak}
+%\end{absolutelynopagebreak}
 It is important to note that this refactoring operations for Python are just only a prototype and
 the work is still in progress.
 \section{Conclusion}

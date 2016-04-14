@@ -145,3 +145,50 @@ not applying every possible refactoring operation, because the
 refactoring operations for which the framework cannot guarantee
 behavior preservation are prevented.  The wrongly prevented operations
 accounts for 6.2\% of all rejections.
+
+
+\subsection{Analysis}
+\begin{table}[]
+\centering
+\caption{Data Structures}
+\label{tab:my-table}
+\begin{tabular}{c|c|c|c|c}
+Name       & AST & PDG & Database & Others \\ \hline
+Griswold   & X   & X   &          &        \\ \hline
+Rope       & X   &     & X        &        \\ \hline
+Bicycle    & X   &     & X        &        \\ \hline
+Pycharm Edu & X   &     & X        &        \\ \hline
+Javascript &     &     &          & X
+\end{tabular}
+\end{table}
+
+The Table~\ref{tab:my-table} summarizes the data structures of the analyzed refactoring tools.
+It is clear that the AST of a program is an essential part of the refactoring
+tool information with every refactoring tool having an AST to represent the program.
+Regarding the PDG and Database it contains mainly information about the def-use-relation
+of the program. The PDG has also control flow information of the program.
+Our implementation uses the same data structures, the AST and
+the def-use-relations.
+
+%HaRe only uses the AST as a source of information of the program. Thus, by not having
+%the def-use-relation or a PDG it has less information to perform the refactoring operations.
+%However, because HaRe is for the Haskell program language that is purely-functional
+%programming language that extra information is not necessary to perform a good set of
+%refactoring operations correctly.
+
+
+Some tools like the one build by Griswold focus on the correctness of the refactoring
+operations and therefore need more information about the program, such as the information
+provided by the PDG.
+Others, focus in offering refactoring operations for professional or advanced users.
+However, the goal of our refactoring tool is to provide refactoring operations
+designed for beginners.
+Therefore we are not interested in refactoring operations formerly proven
+correct or provide refactoring operations only used in advanced and complex use cases.
+
+We intend to have simple, useful, and correct refactoring operations to correct the typical mistakes made by beginners.
+With this we exclude from the refactoring tool scope  macros usage, classes, and other complex structures
+not often used by beginners.
+
+%Added in evaluation: I already used the refactoring tool to do a refactoring operation in
+%the source code of the refactoring tool. However this is only applicable in the parts that are supported by this refactoring tool.
