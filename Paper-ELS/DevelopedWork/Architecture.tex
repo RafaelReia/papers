@@ -67,7 +67,7 @@ AST produced by the Expander because it has the correct dependency
 information.  The Transformer uses the Code Walker to parse the ASTs
 and the information of the def-use relations to correctly perform the
 refactoring operations.  Then it goes to the Writing module to produce
-the output in DrRacket's definitions pane.
+the output in DrRacket's definitions pane. \\
 
 
 \subsection{Syntax Expressions}
@@ -384,6 +384,7 @@ most of the cases.
 (define (loop x)
   (when (< x 10)
     (loop (+ x 1))))
+(loop 1)
 \end{lstlisting}
 
 \subsection{Wide-Scope Replacement}
