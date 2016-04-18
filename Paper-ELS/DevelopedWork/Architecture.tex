@@ -16,10 +16,10 @@ their expanded form.
 
 In order to create correct refactoring operations, the refactoring
 tool uses two sources of information, the def-use relations and the
-AST of the program.  The def-use relations represent the links between
+AST of the program.  The def-use relations represent the links between the
 definition of an identifier and its usage.  In the DrRacket IDE these
 relations are visually represented as arrows that point from a
-definition to its use.  The opposite relation, the use-def relation is
+definition to its use.  The opposite relation, the use-def relation, is
 also visually represented as an arrow from the use of an identifier to
 its definition.  The AST is the abstract syntax tree of the program
 which, in the case of the Racket language, is represented by a list of
@@ -236,17 +236,17 @@ refactoring operation will change the meaning of the program.
 % \begin{lstlisting}[basicstyle=\ttfamily, caption=Refactored code]
 %   (< 1 (foo 2) 3)
 % \end{lstlisting}
-
+%(and (< 2 x) (> x 2))
 
 % Instead of applying the side effect that is displaying the the string "foo"
 %  twice it will only display it once. Therefore changing the meaning of the program.
 
 Despite this problem, we support this refactoring operation because,
 in the vast majority of the cases, there are no side-effects being
-done in the middle of numerical comparisons, it is not often to have the same
-argument repeated in a comparison, and with the short-circuit evaluation there
-is no guarantee that the side effect will occur twice.
-Therefore, the refactoring operation does not change the meaning of the program.
+done in the middle of numerical comparisons. This is explained by the fact that it is rare to have the same
+argument repeated in a comparison and, moreover, the short-circuit evaluation rule does not
+guarantee that the side effects will be done.
+Therefore, it is usually safe to apply this refactoring operation.
 % Furthermore, the possible solution would limit excessively this
 % refactoring operation.  %enormously
 % Considering Racket's reflection capabilities we would only apply this
